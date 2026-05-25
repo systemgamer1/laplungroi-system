@@ -247,7 +247,13 @@ margin-bottom:20px;
 flex-wrap:wrap;
 gap:15px;
 ">
-<h2>WEEKLY PAYMENT</h2>
+<div>
+    <h2 style="display:inline-block; margin-bottom: 5px;">WEEKLY PAYMENT</h2>
+    <div id="totalTargetMoneyDisplay" style="color:#aaa; font-size:14px; margin-top:5px;">
+        เดือนนี้ชำระเงิน: <span id="targetMoneyText" style="color:#ff2d2d; font-weight:bold;">0</span> B
+        <button id="editMoneyBtn" class="edit-money-btn hidden" onclick="editTargetMoney()">แก้ไข</button>
+    </div>
+</div>
 
 <select
 id="moneyMonthSelector"
@@ -485,7 +491,7 @@ ref(db,"users/" + username));
 
 if(!snapshot.exists()){
 
-alert("ไม่พบ Username");
+alert("Username ไม่ถูกต้อง");
 return;
 
 }
@@ -530,6 +536,11 @@ document.getElementById(
 "userMenu")
 .classList.remove("hidden");
 
+}
+
+if(role === "admin" || role === "member"){
+    const editBtn = document.getElementById("editMoneyBtn");
+    if(editBtn) editBtn.classList.remove("hidden");
 }
 
 showSection("dashboardSection");
@@ -1106,6 +1117,30 @@ loadMembers();
 
 /* MONEY */
 
+window.editTargetMoney = async function() {
+    const moneySelector = document.getElementById("moneyMonthSelector");
+    const now = new Date();
+    const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    
+    const amount = prompt("กรอกจำนวนเงินที่ต้องชำระประจำเดือนนี้ (เช่น 500,000):");
+    if (amount === null) return;
+    
+    await set(ref(db, "money_config/" + selectedMonth), {
+        target: amount
+    });
+    alert("บันทึกจำนวนเงินชำระสำเร็จ");
+    loadMoney();
+}
+
+window.handleMoneyStatusChange = function(username, status) {
+    const fineInput = document.getElementById(`fine-container-${username}`);
+    if (status === "ส่งแล้ว (ล่าช้า)") {
+        fineInput.classList.remove("hidden");
+    } else {
+        fineInput.classList.add("hidden");
+    }
+}
+
 async function loadMoney(){
 
 const snapshot =
@@ -1145,6 +1180,20 @@ moneySelector.innerHTML = optionsHtml;
 const now = new Date();
 const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
+const role = localStorage.getItem("role");
+if(role === "admin" || role === "member"){
+    const editBtn = document.getElementById("editMoneyBtn");
+    if(editBtn) editBtn.classList.remove("hidden");
+}
+
+const configSnapshot = await get(ref(db, "money_config/" + selectedMonth));
+const targetText = document.getElementById("targetMoneyText");
+if(configSnapshot.exists() && configSnapshot.val().target){
+    targetText.innerText = configSnapshot.val().target;
+} else {
+    targetText.innerText = "0";
+}
+
 const moneySnapshot =
 await get(ref(db,"money/" + selectedMonth));
 
@@ -1153,9 +1202,6 @@ document.getElementById(
 "moneyTable");
 
 table.innerHTML = "";
-
-const role =
-localStorage.getItem("role");
 
 let moneyData = {};
 
@@ -1178,6 +1224,15 @@ const status =
 moneyData[user.username]
 ?.status || "ยังไม่ส่ง";
 
+const fine =
+moneyData[user.username]
+?.fine || "";
+
+let displayText = status;
+if (status === "ส่งแล้ว (ล่าช้า)" && fine) {
+    displayText = `ส่งแล้ว (ล่าช้าปรับ ${fine} B)`;
+}
+
 let manageButton = "";
 
 if(
@@ -1188,27 +1243,17 @@ role === "member"
 manageButton = `
 
 <select
-id="money-${user.username}">
+id="money-${user.username}" onchange="handleMoneyStatusChange('${user.username}', this.value)">
 
-<option
-${
-status === "ยังไม่ส่ง"
-? "selected"
-: ""
-}>
-ยังไม่ส่ง
-</option>
-
-<option
-${
-status === "ส่งแล้ว"
-? "selected"
-: ""
-}>
-ส่งแล้ว
-</option>
+<option ${status === "ยังไม่ส่ง" ? "selected" : ""}>ยังไม่ส่ง</option>
+<option ${status === "ส่งแล้ว" ? "selected" : ""}>ส่งแล้ว</option>
+<option ${status === "ส่งแล้ว (ล่าช้า)" ? "selected" : ""}>ส่งแล้ว (ล่าช้า)</option>
 
 </select>
+
+<div id="fine-container-${user.username}" class="${status === 'ส่งแล้ว (ล่าช้า)' ? '' : 'hidden'}">
+    <input type="text" id="fine-input-${user.username}" class="fine-input" placeholder="จำนวนค่าปรับ" value="${fine}">
+</div>
 
 <button
 onclick="
@@ -1235,12 +1280,12 @@ table.innerHTML += `
 <span class="
 status
 ${
-status === "ส่งแล้ว"
+status.startsWith("ส่งแล้ว")
 ? "success"
 : "pending"
 }">
 
-${status}
+${displayText}
 
 </span>
 
@@ -1272,10 +1317,16 @@ const value =
 document.getElementById(
 "money-" + user).value;
 
+let fineValue = "";
+if (value === "ส่งแล้ว (ล่าช้า)") {
+    fineValue = document.getElementById("fine-input-" + user).value.trim();
+}
+
 await set(
 ref(db,"money/" + selectedMonth + "/" + user),{
 
-status:value
+status:value,
+fine:fineValue
 
 });
 

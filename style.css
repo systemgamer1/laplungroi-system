@@ -384,6 +384,34 @@ table select{
     color:white;
 }
 
+.fine-input {
+    width: 110px;
+    padding: 8px;
+    background: #000;
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 8px;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.edit-money-btn {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid #ff1e1e;
+    color: #ff1e1e;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    transition: all 0.3s;
+}
+
+.edit-money-btn:hover {
+    background: #ff1e1e;
+    color: #fff;
+}
+
 @media(max-width:1000px){
 
     .container{
