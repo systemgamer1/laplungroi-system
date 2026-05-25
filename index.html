@@ -52,6 +52,30 @@
     z-index: 5;
 }
 
+/* สไตล์สำหรับปุ่มสลับโหมดประวัติการลา */
+.view-mode-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.view-mode-btn {
+    background: #000;
+    border: 1px solid #333;
+    color: #888;
+    padding: 8px 16px;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+}
+.view-mode-btn.active {
+    border-color: #ff2d2d;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(255, 45, 45, 0.3);
+    background: rgba(255, 45, 45, 0.1);
+}
+
 /* --------------------------------------------------------------------------
    [MEDIA QUERY] ปรับแต่งตำแหน่งและสเกลของมุมฉากสำหรับหน้าจอมือถือโดยเฉพาะ
    -------------------------------------------------------------------------- */
@@ -201,7 +225,13 @@
             <div id="historySection" class="box hidden">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
                     <h2 id="boxHistory">LEAVE HISTORY</h2>
-                    <select id="weekSelector" onchange="loadLeaves()"></select>
+                    <div style="display:flex; align-items:center; gap:15px; flex-wrap:wrap;">
+                        <div class="view-mode-container" style="margin-bottom:0;">
+                            <button id="btnModeDaily" class="view-mode-btn" onclick="switchLeaveViewMode('daily')">DAILY</button>
+                            <button id="btnModeMonthly" class="view-mode-btn active" onclick="switchLeaveViewMode('monthly')">MONTHLY</button>
+                        </div>
+                        <select id="weekSelector" onchange="loadLeaves()"></select>
+                    </div>
                 </div>
                 <div id="weekInfo" style="margin-bottom:20px; color:#ff2d2d; font-size:14px;"></div>
                 <table>
@@ -238,7 +268,10 @@
             <div id="storeSection" class="box center-msg-box hidden"><h1 id="storeMsg">รอการอัพเดท..</h1></div>
 
             <div id="userSection" class="box hidden">
-                <h2 id="boxUserManage">USER MANAGEMENT</h2>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                    <h2 id="boxUserManage">USER MANAGEMENT</h2>
+                    <div id="totalUsersCountDisplay" style="color:#ff2d2d; font-size:16px; font-weight:bold; letter-spacing:1px;">ผู้ใช้งานทั้งหมด 0 คน</div>
+                </div>
                 <table>
                     <thead><tr><th id="thMngUser">USER</th><th id="thMngRole">ROLE</th><th id="thMngAction">MANAGE</th></tr></thead>
                     <tbody id="userTable"></tbody>
@@ -314,7 +347,7 @@ const db = getDatabase(app);
 let isRegister = false, chart;
 const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-// ตัวแปรเก็บฟังก์ชันการทำงานเมื่อกดยืนยันป๊อปอัพตัวใหม่
+let leaveViewMode = "monthly";
 let confirmCallback = null;
 
 const languages = {
@@ -326,7 +359,8 @@ const languages = {
         boxMembers: "สมาชิกทั้งหมด", thMemDetails: "รายละเอียด", boxUserManage: "จัดการสิทธิ์ผู้ใช้งาน", thMngAction: "การจัดการ", statusApproved: "อนุมัติแล้ว", statusPending: "รออนุมัติ", alertFill: "กรอกข้อมูลให้ครบ", alertMatch: "Password ไม่ตรงกัน", alertDup: "Username ซ้ำ",
         alertRegisSuccess: "สมัครสมาชิกสำเร็จ", alertNoUser: "ไม่พบ Username", alertWrongPass: "Password ไม่ถูกต้อง", alertDateWrong: "วันที่ไม่ถูกต้อง", alertLeaveSuccess: "ส่งคำลาแล้ว", alertApproveSuccess: "อนุมัติสำเร็จ", alertDeleteLeave: "ยืนยันการลบรายการใบลาชุดนี้ ?", alertDeleteLeaveSuccess: "ลบใบลาสำเร็จ",
         alertRoleSuccess: "เปลี่ยนสิทธิ์สำเร็จ", alertNoDeleteAdmin: "ลบ admin ไม่ได้", alertConfirmDeleteUser: "ยืนยันการลบผู้ใช้งาน ?", alertDeleteUserSuccess: "ลบสำเร็จ", alertUpdateMoney: "อัปเดตสถานะสำเร็จ", promptMoneyConfig: "กรอกจำนวนเงินที่ต้องชำระประจำเดือนนี้ (เช่น 500,000):", alertMoneyConfigSuccess: "บันทึกจำนวนเงินชำระสำเร็จ",
-        notSet: "ยังไม่ตั้งค่า", statusNotSent: "ยังไม่ส่ง", statusSent: "ส่งแล้ว", statusSentLate: "ส่งแล้ว (ล่าช้า)", statusDisplayLate: "ส่งแล้ว (ล่าช้าปรับ {fine} B)", finePlace: "จำนวนค่าปรับ", confirmBtnText: "ยืนยัน", editProfileTitle: "แก้ไขโปรไฟล์", imgUrlPlace: "ลิงก์รูปภาพโปรไฟล์", saveChangeBtn: "บันทึกการเปลี่ยนแปลง", cancelBtn: "ยกเลิก", viewBtnText: "ดูข้อมูล", closeBtnText: "ปิดหน้าต่าง", storeMsg: "รอการอัพเดท..", btnDetail: "รายละเอียด", titleReason: "เหตุผลการลา"
+        notSet: "ยังไม่ตั้งค่า", statusNotSent: "ยังไม่ส่ง", statusSent: "ส่งแล้ว", statusSentLate: "ส่งแล้ว (ล่าช้า)", statusDisplayLate: "ส่งแล้ว (ล่าช้าปรับ {fine} B)", finePlace: "จำนวนค่าปรับ", confirmBtnText: "ยืนยัน", editProfileTitle: "แก้ไขโปรไฟล์", imgUrlPlace: "ลิงก์รูปภาพโปรไฟล์", saveChangeBtn: "บันทึกการเปลี่ยนแปลง", cancelBtn: "ยกเลิก", viewBtnText: "ดูข้อมูล", closeBtnText: "ปิดหน้าต่าง", storeMsg: "รอการอัพเดท..", btnDetail: "รายละเอียด", titleReason: "เหตุผลการลา",
+        btnDaily: "รายวัน", btnMonthly: "รายเดือน", lblDailyPeriod: "ประจำวันที่: {date}"
     },
     en: {
         loginTitle: "LAPLUNGROI LOGIN", usernamePlace: "USERNAME", passwordPlace: "PASSWORD", confirmPasswordPlace: "CONFIRM PASSWORD", loginBtn: "LOGIN", registerBtn: "REGISTER", switchCreate: "CREATE ACCOUNT", switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
@@ -336,29 +370,34 @@ const languages = {
         boxMembers: "ALL MEMBERS", thMemDetails: "DETAILS", boxUserManage: "USER MANAGEMENT", thMngAction: "MANAGE", statusApproved: "Approved", statusPending: "Pending", alertFill: "Please fill in all fields", alertMatch: "Passwords do not match", alertDup: "Username already exists",
         alertRegisSuccess: "Registration successful", alertNoUser: "Username not found", alertWrongPass: "Incorrect password", alertDateWrong: "Invalid date range", alertLeaveSuccess: "Leave request submitted", alertApproveSuccess: "Approved successfully", alertDeleteLeave: "Are you sure you want to delete this leave request?", alertDeleteLeaveSuccess: "Leave request deleted",
         alertRoleSuccess: "Role updated successfully", alertNoDeleteAdmin: "Cannot delete master admin account", alertConfirmDeleteUser: "Confirm deleting this user account?", alertDeleteUserSuccess: "User deleted successfully", alertUpdateMoney: "Status updated successfully", promptMoneyConfig: "Enter monthly payment target amount (e.g., 500,000):", alertMoneyConfigSuccess: "Monthly target saved successfully",
-        notSet: "NOT SET", statusNotSent: "Unpaid", statusSent: "Paid", statusSentLate: "Paid (Late)", statusDisplayLate: "Paid (Late fine {fine} B)", finePlace: "Fine amount", confirmBtnText: "CONFIRM", editProfileTitle: "EDIT PROFILE", imgUrlPlace: "IMAGE URL", saveChangeBtn: "SAVE CHANGES", cancelBtn: "CANCEL", viewBtnText: "VIEW", closeBtnText: "CLOSE", storeMsg: "UNDER CONSTRUCTION..", btnDetail: "Detail", titleReason: "Leave Reason"
+        notSet: "NOT SET", statusNotSent: "Unpaid", statusSent: "Paid", statusSentLate: "Paid (Late)", statusDisplayLate: "Paid (Late fine {fine} B)", finePlace: "Fine amount", confirmBtnText: "CONFIRM", editProfileTitle: "EDIT PROFILE", imgUrlPlace: "IMAGE URL", saveChangeBtn: "SAVE CHANGES", cancelBtn: "CANCEL", viewBtnText: "VIEW", closeBtnText: "CLOSE", storeMsg: "UNDER CONSTRUCTION..", btnDetail: "Detail", titleReason: "Leave Reason",
+        btnDaily: "DAILY", btnMonthly: "MONTHLY", lblDailyPeriod: "Date: {date}"
     }
 };
 
 let currentLang = localStorage.getItem("sysLang") || "th";
 
-// ฟังก์ชันเรียกเปิดหน้าต่างยืนยันการลบแบบสร้างเองเพื่อรองรับ iPhone 
 window.openCyberConfirm = function(msg, callback) {
     document.getElementById("confirmModalMsg").innerText = msg;
     document.getElementById("confirmModalTitle").innerText = currentLang === "th" ? "ยืนยันการดำเนินการ" : "SYSTEM CONFIRMATION";
     document.getElementById("confirmCancelBtn").innerText = currentLang === "th" ? "ยกเลิก" : "CANCEL";
     document.getElementById("confirmSuccessBtn").innerText = currentLang === "th" ? "ยืนยัน" : "CONFIRM";
-    
     document.getElementById("cyberConfirmModal").classList.remove("hidden");
     confirmCallback = callback;
 }
 
 window.closeCyberConfirm = function(isConfirmed) {
     document.getElementById("cyberConfirmModal").classList.add("hidden");
-    if(isConfirmed && confirmCallback) {
-        confirmCallback();
-    }
+    if(isConfirmed && confirmCallback) confirmCallback();
     confirmCallback = null;
+}
+
+window.switchLeaveViewMode = function(mode) {
+    leaveViewMode = mode;
+    document.getElementById("btnModeDaily").classList.toggle("active", mode === "daily");
+    document.getElementById("btnModeMonthly").classList.toggle("active", mode === "monthly");
+    document.getElementById("weekSelector").style.display = (mode === "daily") ? "none" : "block";
+    loadLeaves();
 }
 
 async function getUserRole(username) {
@@ -426,6 +465,8 @@ function applyLanguagePack() {
     document.getElementById("editAvatarUrl").placeholder = p.imgUrlPlace;
     document.getElementById("popupLeaveTitle").innerText = p.titleReason;
     document.getElementById("popupLeaveCloseBtn").innerText = p.closeBtnText;
+    document.getElementById("btnModeDaily").innerText = p.btnDaily;
+    document.getElementById("btnModeMonthly").innerText = p.btnMonthly;
 }
 
 async function createAdmin(){
@@ -572,12 +613,27 @@ async function loadLeaves(){
         selector.innerHTML = opts;
     }
     const selVal = selector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    document.getElementById("weekInfo").innerHTML = currentLang === "th" ? `ประจำเดือน: ${selVal.split("-")[1]}/${currentLang === "th" ? parseInt(selVal.split("-")[0])+543 : selVal.split("-")[0]}` : `Month Period: ${selVal}`;
+    
+    if (leaveViewMode === "daily") {
+        const dNum = String(now.getDate()).padStart(2, '0');
+        const mNum = String(now.getMonth() + 1).padStart(2, '0');
+        const yNum = currentLang === "th" ? now.getFullYear() + 543 : now.getFullYear();
+        document.getElementById("weekInfo").innerHTML = p.lblDailyPeriod.replace("{date}", `${dNum}/${mNum}/${yNum}`);
+    } else {
+        document.getElementById("weekInfo").innerHTML = currentLang === "th" ? `ประจำเดือน: ${selVal.split("-")[1]}/${currentLang === "th" ? parseInt(selVal.split("-")[0])+543 : selVal.split("-")[0]}` : `Month Period: ${selVal}`;
+    }
 
     if(snapshot.exists()){
         for (const [key, leave] of Object.entries(snapshot.val())) {
-            if(!leave.startDate || leave.startDate.substring(0, 7) !== selVal) continue;
-            total++; if(leave.startDate === currentDate) today++;
+            if (leaveViewMode === "daily") {
+                if (currentDate < leave.startDate || currentDate > leave.endDate) continue;
+            } else {
+                if(!leave.startDate || leave.startDate.substring(0, 7) !== selVal) continue;
+            }
+
+            total++; 
+            if(leave.startDate === currentDate) today++;
+            
             let typeDisplay = leave.type;
             if (leave.type === "ลาป่วย") { typeDisplay = p.optSick; sick++; }
             else if (leave.type === "ลากิจ") { typeDisplay = p.optPersonal; personal++; }
@@ -596,14 +652,17 @@ async function loadLeaves(){
             <button style="margin-bottom:12px; padding:10px 14px; background:#111; border:1px solid #ff2d2d; color:#ff2d2d; font-size:11px; border-radius:10px; cursor:pointer;" onclick="openLeaveDetailModal('${cleanReason}')">${p.btnDetail}</button><br>${acts}</td></tr>`;
         }
     }
-    document.getElementById("todayCount").innerText = today; document.getElementById("totalLeaves").innerText = total;
+    if (leaveViewMode === "monthly") {
+        document.getElementById("totalLeaves").innerText = total;
+    }
+    document.getElementById("todayCount").innerText = today; 
+    
     if(chart) chart.destroy();
     chart = new Chart(document.getElementById("leaveChart"),{ type:"doughnut", data:{ labels:[p.optSick, p.optPersonal, p.optVacation], datasets:[{ data:[sick, personal, vacation], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:"72%" } });
 }
 
 window.approveLeave = async function(id){ await update(ref(db,"leaves/" + id),{ status:"approved" }); alert(languages[currentLang].alertApproveSuccess); loadLeaves(); }
 
-// ปรับปรุงฟังก์ชันลบใบลา ยิงสลับไปใช้ระบบ Cyber Modal แจ้งเตือนในเว็บแทน confirm()
 window.deleteLeave = function(id){
     const p = languages[currentLang];
     openCyberConfirm(p.alertDeleteLeave, async () => {
@@ -613,33 +672,59 @@ window.deleteLeave = function(id){
     });
 }
 
+// 📌 OPTIMIZED: ฟังก์ชันดึงและคำนวณรายชื่อผู้ใช้งานทั้งหมด (แยกสิทธิ์ดักออก เพื่อให้ Member ทุกคนดึงสถิติไปอัปเดต Dashboard สำเร็จ)
 async function loadUsers(){
-    if(localStorage.getItem("role") !== "admin") return;
-    const snap = await get(ref(db,"users")), table = document.getElementById("userTable"); table.innerHTML = ""; let total = 0;
+    const snap = await get(ref(db,"users")), table = document.getElementById("userTable"); 
+    table.innerHTML = ""; 
+    let nonAdminCount = 0; // ตัวแปรนับสมาชิกทั่วไปที่ไม่รวมบัญชีชื่อ "admin"
+    
     if(snap.exists()){
         Object.entries(snap.val()).forEach(([key,user]) => {
-            total++; let isL = (user.role === "admin" || user.role === "leader");
-            table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td>
-            <select onchange="changeRole('${key}', this.value)"><option value="member" ${user.role === "member" ? "selected" : ""}>MEMBER</option><option value="leader" ${user.role === "leader" ? "selected" : ""}>LEADER</option><option value="admin" ${user.role === "admin" ? "selected" : ""}>ADMIN</option></select>
-            <button onclick="deleteUser('${key}')">DELETE</button></td></tr>`;
+            // เงื่อนไข: ถ้านามแฝงไม่ใช่บัญชีหลัก "admin" ให้บวกเพิ่มจำนวนนับสะสม
+            if(user.username !== "admin") {
+                nonAdminCount++;
+            }
+            
+            // แสดงรายชื่อตารางหลังบ้านลงตารางเฉพาะคนที่เป็นแอดมินเท่านั้น
+            if(localStorage.getItem("role") === "admin") {
+                let isL = (user.role === "admin" || user.role === "leader");
+                table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td>
+                <select onchange="changeRole('${key}', this.value)"><option value="member" ${user.role === "member" ? "selected" : ""}>MEMBER</option><option value="leader" ${user.role === "leader" ? "selected" : ""}>LEADER</option><option value="admin" ${user.role === "admin" ? "selected" : ""}>ADMIN</option></select>
+                <button onclick="deleteUser('${key}')">DELETE</button></td></tr>`;
+            }
         });
     }
-    document.getElementById("allUsers").innerText = total;
+    // อัปเดตการแสดงผลยอดรวมสากล สมาชิกทั่วไป (Member) ก็เห็นค่าอัปเดตไม่เป็น 0 แล้ว
+    document.getElementById("allUsers").innerText = nonAdminCount;
+    document.getElementById("totalUsersCountDisplay").innerText = currentLang === "th" ? `ผู้ใช้งานทั้งหมด ${nonAdminCount} คน` : `Total Users: ${nonAdminCount}`;
 }
 
 async function loadMembers(){
-    const p = languages[currentLang], snap = await get(ref(db,"users")), table = document.getElementById("memberTable"); table.innerHTML = "";
+    const p = languages[currentLang], snap = await get(ref(db,"users")), table = document.getElementById("memberTable"); 
+    table.innerHTML = "";
+    
+    let memberCount = 0; // สร้างตัวแปรนับ
+
     if(snap.exists()){
         Object.values(snap.val()).forEach((user)=>{
+            // เงื่อนไข: ถ้านามแฝงไม่ใช่ "admin" ให้บวกจำนวนเพิ่ม
+            if(user.username !== "admin") {
+                memberCount++;
+            }
+
             let isL = (user.role === "admin" || user.role === "leader");
             table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td><button style="padding:6px 12px; font-size:11px; background:#ff1e1e;" onclick="viewMemberDetail('${user.username}')">${p.viewBtnText}</button></td></tr>`;
         });
     }
+
+    // อัปเดตข้อความหัวข้อ (สมมติว่าคุณมี element ไว้แสดงชื่อหัวข้อ ถ้าไม่มีให้สร้าง tag h2 ID ไว้ครับ)
+    // ตรงนี้ผมแนะนำให้เพิ่ม ID ที่ h2 ใน HTML ของส่วน memberSection ครับ
+    const header = document.getElementById("boxMembers");
+    header.innerText = (currentLang === "th" ? "สมาชิกทั้งหมด      " : "ALL MEMBERS ") + memberCount + (currentLang === "th" ? " คน" : "");
 }
 
 window.changeRole = async function(user,role){ await update(ref(db,"users/" + user),{ role:role }); alert(languages[currentLang].alertRoleSuccess); loadUsers(); loadMembers(); updateProfileWidget(); }
 
-// ปรับปรุงฟังก์ชันลบผู้ใช้งาน ยิงสลับไปใช้ระบบ Cyber Modal แจ้งเตือนในเว็บแทน confirm()
 window.deleteUser = function(user){
     const p = languages[currentLang];
     if(user === "admin"){
