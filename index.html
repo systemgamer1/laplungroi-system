@@ -28,8 +28,6 @@
 /* ==========================================================================
    [FIXED SCALING DESIGN] CYBERPUNK STATIC PANEL FRAMES
    ========================================================================== */
-
-/* ปรับแต่งกล่องหลักกึ่งโปร่งแสง และล็อกตำแหน่งเพื่อรองรับระบบขอบมุมเรืองแสง */
 .box, .card, .cyber-modal-content {
     background: rgba(10, 10, 10, 0.88) !important;
     backdrop-filter: blur(6px);
@@ -58,27 +56,16 @@
    [MEDIA QUERY] ปรับแต่งตำแหน่งและสเกลของมุมฉากสำหรับหน้าจอมือถือโดยเฉพาะ
    -------------------------------------------------------------------------- */
 @media screen and (max-width: 768px) {
-    /* ปรับแต่งตำแหน่งขอบมุมเรืองแสงให้หดสัดส่วนแนบสนิทไปกับกล่องบนมือถือ ไม่ลอยทะลุ */
     .box::before, .card::before {
-        top: -1px;
-        left: -1px;
-        width: 10px;
-        height: 10px;
-        border-top-width: 2px;
-        border-left-width: 2px;
+        top: -1px; left: -1px; width: 10px; height: 10px;
+        border-top-width: 2px; border-left-width: 2px;
     }
     .box::after, .card::after {
-        bottom: -1px;
-        right: -1px;
-        width: 10px;
-        height: 10px;
-        border-bottom-width: 2px;
-        border-right-width: 2px;
+        bottom: -1px; right: -1px; width: 10px; height: 10px;
+        border-bottom-width: 2px; border-right-width: 2px;
     }
-    /* ควบคุมไม่ให้ตารางหรือกล่องยืดทะลุโครงสร้างบอร์ดหลักในมือถือ */
     .box {
-        padding: 15px !important;
-        margin-bottom: 15px !important;
+        padding: 15px !important; margin-bottom: 15px !important;
     }
     table {
         width: 100% !important;
@@ -95,6 +82,17 @@
         <div id="loadTitle" class="loader-title">ACCESSING SYS</div>
         <div class="loader-bar-bg"><div id="loaderFill" class="loader-bar-fill"></div></div>
         <div id="loaderStatus" class="loader-status">DECRYPTING DATA... 0%</div>
+    </div>
+</div>
+
+<div id="cyberConfirmModal" class="cyber-modal hidden">
+    <div class="cyber-modal-content" style="max-width: 400px; text-align: center; border-radius: 12px; padding: 25px;">
+        <h3 id="confirmModalTitle" style="color: #ff2d2d; font-size: 20px; margin-bottom: 15px; letter-spacing: 1px;">SYSTEM CONFIRMATION</h3>
+        <p id="confirmModalMsg" style="color: #fff; font-size: 15px; margin-bottom: 25px; line-height: 1.5;">ต้องการดำเนินการลบรายการนี้ใช่หรือไม่?</p>
+        <div class="modal-btn-group" style="display: flex; gap: 10px; justify-content: center;">
+            <button id="confirmCancelBtn" class="modal-btn-close" style="flex: 1; padding: 12px;" onclick="closeCyberConfirm(false)">CANCEL</button>
+            <button id="confirmSuccessBtn" class="modal-btn-save" style="flex: 1; padding: 12px; background: #ff2d2d; border-color: #ff2d2d;" onclick="closeCyberConfirm(true)">CONFIRM</button>
+        </div>
     </div>
 </div>
 
@@ -316,6 +314,9 @@ const db = getDatabase(app);
 let isRegister = false, chart;
 const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
+// ตัวแปรเก็บฟังก์ชันการทำงานเมื่อกดยืนยันป๊อปอัพตัวใหม่
+let confirmCallback = null;
+
 const languages = {
     th: {
         loginTitle: "LAPLUNGROI เข้าสู่ระบบ", usernamePlace: "ชื่อผู้ใช้งาน", passwordPlace: "รหัสผ่าน", confirmPasswordPlace: "ยืนยันรหัสผ่าน", loginBtn: "เข้าสู่ระบบ", registerBtn: "สมัครสมาชิก", switchCreate: "สร้างบัญชีใหม่", switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
@@ -340,6 +341,25 @@ const languages = {
 };
 
 let currentLang = localStorage.getItem("sysLang") || "th";
+
+// ฟังก์ชันเรียกเปิดหน้าต่างยืนยันการลบแบบสร้างเองเพื่อรองรับ iPhone 
+window.openCyberConfirm = function(msg, callback) {
+    document.getElementById("confirmModalMsg").innerText = msg;
+    document.getElementById("confirmModalTitle").innerText = currentLang === "th" ? "ยืนยันการดำเนินการ" : "SYSTEM CONFIRMATION";
+    document.getElementById("confirmCancelBtn").innerText = currentLang === "th" ? "ยกเลิก" : "CANCEL";
+    document.getElementById("confirmSuccessBtn").innerText = currentLang === "th" ? "ยืนยัน" : "CONFIRM";
+    
+    document.getElementById("cyberConfirmModal").classList.remove("hidden");
+    confirmCallback = callback;
+}
+
+window.closeCyberConfirm = function(isConfirmed) {
+    document.getElementById("cyberConfirmModal").classList.add("hidden");
+    if(isConfirmed && confirmCallback) {
+        confirmCallback();
+    }
+    confirmCallback = null;
+}
 
 async function getUserRole(username) {
     const snap = await get(ref(db, "users/" + username));
@@ -582,7 +602,16 @@ async function loadLeaves(){
 }
 
 window.approveLeave = async function(id){ await update(ref(db,"leaves/" + id),{ status:"approved" }); alert(languages[currentLang].alertApproveSuccess); loadLeaves(); }
-window.deleteLeave = async function(id){ if(confirm(languages[currentLang].alertDeleteLeave)){ await remove(ref(db,"leaves/" + id)); alert(languages[currentLang].alertDeleteLeaveSuccess); loadLeaves(); } }
+
+// ปรับปรุงฟังก์ชันลบใบลา ยิงสลับไปใช้ระบบ Cyber Modal แจ้งเตือนในเว็บแทน confirm()
+window.deleteLeave = function(id){
+    const p = languages[currentLang];
+    openCyberConfirm(p.alertDeleteLeave, async () => {
+        await remove(ref(db,"leaves/" + id));
+        alert(p.alertDeleteLeaveSuccess);
+        loadLeaves();
+    });
+}
 
 async function loadUsers(){
     if(localStorage.getItem("role") !== "admin") return;
@@ -609,9 +638,20 @@ async function loadMembers(){
 }
 
 window.changeRole = async function(user,role){ await update(ref(db,"users/" + user),{ role:role }); alert(languages[currentLang].alertRoleSuccess); loadUsers(); loadMembers(); updateProfileWidget(); }
-window.deleteUser = async function(user){
-    if(user === "admin"){ alert(languages[currentLang].alertNoDeleteAdmin); return; }
-    if(confirm(languages[currentLang].alertConfirmDeleteUser)){ await remove(ref(db,"users/" + user)); alert(languages[currentLang].alertDeleteUserSuccess); loadUsers(); loadMembers(); }
+
+// ปรับปรุงฟังก์ชันลบผู้ใช้งาน ยิงสลับไปใช้ระบบ Cyber Modal แจ้งเตือนในเว็บแทน confirm()
+window.deleteUser = function(user){
+    const p = languages[currentLang];
+    if(user === "admin"){
+        alert(p.alertNoDeleteAdmin);
+        return;
+    }
+    openCyberConfirm(p.alertConfirmDeleteUser, async () => {
+        await remove(ref(db,"users/" + user));
+        alert(p.alertDeleteUserSuccess);
+        loadUsers();
+        loadMembers();
+    });
 }
 
 window.editTargetMoney = async function() {
