@@ -121,6 +121,7 @@
 <li id="menuHistory" onclick="showSection('historySection')">LEAVE HISTORY</li>
 <li id="menuMoney" onclick="showSection('moneySection')">WEEKLY PAYMENT</li>
 <li id="menuMembers" onclick="showSection('memberSection')">MEMBERS</li>
+<li id="menuStore" onclick="showSection('storeSection')">STORE</li>
 <li id="userMenu" class="hidden" onclick="showSection('userSection')">USER MANAGEMENT</li>
 
 </ul>
@@ -346,6 +347,10 @@ class="box hidden">
 
 </div>
 
+<div id="storeSection" class="box center-msg-box hidden">
+    <h1 id="storeMsg">รอการอัพเดท..</h1>
+</div>
+
 <div id="userSection"
 class="box hidden">
 
@@ -431,6 +436,7 @@ const languages = {
         menuHistory: "ประวัติการลา",
         menuMoney: "การชำระเงิน",
         menuMembers: "รายชื่อสมาชิก",
+        menuStore: "ร้านค้า",
         menuUserMng: "จัดการผู้ใช้งาน",
         logout: "ออกจากระบบ",
         cardToday: "จำนวนคนลาวันนี้",
@@ -485,7 +491,8 @@ const languages = {
         saveChangeBtn: "บันทึกการเปลี่ยนแปลง",
         cancelBtn: "ยกเลิก",
         viewBtnText: "ดูข้อมูล",
-        closeBtnText: "ปิดหน้าต่าง"
+        closeBtnText: "ปิดหน้าต่าง",
+        storeMsg: "รอการอัพเดท.."
     },
     en: {
         loginTitle: "LAPLUNGROI LOGIN",
@@ -500,6 +507,7 @@ const languages = {
         menuHistory: "LEAVE HISTORY",
         menuMoney: "WEEKLY PAYMENT",
         menuMembers: "MEMBERS",
+        menuStore: "STORE",
         menuUserMng: "USER MANAGEMENT",
         logout: "LOGOUT",
         cardToday: "PEOPLE TODAY",
@@ -554,7 +562,8 @@ const languages = {
         saveChangeBtn: "SAVE CHANGES",
         cancelBtn: "CANCEL",
         viewBtnText: "VIEW",
-        closeBtnText: "CLOSE"
+        closeBtnText: "CLOSE",
+        storeMsg: "UNDER CONSTRUCTION.."
     }
 };
 
@@ -591,6 +600,7 @@ function applyLanguagePack() {
     document.getElementById("menuHistory").innerText = p.menuHistory;
     document.getElementById("menuMoney").innerText = p.menuMoney;
     document.getElementById("menuMembers").innerText = p.menuMembers;
+    document.getElementById("menuStore").innerText = p.menuStore;
     document.getElementById("userMenu").innerText = p.menuUserMng;
     document.getElementById("logoutBtn").innerText = p.logout;
     
@@ -623,6 +633,8 @@ function applyLanguagePack() {
     document.getElementById("thMemUser").innerText = p.usernamePlace;
     document.getElementById("thMemRole").innerText = "ROLE";
     document.getElementById("thMemDetails").innerText = p.thMemDetails;
+    
+    document.getElementById("storeMsg").innerText = p.storeMsg;
     
     document.getElementById("boxUserManage").innerText = p.boxUserManage;
     document.getElementById("thMngUser").innerText = p.thUser;
@@ -946,6 +958,7 @@ const sections = [
 "historySection",
 "moneySection",
 "memberSection",
+"storeSection",
 "userSection"
 
 ];
