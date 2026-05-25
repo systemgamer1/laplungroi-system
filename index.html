@@ -56,6 +56,18 @@
     </div>
 </div>
 
+<div id="leaveDetailModal" class="cyber-modal hidden">
+    <div class="cyber-modal-content" style="border-radius: 12px; max-width: 450px;">
+        <h3 id="popupLeaveTitle" style="font-size: 20px; border-bottom: 1px solid #ff2d2d; padding-bottom: 10px; margin-bottom: 15px;">เหตุผลการลา</h3>
+        <div id="popupLeaveReason" style="width: 100%; background: #000; padding: 20px; border-radius: 8px; border: 1px solid #1f1f1f; color: #fff; text-align: left; font-size: 14px; line-height: 1.6; word-break: break-all; min-height: 100px; margin-bottom: 20px;">
+            -
+        </div>
+        <div class="modal-btn-group">
+            <button id="popupLeaveCloseBtn" class="modal-btn-close" style="width: 100%; border-radius: 8px;" onclick="closeLeaveDetailModal()">ปิดหน้าต่าง</button>
+        </div>
+    </div>
+</div>
+
 <div id="loginPage">
 
     <div class="login-box">
@@ -492,7 +504,9 @@ const languages = {
         cancelBtn: "ยกเลิก",
         viewBtnText: "ดูข้อมูล",
         closeBtnText: "ปิดหน้าต่าง",
-        storeMsg: "รอการอัพเดท.."
+        storeMsg: "รอการอัพเดท..",
+        btnDetail: "รายละเอียด",
+        titleReason: "เหตุผลการลา"
     },
     en: {
         loginTitle: "LAPLUNGROI LOGIN",
@@ -563,7 +577,9 @@ const languages = {
         cancelBtn: "CANCEL",
         viewBtnText: "VIEW",
         closeBtnText: "CLOSE",
-        storeMsg: "UNDER CONSTRUCTION.."
+        storeMsg: "UNDER CONSTRUCTION..",
+        btnDetail: "Detail",
+        titleReason: "Leave Reason"
     }
 };
 
@@ -651,6 +667,10 @@ function applyLanguagePack() {
     document.getElementById("modalCancelBtn").innerText = p.cancelBtn;
     document.getElementById("modalSaveBtn").innerText = p.saveChangeBtn;
     document.getElementById("modalCloseBtn").innerText = p.closeBtnText;
+
+    // แปลภาษาของหน้าต่างเหตุผลใบลาตัวใหม่
+    document.getElementById("popupLeaveTitle").innerText = p.titleReason;
+    document.getElementById("popupLeaveCloseBtn").innerText = p.closeBtnText;
 }
 
 async function createAdmin(){
@@ -936,6 +956,17 @@ window.closeMemberViewModal = function() {
     document.getElementById("memberViewModal").classList.add("hidden");
 }
 
+// เปิด-ปิด หน้าต่างแสดงเหตุผลรายละเอียดใบลาพักสี่เหลี่ยมแยกเฉพาะ
+window.openLeaveDetailModal = function(reason) {
+    const textBlock = document.getElementById("popupLeaveReason");
+    textBlock.innerText = reason ? reason : (currentLang === "th" ? "ไม่ได้ระบุเหตุผลการลา" : "No reason provided");
+    document.getElementById("leaveDetailModal").classList.remove("hidden");
+}
+
+window.closeLeaveDetailModal = function() {
+    document.getElementById("leaveDetailModal").classList.add("hidden");
+}
+
 function initDashboard(){
 
 document.getElementById("loginPage")
@@ -1158,7 +1189,7 @@ else if (leave.type === "พักร้อน") { leaveTypeDisplay = p.optVacat
 
 let actionButtons = "";
 
-// [UPDATED LOGIC]: ปลดล็อกสิทธิ์ปุ่มกดหน้าลาให้ Admin และ Leader (รหัสเบสคือ admin และ leader)
+// ปลดล็อกสิทธิ์ปุ่มกดหน้าลาให้ Admin และ Leader (รหัสเบสคือ admin และ leader)
 if(
 role === "admin" ||
 role === "leader" 
@@ -1198,6 +1229,9 @@ const snapUser = await get(ref(db, "users/" + leave.username));
 const applicantRole = snapUser.exists() ? snapUser.val().role : "member";
 const isApplicantLeader = (applicantRole === "admin" || applicantRole === "leader");
 
+// ทำความสะอาดข้อความสตริงก่อนส่งเข้าไปใน onClick ฟังก์ชัน ป้องกันโควทพัง
+const cleanReason = leave.reason ? leave.reason.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, ' ') : "";
+
 table.innerHTML += `
 
 <tr>
@@ -1233,6 +1267,12 @@ leave.status === "approved"
 </span>
 
 <br><br>
+
+<button style="margin-bottom: 12px; padding: 10px 14px; background: #111; border: 1px solid #ff2d2d; color:#ff2d2d; font-size:11px; border-radius:10px; cursor:pointer;" 
+        onclick="openLeaveDetailModal('${cleanReason}')">
+    ${p.btnDetail}
+</button>
+<br>
 
 ${actionButtons}
 
@@ -1293,15 +1333,10 @@ borderWidth:0
 options:{
 
 responsive:true,
-
 maintainAspectRatio:false,
-
 cutout:"72%"
-
 }
-
 });
-
 }
 
 window.approveLeave =
@@ -1573,7 +1608,6 @@ const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.
 
 const role = localStorage.getItem("role");
 
-// [UPDATED CHECKING]: ปุ่มสลับค่าเป้าหมายเงินประจำเดือนเปิดให้เฉพาะ Admin และ Leader (สิทธิ์คำว่า leader ในเบส)
 if(role === "admin" || role === "leader"){ 
     const editBtn = document.getElementById("editMoneyBtn");
     if(editBtn) editBtn.classList.remove("hidden");
@@ -1627,7 +1661,6 @@ if (rawStatus === "ส่งแล้ว (ล่าช้า)" && fine) {
 
 let manageButton = "";
 
-// [UPDATED CHECKING]: เปิดชุดเครื่องมือ Dropdown อัปเดตเงินให้เฉพาะ Admin และ Leader สิทธิ์ใหม่ตรงๆ ตัว
 if(
 role === "admin" ||
 role === "leader"
@@ -1705,7 +1738,6 @@ ${manageButton}
 window.confirmMoney =
 async function(user){
 
-    // แก้ไขจุดนี้: ถ้า Selector เป็นค่าว่าง ให้ดึงเดือนปัจจุบันของระบบมาใช้งานทันที ป้องกันบัคกดไม่ไป
     const selectorElement = document.getElementById("moneyMonthSelector");
     let selectedMonth = selectorElement.value;
     
@@ -1721,7 +1753,6 @@ async function(user){
         fineValue = document.getElementById("fine-input-" + user).value.trim();
     }
 
-    // สั่งเซ็ตลง Firebase มั่นใจว่า Path เดือนถูกต้องแน่นอน
     await set(ref(db, "money/" + selectedMonth + "/" + user), {
         status: value,
         fine: fineValue
