@@ -22,6 +22,40 @@
     </div>
 </div>
 
+<div id="myProfileModal" class="cyber-modal hidden">
+    <div class="cyber-modal-content">
+        <h3>EDIT PROFILE</h3>
+        <input type="text" id="editAvatarUrl" placeholder="IMAGE URL (ลิงก์รูปภาพ)">
+        <input type="text" id="editFacebook" placeholder="FACEBOOK LINK">
+        <input type="text" id="editDiscord" placeholder="DISCORD LINK">
+        <div class="modal-btn-group">
+            <button class="modal-btn-close" onclick="closeMyProfileModal()">CANCEL</button>
+            <button class="modal-btn-save" onclick="saveMyProfile()">SAVE CHANGES</button>
+        </div>
+    </div>
+</div>
+
+<div id="memberViewModal" class="cyber-modal hidden">
+    <div class="cyber-modal-content">
+        <h3 id="viewMemberName">MEMBER PROFILE</h3>
+        <img id="viewMemberAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="view-profile-avatar" alt="Avatar">
+        <div style="color: #ff2d2d; font-size: 12px; margin-bottom: 20px; letter-spacing: 1px;" id="viewMemberRole">USER</div>
+        
+        <div class="social-link-item">
+            <span>FACEBOOK</span>
+            <a id="viewMemberFB" href="#" target="_blank">NOT SET</a>
+        </div>
+        <div class="social-link-item">
+            <span>DISCORD</span>
+            <a id="viewMemberDC" href="#" target="_blank">NOT SET</a>
+        </div>
+        
+        <div class="modal-btn-group" style="margin-top: 20px;">
+            <button class="modal-btn-close" style="width:100%;" onclick="closeMemberViewModal()">CLOSE</button>
+        </div>
+    </div>
+</div>
+
 <div id="loginPage">
 
     <div class="login-box">
@@ -105,6 +139,16 @@ LOGOUT
 </div>
 
 <div class="main">
+
+<div class="top-header">
+    <div class="user-profile-widget" onclick="openMyProfileModal()">
+        <div class="profile-info-block">
+            <div id="widgetUserName" class="profile-info-name">GUEST</div>
+            <div id="widgetUserRole" class="profile-info-role">USER</div>
+        </div>
+        <img id="widgetUserAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small" alt="Profile">
+    </div>
+</div>
 
 <div id="dashboardSection">
 
@@ -295,6 +339,7 @@ class="box hidden">
 
 <th>USERNAME</th>
 <th>ROLE</th>
+<th>DETAILS</th>
 
 </tr>
 
@@ -375,6 +420,8 @@ const db = getDatabase(app);
 let isRegister = false;
 let chart;
 
+const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
 async function createAdmin(){
 
 const snapshot =
@@ -386,7 +433,10 @@ await set(ref(db,"users/admin"),{
 
 username:"admin",
 password:"admin",
-role:"admin"
+role:"admin",
+avatar: defaultAvatar,
+facebook: "",
+discord: ""
 
 });
 
@@ -480,7 +530,10 @@ ref(db,"users/" + username),{
 
 username:username,
 password:password,
-role:"user"
+role:"user",
+avatar: defaultAvatar,
+facebook: "",
+discord: ""
 
 });
 
@@ -523,6 +576,91 @@ triggerLoginAnimation(() => {
 
 }
 
+async function updateProfileWidget() {
+    const loginUser = localStorage.getItem("loginUser");
+    if(!loginUser) return;
+    
+    const snap = await get(ref(db, "users/" + loginUser));
+    if(snap.exists()){
+        const data = snap.val();
+        document.getElementById("widgetUserName").innerText = data.username;
+        document.getElementById("widgetUserRole").innerText = data.role.toUpperCase();
+        document.getElementById("widgetUserAvatar").src = data.avatar || defaultAvatar;
+    }
+}
+
+window.openMyProfileModal = async function() {
+    const loginUser = localStorage.getItem("loginUser");
+    const snap = await get(ref(db, "users/" + loginUser));
+    if(snap.exists()){
+        const data = snap.val();
+        document.getElementById("editAvatarUrl").value = data.avatar || "";
+        document.getElementById("editFacebook").value = data.facebook || "";
+        document.getElementById("editDiscord").value = data.discord || "";
+        document.getElementById("myProfileModal").classList.remove("hidden");
+    }
+}
+
+window.closeMyProfileModal = function() {
+    document.getElementById("myProfileModal").classList.add("hidden");
+}
+
+window.saveMyProfile = async function() {
+    const loginUser = localStorage.getItem("loginUser");
+    const avatar = document.getElementById("editAvatarUrl").value.trim() || defaultAvatar;
+    const facebook = document.getElementById("editFacebook").value.trim();
+    const discord = document.getElementById("editDiscord").value.trim();
+    
+    await update(ref(db, "users/" + loginUser), {
+        avatar: avatar,
+        facebook: facebook,
+        discord: discord
+    });
+    
+    alert("บันทึกข้อมูลโปรไฟล์สำเร็จ");
+    closeMyProfileModal();
+    updateProfileWidget();
+    loadMembers();
+}
+
+window.viewMemberDetail = async function(username) {
+    const snap = await get(ref(db, "users/" + username));
+    if(snap.exists()){
+        const data = snap.val();
+        document.getElementById("viewMemberName").innerText = data.username.toUpperCase() + " PROFILE";
+        document.getElementById("viewMemberAvatar").src = data.avatar || defaultAvatar;
+        document.getElementById("viewMemberRole").innerText = data.role.toUpperCase();
+        
+        const fbLink = document.getElementById("viewMemberFB");
+        if(data.facebook) {
+            fbLink.innerText = "LINK";
+            fbLink.href = data.facebook.startsWith("http") ? data.facebook : "https://" + data.facebook;
+            fbLink.style.pointerEvents = "auto";
+        } else {
+            fbLink.innerText = "NOT SET";
+            fbLink.removeAttribute("href");
+            fbLink.style.pointerEvents = "none";
+        }
+
+        const dcLink = document.getElementById("viewMemberDC");
+        if(data.discord) {
+            dcLink.innerText = "LINK";
+            dcLink.href = data.discord.startsWith("http") ? data.discord : "https://" + data.discord;
+            dcLink.style.pointerEvents = "auto";
+        } else {
+            dcLink.innerText = "NOT SET";
+            dcLink.removeAttribute("href");
+            dcLink.style.pointerEvents = "none";
+        }
+        
+        document.getElementById("memberViewModal").classList.remove("hidden");
+    }
+}
+
+window.closeMemberViewModal = function() {
+    document.getElementById("memberViewModal").classList.add("hidden");
+}
+
 function initDashboard(){
 
 document.getElementById("loginPage")
@@ -549,6 +687,7 @@ if(role === "admin" || role === "member"){
 
 showSection("dashboardSection");
 
+updateProfileWidget();
 loadLeaves();
 loadUsers();
 loadMoney();
@@ -1067,6 +1206,10 @@ table.innerHTML += `
 
 <td>${user.role}</td>
 
+<td>
+    <button style="padding: 6px 12px; font-size: 11px; background: #ff1e1e;" onclick="viewMemberDetail('${user.username}')">VIEW</button>
+</td>
+
 </tr>
 
 `;
@@ -1091,6 +1234,7 @@ alert("เปลี่ยนสิทธิ์สำเร็จ");
 
 loadUsers();
 loadMembers();
+updateProfileWidget();
 
 }
 
