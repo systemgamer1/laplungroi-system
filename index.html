@@ -3,21 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>LAPLUNGROI SYS</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="style.css">
+<style>
+/* ค้างกรอบสีแดงเมื่อเมนูถูกเลือก */
+.sidebar ul li.active {
+    background: #1a0000 !important;
+    border: 1px solid #ff2d2d !important;
+    color: white !important;
+    box-shadow: 0 0 10px rgba(255, 45, 45, 0.2);
+}
+</style>
 </head>
-
 <body>
 
 <div id="loadingPage" class="hidden">
     <div class="loader-content">
         <div id="loadTitle" class="loader-title">ACCESSING SYS</div>
-        <div class="loader-bar-bg">
-            <div id="loaderFill" class="loader-bar-fill"></div>
-        </div>
+        <div class="loader-bar-bg"><div id="loaderFill" class="loader-bar-fill"></div></div>
         <div id="loaderStatus" class="loader-status">DECRYPTING DATA... 0%</div>
     </div>
 </div>
@@ -29,8 +33,8 @@
         <input type="text" id="editFacebook" placeholder="FACEBOOK LINK">
         <input type="text" id="editDiscord" placeholder="DISCORD LINK">
         <div class="modal-btn-group">
-            <button id="modalCancelBtn" class="modal-btn-close" onclick="closeMyProfileModal()">CANCEL</button>
-            <button id="modalSaveBtn" class="modal-btn-save" onclick="saveMyProfile()">SAVE CHANGES</button>
+            <button class="modal-btn-close" onclick="closeMyProfileModal()">CANCEL</button>
+            <button class="modal-btn-save" onclick="saveMyProfile()">SAVE CHANGES</button>
         </div>
     </div>
 </div>
@@ -40,583 +44,203 @@
         <h3 id="viewMemberName">MEMBER PROFILE</h3>
         <img id="viewMemberAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="view-profile-avatar" alt="Avatar">
         <div style="color: #ff2d2d; font-size: 12px; margin-bottom: 20px; letter-spacing: 1px;" id="viewMemberRole">MEMBER</div>
-        
-        <div class="social-link-item">
-            <span>FACEBOOK</span>
-            <a id="viewMemberFB" href="#" target="_blank">NOT SET</a>
-        </div>
-        <div class="social-link-item">
-            <span>DISCORD</span>
-            <a id="viewMemberDC" href="#" target="_blank">NOT SET</a>
-        </div>
-        
-        <div class="modal-btn-group" style="margin-top: 20px;">
-            <button id="modalCloseBtn" class="modal-btn-close" style="width:100%;" onclick="closeMemberViewModal()">CLOSE</button>
-        </div>
+        <div class="social-link-item"><span>FACEBOOK</span><a id="viewMemberFB" href="#" target="_blank">NOT SET</a></div>
+        <div class="social-link-item"><span>DISCORD</span><a id="viewMemberDC" href="#" target="_blank">NOT SET</a></div>
+        <div class="modal-btn-group" style="margin-top: 20px;"><button class="modal-btn-close" style="width:100%;" onclick="closeMemberViewModal()">CLOSE</button></div>
     </div>
 </div>
 
 <div id="leaveDetailModal" class="cyber-modal hidden">
-    <div class="cyber-modal-content" style="border-radius: 12px; max-width: 450px;">
-        <h3 id="popupLeaveTitle" style="font-size: 20px; border-bottom: 1px solid #ff2d2d; padding-bottom: 10px; margin-bottom: 15px;">เหตุผลการลา</h3>
-        <div id="popupLeaveReason" style="width: 100%; background: #000; padding: 20px; border-radius: 8px; border: 1px solid #1f1f1f; color: #fff; text-align: left; font-size: 14px; line-height: 1.6; word-break: break-all; min-height: 100px; margin-bottom: 20px;">
-            -
-        </div>
-        <div class="modal-btn-group">
-            <button id="popupLeaveCloseBtn" class="modal-btn-close" style="width: 100%; border-radius: 8px;" onclick="closeLeaveDetailModal()">ปิดหน้าต่าง</button>
-        </div>
+    <div class="cyber-modal-content" style="border-radius:12px; max-width:450px;">
+        <h3 id="popupLeaveTitle" style="font-size:20px; border-bottom:1px solid #ff2d2d; padding-bottom:10px; margin-bottom:15px;">เหตุผลการลา</h3>
+        <div id="popupLeaveReason" style="width:100%; background:#000; padding:20px; border-radius:8px; border:1px solid #1f1f1f; color:#fff; text-align:left; font-size:14px; line-height:1.6; word-break:break-all; min-height:100px; margin-bottom:20px;">-</div>
+        <div class="modal-btn-group"><button id="popupLeaveCloseBtn" class="modal-btn-close" style="width:100%; border-radius:8px;" onclick="closeLeaveDetailModal()">ปิดหน้าต่าง</button></div>
     </div>
 </div>
 
 <div id="loginPage">
-
     <div class="login-box">
-
         <h1 id="loginTitle">LAPLUNGROI LOGIN</h1>
-
-        <input type="text"
-        id="username"
-        placeholder="USERNAME">
-
-        <input type="password"
-        id="password"
-        placeholder="PASSWORD">
-
-        <input type="password"
-        id="confirmPassword"
-        placeholder="CONFIRM PASSWORD"
-        style="display:none;">
-
-        <button id="authBtn"
-        onclick="handleAuth()">
-
-            LOGIN
-
-        </button>
-
-        <div id="switchAuthMode" class="switch"
-        onclick="toggleMode()">
-
-            CREATE ACCOUNT
-
-        </div>
-
+        <input type="text" id="username" placeholder="USERNAME">
+        <input type="password" id="password" placeholder="PASSWORD">
+        <input type="password" id="confirmPassword" placeholder="CONFIRM PASSWORD" style="display:none;">
+        <button id="authBtn" onclick="handleAuth()">LOGIN</button>
+        <div id="switchAuthMode" class="switch" onclick="toggleMode()">CREATE ACCOUNT</div>
     </div>
-
 </div>
 
 <div id="dashboard">
-
-<div class="top-header mobile-only">
-    <div class="lang-switcher">
-        <button class="lang-btn langBtnTH" onclick="toggleLanguage('th')">TH</button>
-        <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
-    </div>
-    <div class="user-profile-widget" onclick="openMyProfileModal()">
-        <div class="profile-info-block">
-            <div class="profile-info-name widgetUserName">GUEST</div>
-            <div class="profile-info-role widgetUserRole">MEMBER</div>
+    <div class="top-header mobile-only">
+        <div class="lang-switcher">
+            <button class="lang-btn langBtnTH" onclick="toggleLanguage('th')">TH</button>
+            <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
         </div>
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
-    </div>
-</div>
-
-<div class="container">
-
-<div class="sidebar">
-
-<h2>LAPLUNGROI SYS</h2>
-
-<ul>
-
-<li id="menuDash" onclick="showSection('dashboardSection')">DASHBOARD</li>
-<li id="menuHistory" onclick="showSection('historySection')">LEAVE HISTORY</li>
-<li id="menuMoney" onclick="showSection('moneySection')">WEEKLY PAYMENT</li>
-<li id="menuMembers" onclick="showSection('memberSection')">MEMBERS</li>
-<li id="menuStore" onclick="showSection('storeSection')">STORE</li>
-<li id="userMenu" class="hidden" onclick="showSection('userSection')">USER MANAGEMENT</li>
-
-</ul>
-
-<button id="logoutBtn" class="logout-btn" onclick="logout()">LOGOUT</button>
-
-</div>
-
-<div class="main">
-
-<div class="top-header desktop-only">
-    <div class="lang-switcher">
-        <button class="lang-btn langBtnTH" onclick="toggleLanguage('th')">TH</button>
-        <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
-    </div>
-    <div class="user-profile-widget" onclick="openMyProfileModal()">
-        <div class="profile-info-block">
-            <div class="profile-info-name widgetUserName">GUEST</div>
-            <div class="profile-info-role widgetUserRole">MEMBER</div>
+        <div class="user-profile-widget" onclick="openMyProfileModal()">
+            <div class="profile-info-block"><div class="profile-info-name widgetUserName">GUEST</div><div class="profile-info-role widgetUserRole">MEMBER</div></div>
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
         </div>
-        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
     </div>
-</div>
 
-<div id="dashboardSection">
+    <div class="container">
+        <div class="sidebar">
+            <h2>LAPLUNGROI SYS</h2>
+            <ul>
+                <li id="menuDash" onclick="showSection('dashboardSection')">DASHBOARD</li>
+                <li id="menuHistory" onclick="showSection('historySection')">LEAVE HISTORY</li>
+                <li id="menuMoney" onclick="showSection('moneySection')">WEEKLY PAYMENT</li>
+                <li id="menuMembers" onclick="showSection('memberSection')">MEMBERS</li>
+                <li id="menuStore" onclick="showSection('storeSection')">STORE</li>
+                <li id="userMenu" class="hidden" onclick="showSection('userSection')">USER MANAGEMENT</li>
+            </ul>
+            <button id="logoutBtn" class="logout-btn" onclick="logout()">LOGOUT</button>
+        </div>
 
-<div class="cards">
+        <div class="main">
+            <div class="top-header desktop-only">
+                <div class="lang-switcher">
+                    <button class="lang-btn langBtnTH" onclick="toggleLanguage('th')">TH</button>
+                    <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
+                </div>
+                <div class="user-profile-widget" onclick="openMyProfileModal()">
+                    <div class="profile-info-block"><div class="profile-info-name widgetUserName">GUEST</div><div class="profile-info-role widgetUserRole">MEMBER</div></div>
+                    <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
+                </div>
+            </div>
 
-<div class="card">
-<h3 id="cardToday">PEOPLE TODAY</h3>
-<p id="todayCount">0</p>
-</div>
+            <div id="dashboardSection">
+                <div class="cards">
+                    <div class="card"><h3 id="cardToday">PEOPLE TODAY</h3><p id="todayCount">0</p></div>
+                    <div class="card"><h3 id="cardTotalUsers">TOTAL USERS</h3><p id="allUsers">0</p></div>
+                    <div class="card"><h3 id="cardTotalLeaves">TOTAL LEAVES</h3><p id="totalLeaves">0</p></div>
+                </div>
+                <div class="grid">
+                    <div class="box"><h2 id="boxAnalytics">LEAVE ANALYTICS</h2><div class="chart-container"><canvas id="leaveChart"></canvas></div></div>
+                    <div class="box">
+                        <h2 id="boxCreateLeave">CREATE LEAVE</h2>
+                        <form id="leaveForm">
+                            <select id="type"><option id="optSick">ลาป่วย</option><option id="optPersonal">ลากิจ</option><option id="optVacation">พักร้อน</option></select>
+                            <textarea id="reason" placeholder="REASON"></textarea>
+                            <input type="date" id="startDate" onclick="this.showPicker()">
+                            <input type="date" id="endDate" onclick="this.showPicker()">
+                            <button id="leaveSubmitBtn" type="submit">SUBMIT REQUEST</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-<div class="card">
-<h3 id="cardTotalUsers">TOTAL USERS</h3>
-<p id="allUsers">0</p>
-</div>
+            <div id="historySection" class="box hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                    <h2 id="boxHistory">LEAVE HISTORY</h2>
+                    <select id="weekSelector" onchange="loadLeaves()"></select>
+                </div>
+                <div id="weekInfo" style="margin-bottom:20px; color:#ff2d2d; font-size:14px;"></div>
+                <table>
+                    <thead><tr><th id="thUser">USER</th><th id="thType">TYPE</th><th id="thDuration">DURATION</th><th id="thDays">DAYS</th><th id="thStatus">STATUS</th></tr></thead>
+                    <tbody id="leaveTable"></tbody>
+                </table>
+            </div>
 
-<div class="card">
-<h3 id="cardTotalLeaves">TOTAL LEAVES</h3>
-<p id="totalLeaves">0</p>
-</div>
+            <div id="moneySection" class="box hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                    <div>
+                        <h2 id="boxMoney" style="display:inline-block; margin-bottom:5px;">WEEKLY PAYMENT</h2>
+                        <div style="color:#aaa; font-size:14px; margin-top:5px;">
+                            <span id="lblPaymentText">เดือนนี้ชำระเงิน</span>: <span id="targetMoneyText" style="color:#ff2d2d; font-weight:bold;">0</span> B
+                            <button id="editMoneyBtn" class="edit-money-btn hidden" onclick="editTargetMoney()">แก้ไข</button>
+                        </div>
+                    </div>
+                    <select id="moneyMonthSelector" onchange="loadMoney()"></select>
+                </div>
+                <table>
+                    <thead><tr><th id="thMoneyUser">USER</th><th id="thMoneyStatus">STATUS</th><th id="thMoneyManage">MANAGE</th></tr></thead>
+                    <tbody id="moneyTable"></tbody>
+                </table>
+            </div>
 
-</div>
+            <div id="memberSection" class="box hidden">
+                <h2 id="boxMembers">ALL MEMBERS</h2>
+                <table>
+                    <thead><tr><th id="thMemUser">USERNAME</th><th id="thMemRole">ROLE</th><th id="thMemDetails">DETAILS</th></tr></thead>
+                    <tbody id="memberTable"></tbody>
+                </table>
+            </div>
 
-<div class="grid">
+            <div id="storeSection" class="box center-msg-box hidden"><h1 id="storeMsg">รอการอัพเดท..</h1></div>
 
-<div class="box">
-
-<h2 id="boxAnalytics">LEAVE ANALYTICS</h2>
-
-<div class="chart-container">
-
-<canvas id="leaveChart"></canvas>
-
-</div>
-
-</div>
-
-<div class="box">
-
-<h2 id="boxCreateLeave">CREATE LEAVE</h2>
-
-<form id="leaveForm">
-
-<select id="type">
-
-<option id="optSick">ลาป่วย</option>
-<option id="optPersonal">ลากิจ</option>
-<option id="optVacation">พักร้อน</option>
-
-</select>
-
-<textarea
-id="reason"
-placeholder="REASON"></textarea>
-
-<input
-type="date"
-id="startDate"
-onclick="this.showPicker()">
-
-<input
-type="date"
-id="endDate"
-onclick="this.showPicker()">
-
-<button id="leaveSubmitBtn" type="submit">
-SUBMIT REQUEST
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="historySection"
-class="box hidden">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-flex-wrap:wrap;
-gap:15px;
-">
-
-<h2 id="boxHistory">
-LEAVE HISTORY
-</h2>
-
-<select
-id="weekSelector"
-onchange="loadLeaves()">
-
-</select>
-
-</div>
-
-<div id="weekInfo"
-style="
-margin-bottom:20px;
-color:#ff2d2d;
-font-size:14px;
-">
-
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th id="thUser">USER</th>
-<th id="thType">TYPE</th>
-<th id="thDuration">DURATION</th>
-<th id="thDays">DAYS</th>
-<th id="thStatus">STATUS</th>
-
-</tr>
-
-</thead>
-
-<tbody id="leaveTable"></tbody>
-
-</table>
-
-</div>
-
-<div id="moneySection"
-class="box hidden">
-
-<div style="
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-flex-wrap:wrap;
-gap:15px;
-">
-<div>
-    <h2 id="boxMoney" style="display:inline-block; margin-bottom: 5px;">WEEKLY PAYMENT</h2>
-    <div id="totalTargetMoneyDisplay" style="color:#aaa; font-size:14px; margin-top:5px;">
-        <span id="lblPaymentText">เดือนนี้ชำระเงิน</span>: <span id="targetMoneyText" style="color:#ff2d2d; font-weight:bold;">0</span> B
-        <button id="editMoneyBtn" class="edit-money-btn hidden" onclick="editTargetMoney()">แก้ไข</button>
+            <div id="userSection" class="box hidden">
+                <h2 id="boxUserManage">USER MANAGEMENT</h2>
+                <table>
+                    <thead><tr><th id="thMngUser">USER</th><th id="thMngRole">ROLE</th><th id="thMngAction">MANAGE</th></tr></thead>
+                    <tbody id="userTable"></tbody>
+                </table>
+            </div>
+            <div class="credits-footer">developer by mhoo onetrap</div>
+        </div>
     </div>
-</div>
-
-<select
-id="moneyMonthSelector"
-onchange="loadMoney()">
-
-</select>
-</div>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th id="thMoneyUser">USER</th>
-<th id="thMoneyStatus">STATUS</th>
-<th id="thMoneyManage">MANAGE</th>
-
-</tr>
-
-</thead>
-
-<tbody id="moneyTable"></tbody>
-
-</table>
-
-</div>
-
-<div id="memberSection"
-class="box hidden">
-
-<h2 id="boxMembers">ALL MEMBERS</h2>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th id="thMemUser">USERNAME</th>
-<th id="thMemRole">ROLE</th>
-<th id="thMemDetails">DETAILS</th>
-
-</tr>
-
-</thead>
-
-<tbody id="memberTable"></tbody>
-
-</table>
-
-</div>
-
-<div id="storeSection" class="box center-msg-box hidden">
-    <h1 id="storeMsg">รอการอัพเดท..</h1>
-</div>
-
-<div id="userSection"
-class="box hidden">
-
-<h2 id="boxUserManage">USER MANAGEMENT</h2>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th id="thMngUser">USER</th>
-<th id="thMngRole">ROLE</th>
-<th id="thMngAction">MANAGE</th>
-
-</tr>
-
-</thead>
-
-<tbody id="userTable"></tbody>
-
-</table>
-
-</div>
-
-<div class="credits-footer">
-    developer by mhoo onetrap
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 <script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getDatabase,
-ref,
-set,
-get,
-push,
-remove,
-update
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, get, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyCZ4AHCqS8I-DDnzw1uCxio9Cr3GWO_8gI",
-authDomain: "sheetgame-f52f0.firebaseapp.com",
-databaseURL: "https://sheetgame-f52f0-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId: "sheetgame-f52f0",
-storageBucket: "sheetgame-f52f0.firebasestorage.app",
-messagingSenderId: "789188025871",
-appId: "1:789188025871:web:8346752832be50ed7acd7a"
-
+    apiKey: "AIzaSyCZ4AHCqS8I-DDnzw1uCxio9Cr3GWO_8gI",
+    authDomain: "sheetgame-f52f0.firebaseapp.com",
+    databaseURL: "https://sheetgame-f52f0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "sheetgame-f52f0",
+    storageBucket: "sheetgame-f52f0.firebasestorage.app",
+    messagingSenderId: "789188025871",
+    appId: "1:789188025871:web:8346752832be50ed7acd7a"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-let isRegister = false;
-let chart;
-
+let isRegister = false, chart;
 const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 const languages = {
     th: {
-        loginTitle: "LAPLUNGROI เข้าสู่ระบบ",
-        usernamePlace: "ชื่อผู้ใช้งาน",
-        passwordPlace: "รหัสผ่าน",
-        confirmPasswordPlace: "ยืนยันรหัสผ่าน",
-        loginBtn: "เข้าสู่ระบบ",
-        registerBtn: "สมัครสมาชิก",
-        switchCreate: "สร้างบัญชีใหม่",
-        switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
-        menuDash: "แดชบอร์ด",
-        menuHistory: "ประวัติการลา",
-        menuMoney: "การชำระเงิน",
-        menuMembers: "รายชื่อสมาชิก",
-        menuStore: "ร้านค้า",
-        menuUserMng: "จัดการผู้ใช้งาน",
-        logout: "ออกจากระบบ",
-        cardToday: "จำนวนคนลาวันนี้",
-        cardTotalUsers: "ผู้ใช้งานทั้งหมด",
-        cardTotalLeaves: "ใบลาทั้งหมดในเดือน",
-        boxAnalytics: "สถิติการลา",
-        boxCreateLeave: "สร้างใบลา",
-        optSick: "ลาป่วย",
-        optPersonal: "ลากิจ",
-        optVacation: "พักร้อน",
-        reasonPlace: "เหตุผลการลา",
-        leaveSubmit: "ส่งคำขอใบลา",
-        boxHistory: "ประวัติการลา",
-        thUser: "ผู้ใช้งาน", thType: "ประเภท", thDuration: "ระยะเวลา", thDays: "จำนวนวัน", thStatus: "สถานะ",
-        boxMoney: "การชำระเงินรายเดือน",
-        lblPaymentText: "เดือนนี้ชำระเงิน",
-        editBtn: "แก้ไข",
-        thMoneyStatus: "สถานะ", thMoneyManage: "จัดการ",
-        boxMembers: "สมาชิกทั้งหมด",
-        thMemDetails: "รายละเอียด",
-        boxUserManage: "จัดการสิทธิ์ผู้ใช้งาน",
-        thMngAction: "การจัดการ",
-        statusApproved: "อนุมัติแล้ว",
-        statusPending: "รออนุมัติ",
-        alertFill: "กรอกข้อมูลให้ครบ",
-        alertMatch: "Password ไม่ตรงกัน",
-        alertDup: "Username ซ้ำ",
-        alertRegisSuccess: "สมัครสมาชิกสำเร็จ",
-        alertNoUser: "ไม่พบ Username",
-        alertWrongPass: "Password ไม่ถูกต้อง",
-        alertDateWrong: "วันที่ไม่ถูกต้อง",
-        alertLeaveSuccess: "ส่งคำลาแล้ว",
-        alertApproveSuccess: "อนุมัติสำเร็จ",
-        alertDeleteLeave: "ยืนยันการลบรายการใบลาชุดนี้ ?",
-        alertDeleteLeaveSuccess: "ลบใบลาสำเร็จ",
-        alertRoleSuccess: "เปลี่ยนสิทธิ์สำเร็จ",
-        alertNoDeleteAdmin: "ลบ admin ไม่ได้",
-        alertConfirmDeleteUser: "ยืนยันการลบผู้ใช้งาน ?",
-        alertDeleteUserSuccess: "ลบสำเร็จ",
-        alertUpdateMoney: "อัปเดตสถานะสำเร็จ",
-        promptMoneyConfig: "กรอกจำนวนเงินที่ต้องชำระประจำเดือนนี้ (เช่น 500,000):",
-        alertMoneyConfigSuccess: "บันทึกจำนวนเงินชำระสำเร็จ",
-        notSet: "ยังไม่ตั้งค่า",
-        statusNotSent: "ยังไม่ส่ง",
-        statusSent: "ส่งแล้ว",
-        statusSentLate: "ส่งแล้ว (ล่าช้า)",
-        statusDisplayLate: "ส่งแล้ว (ล่าช้าปรับ {fine} B)",
-        finePlace: "จำนวนค่าปรับ",
-        confirmBtnText: "ยืนยัน",
-        editProfileTitle: "แก้ไขโปรไฟล์",
-        imgUrlPlace: "ลิงก์รูปภาพโปรไฟล์",
-        saveChangeBtn: "บันทึกการเปลี่ยนแปลง",
-        cancelBtn: "ยกเลิก",
-        viewBtnText: "ดูข้อมูล",
-        closeBtnText: "ปิดหน้าต่าง",
-        storeMsg: "รอการอัพเดท..",
-        btnDetail: "รายละเอียด",
-        titleReason: "เหตุผลการลา"
+        loginTitle: "LAPLUNGROI เข้าสู่ระบบ", usernamePlace: "ชื่อผู้ใช้งาน", passwordPlace: "รหัสผ่าน", confirmPasswordPlace: "ยืนยันรหัสผ่าน", loginBtn: "เข้าสู่ระบบ", registerBtn: "สมัครสมาชิก", switchCreate: "สร้างบัญชีใหม่", switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
+        menuDash: "แดชบอร์ด", menuHistory: "ประวัติการลา", menuMoney: "การชำระเงิน", menuMembers: "รายชื่อสมาชิก", menuStore: "ร้านค้า", menuUserMng: "จัดการผู้ใช้งาน", logout: "ออกจากระบบ",
+        cardToday: "จำนวนคนลาวันนี้", cardTotalUsers: "ผู้ใช้งานทั้งหมด", cardTotalLeaves: "ใบลาทั้งหมดในเดือน", boxAnalytics: "สถิติการลา", boxCreateLeave: "สร้างใบลา", optSick: "ลาป่วย", optPersonal: "ลากิจ", optVacation: "พักร้อน", reasonPlace: "เหตุผลการลา", leaveSubmit: "ส่งคำขอใบลา",
+        boxHistory: "ประวัติการลา", thUser: "ผู้ใช้งาน", thType: "ประเภท", thDuration: "ระยะเวลา", thDays: "จำนวนวัน", thStatus: "สถานะ", boxMoney: "การชำระเงินรายเดือน", lblPaymentText: "เดือนนี้ชำระเงิน", editBtn: "แก้ไข", thMoneyStatus: "สถานะ", thMoneyManage: "จัดการ",
+        boxMembers: "สมาชิกทั้งหมด", thMemDetails: "รายละเอียด", boxUserManage: "จัดการสิทธิ์ผู้ใช้งาน", thMngAction: "การจัดการ", statusApproved: "อนุมัติแล้ว", statusPending: "รออนุมัติ", alertFill: "กรอกข้อมูลให้ครบ", alertMatch: "Password ไม่ตรงกัน", alertDup: "Username ซ้ำ",
+        alertRegisSuccess: "สมัครสมาชิกสำเร็จ", alertNoUser: "ไม่พบ Username", alertWrongPass: "Password ไม่ถูกต้อง", alertDateWrong: "วันที่ไม่ถูกต้อง", alertLeaveSuccess: "ส่งคำลาแล้ว", alertApproveSuccess: "อนุมัติสำเร็จ", alertDeleteLeave: "ยืนยันการลบรายการใบลาชุดนี้ ?", alertDeleteLeaveSuccess: "ลบใบลาสำเร็จ",
+        alertRoleSuccess: "เปลี่ยนสิทธิ์สำเร็จ", alertNoDeleteAdmin: "ลบ admin ไม่ได้", alertConfirmDeleteUser: "ยืนยันการลบผู้ใช้งาน ?", alertDeleteUserSuccess: "ลบสำเร็จ", alertUpdateMoney: "อัปเดตสถานะสำเร็จ", promptMoneyConfig: "กรอกจำนวนเงินที่ต้องชำระประจำเดือนนี้ (เช่น 500,000):", alertMoneyConfigSuccess: "บันทึกจำนวนเงินชำระสำเร็จ",
+        notSet: "ยังไม่ตั้งค่า", statusNotSent: "ยังไม่ส่ง", statusSent: "ส่งแล้ว", statusSentLate: "ส่งแล้ว (ล่าช้า)", statusDisplayLate: "ส่งแล้ว (ล่าช้าปรับ {fine} B)", finePlace: "จำนวนค่าปรับ", confirmBtnText: "ยืนยัน", editProfileTitle: "แก้ไขโปรไฟล์", imgUrlPlace: "ลิงก์รูปภาพโปรไฟล์", saveChangeBtn: "บันทึกการเปลี่ยนแปลง", cancelBtn: "ยกเลิก", viewBtnText: "ดูข้อมูล", closeBtnText: "ปิดหน้าต่าง", storeMsg: "รอการอัพเดท..", btnDetail: "รายละเอียด", titleReason: "เหตุผลการลา"
     },
     en: {
-        loginTitle: "LAPLUNGROI LOGIN",
-        usernamePlace: "USERNAME",
-        passwordPlace: "PASSWORD",
-        confirmPasswordPlace: "CONFIRM PASSWORD",
-        loginBtn: "LOGIN",
-        registerBtn: "REGISTER",
-        switchCreate: "CREATE ACCOUNT",
-        switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
-        menuDash: "DASHBOARD",
-        menuHistory: "LEAVE HISTORY",
-        menuMoney: "WEEKLY PAYMENT",
-        menuMembers: "MEMBERS",
-        menuStore: "STORE",
-        menuUserMng: "USER MANAGEMENT",
-        logout: "LOGOUT",
-        cardToday: "PEOPLE TODAY",
-        cardTotalUsers: "TOTAL USERS",
-        cardTotalLeaves: "TOTAL LEAVES",
-        boxAnalytics: "LEAVE ANALYTICS",
-        boxCreateLeave: "CREATE LEAVE",
-        optSick: "Sick Leave",
-        optPersonal: "Personal Leave",
-        optVacation: "Vacation Leave",
-        reasonPlace: "REASON",
-        leaveSubmit: "SUBMIT REQUEST",
-        boxHistory: "LEAVE HISTORY",
-        thUser: "USER", thType: "TYPE", thDuration: "DURATION", thDays: "DAYS", thStatus: "STATUS",
-        boxMoney: "WEEKLY PAYMENT",
-        lblPaymentText: "Monthly Target",
-        editBtn: "EDIT",
-        thMoneyStatus: "STATUS", thMoneyManage: "MANAGE",
-        boxMembers: "ALL MEMBERS",
-        thMemDetails: "DETAILS",
-        boxUserManage: "USER MANAGEMENT",
-        thMngAction: "MANAGE",
-        statusApproved: "Approved",
-        statusPending: "Pending",
-        alertFill: "Please fill in all fields",
-        alertMatch: "Passwords do not match",
-        alertDup: "Username already exists",
-        alertRegisSuccess: "Registration successful",
-        alertNoUser: "Username not found",
-        alertWrongPass: "Incorrect password",
-        alertDateWrong: "Invalid date range",
-        alertLeaveSuccess: "Leave request submitted",
-        alertApproveSuccess: "Approved successfully",
-        alertDeleteLeave: "Are you sure you want to delete this leave request?",
-        alertDeleteLeaveSuccess: "Leave request deleted",
-        alertRoleSuccess: "Role updated successfully",
-        alertNoDeleteAdmin: "Cannot delete master admin account",
-        alertConfirmDeleteUser: "Confirm deleting this user account?",
-        alertDeleteUserSuccess: "User deleted successfully",
-        alertUpdateMoney: "Status updated successfully",
-        promptMoneyConfig: "Enter monthly payment target amount (e.g., 500,000):",
-        alertMoneyConfigSuccess: "Monthly target saved successfully",
-        notSet: "NOT SET",
-        statusNotSent: "Unpaid",
-        statusSent: "Paid",
-        statusSentLate: "Paid (Late)",
-        statusDisplayLate: "Paid (Late fine {fine} B)",
-        finePlace: "Fine amount",
-        confirmBtnText: "CONFIRM",
-        editProfileTitle: "EDIT PROFILE",
-        imgUrlPlace: "IMAGE URL",
-        saveChangeBtn: "SAVE CHANGES",
-        cancelBtn: "CANCEL",
-        viewBtnText: "VIEW",
-        closeBtnText: "CLOSE",
-        storeMsg: "UNDER CONSTRUCTION..",
-        btnDetail: "Detail",
-        titleReason: "Leave Reason"
+        loginTitle: "LAPLUNGROI LOGIN", usernamePlace: "USERNAME", passwordPlace: "PASSWORD", confirmPasswordPlace: "CONFIRM PASSWORD", loginBtn: "LOGIN", registerBtn: "REGISTER", switchCreate: "CREATE ACCOUNT", switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
+        menuDash: "DASHBOARD", menuHistory: "LEAVE HISTORY", menuMoney: "WEEKLY PAYMENT", menuMembers: "MEMBERS", menuStore: "STORE", menuUserMng: "USER MANAGEMENT", logout: "LOGOUT",
+        cardToday: "PEOPLE TODAY", cardTotalUsers: "TOTAL USERS", cardTotalLeaves: "TOTAL LEAVES", boxAnalytics: "LEAVE ANALYTICS", boxCreateLeave: "CREATE LEAVE", optSick: "Sick Leave", optPersonal: "Personal Leave", optVacation: "Vacation Leave", reasonPlace: "REASON", leaveSubmit: "SUBMIT REQUEST",
+        boxHistory: "LEAVE HISTORY", thUser: "USER", thType: "TYPE", thDuration: "DURATION", thDays: "DAYS", thStatus: "STATUS", boxMoney: "WEEKLY PAYMENT", lblPaymentText: "Monthly Target", editBtn: "EDIT", thMoneyStatus: "STATUS", thMoneyManage: "MANAGE",
+        boxMembers: "ALL MEMBERS", thMemDetails: "DETAILS", boxUserManage: "USER MANAGEMENT", thMngAction: "MANAGE", statusApproved: "Approved", statusPending: "Pending", alertFill: "Please fill in all fields", alertMatch: "Passwords do not match", alertDup: "Username already exists",
+        alertRegisSuccess: "Registration successful", alertNoUser: "Username not found", alertWrongPass: "Incorrect password", alertDateWrong: "Invalid date range", alertLeaveSuccess: "Leave request submitted", alertApproveSuccess: "Approved successfully", alertDeleteLeave: "Are you sure you want to delete this leave request?", alertDeleteLeaveSuccess: "Leave request deleted",
+        alertRoleSuccess: "Role updated successfully", alertNoDeleteAdmin: "Cannot delete master admin account", alertConfirmDeleteUser: "Confirm deleting this user account?", alertDeleteUserSuccess: "User deleted successfully", alertUpdateMoney: "Status updated successfully", promptMoneyConfig: "Enter monthly payment target amount (e.g., 500,000):", alertMoneyConfigSuccess: "Monthly target saved successfully",
+        notSet: "NOT SET", statusNotSent: "Unpaid", statusSent: "Paid", statusSentLate: "Paid (Late)", statusDisplayLate: "Paid (Late fine {fine} B)", finePlace: "Fine amount", confirmBtnText: "CONFIRM", editProfileTitle: "EDIT PROFILE", imgUrlPlace: "IMAGE URL", saveChangeBtn: "SAVE CHANGES", cancelBtn: "CANCEL", viewBtnText: "VIEW", closeBtnText: "CLOSE", storeMsg: "UNDER CONSTRUCTION..", btnDetail: "Detail", titleReason: "Leave Reason"
     }
 };
 
 let currentLang = localStorage.getItem("sysLang") || "th";
 
-async function getUserRole(username) {
-    const snap = await get(ref(db, "users/" + username));
-    return snap.exists() ? snap.val().role : "member";
-}
-
 window.toggleLanguage = function(lang) {
-    currentLang = lang;
-    localStorage.setItem("sysLang", lang);
-    
+    currentLang = lang; localStorage.setItem("sysLang", lang);
     document.querySelectorAll(".langBtnTH").forEach(btn => btn.classList.toggle("active", lang === "th"));
     document.querySelectorAll(".langBtnEN").forEach(btn => btn.classList.toggle("active", lang === "en"));
-    
     applyLanguagePack();
-    
     if (document.getElementById("dashboard").style.display === "block") {
-        loadLeaves();
-        loadMoney();
-        loadMembers();
-        loadUsers();
+        loadLeaves(); loadMoney(); loadMembers(); loadUsers();
     }
 };
 
 function applyLanguagePack() {
     const p = languages[currentLang];
-    
     document.getElementById("loginTitle").innerText = p.loginTitle;
     document.getElementById("username").placeholder = p.usernamePlace;
     document.getElementById("password").placeholder = p.passwordPlace;
     document.getElementById("confirmPassword").placeholder = p.confirmPasswordPlace;
     document.getElementById("authBtn").innerText = isRegister ? p.registerBtn : p.loginBtn;
     document.getElementById("switchAuthMode").innerText = isRegister ? p.switchLogin : p.switchCreate;
-    
     document.getElementById("menuDash").innerText = p.menuDash;
     document.getElementById("menuHistory").innerText = p.menuHistory;
     document.getElementById("menuMoney").innerText = p.menuMoney;
@@ -624,7 +248,6 @@ function applyLanguagePack() {
     document.getElementById("menuStore").innerText = p.menuStore;
     document.getElementById("userMenu").innerText = p.menuUserMng;
     document.getElementById("logoutBtn").innerText = p.logout;
-    
     document.getElementById("cardToday").innerText = p.cardToday;
     document.getElementById("cardTotalUsers").innerText = p.cardTotalUsers;
     document.getElementById("cardTotalLeaves").innerText = p.cardTotalLeaves;
@@ -635,104 +258,57 @@ function applyLanguagePack() {
     document.getElementById("optVacation").innerText = p.optVacation;
     document.getElementById("reason").placeholder = p.reasonPlace;
     document.getElementById("leaveSubmitBtn").innerText = p.leaveSubmit;
-    
     document.getElementById("boxHistory").innerText = p.boxHistory;
     document.getElementById("thUser").innerText = p.thUser;
     document.getElementById("thType").innerText = p.thType;
     document.getElementById("thDuration").innerText = p.thDuration;
     document.getElementById("thDays").innerText = p.thDays;
     document.getElementById("thStatus").innerText = p.thStatus;
-    
     document.getElementById("boxMoney").innerText = p.boxMoney;
     document.getElementById("lblPaymentText").innerText = p.lblPaymentText;
     document.getElementById("editMoneyBtn").innerText = p.editBtn;
     document.getElementById("thMoneyUser").innerText = p.thUser;
     document.getElementById("thMoneyStatus").innerText = p.thMoneyStatus;
     document.getElementById("thMoneyManage").innerText = p.thMoneyManage;
-    
     document.getElementById("boxMembers").innerText = p.boxMembers;
     document.getElementById("thMemUser").innerText = p.usernamePlace;
     document.getElementById("thMemRole").innerText = "ROLE";
     document.getElementById("thMemDetails").innerText = p.thMemDetails;
-    
     document.getElementById("storeMsg").innerText = p.storeMsg;
-    
     document.getElementById("boxUserManage").innerText = p.boxUserManage;
     document.getElementById("thMngUser").innerText = p.thUser;
     document.getElementById("thMngRole").innerText = "ROLE";
     document.getElementById("thMngAction").innerText = p.thMngAction;
-    
     document.getElementById("modalEditTitle").innerText = p.editProfileTitle;
     document.getElementById("editAvatarUrl").placeholder = p.imgUrlPlace;
-    document.getElementById("modalCancelBtn").innerText = p.cancelBtn;
-    document.getElementById("modalSaveBtn").innerText = p.saveChangeBtn;
-    document.getElementById("modalCloseBtn").innerText = p.closeBtnText;
-
-    // แปลภาษาของหน้าต่างเหตุผลใบลาตัวใหม่
     document.getElementById("popupLeaveTitle").innerText = p.titleReason;
     document.getElementById("popupLeaveCloseBtn").innerText = p.closeBtnText;
 }
 
 async function createAdmin(){
-
-const snapshot =
-await get(ref(db,"users/admin"));
-
-if(!snapshot.exists()){
-
-await set(ref(db,"users/admin"),{
-
-username:"admin",
-password:"admin",
-role:"admin",
-avatar: defaultAvatar,
-facebook: "",
-discord: ""
-
-});
-
+    const snap = await get(ref(db,"users/admin"));
+    if(!snap.exists()){
+        await set(ref(db,"users/admin"),{username:"admin",password:"admin",role:"admin",avatar:defaultAvatar,facebook:"",discord:""});
+    }
 }
-
-}
-
 createAdmin();
 
 window.toggleMode = function(){
-
-isRegister = !isRegister;
-const p = languages[currentLang];
-
-document.getElementById(
-"confirmPassword").style.display =
-isRegister ? "block" : "none";
-
-document.getElementById(
-"authBtn").innerText =
-isRegister ? p.registerBtn : p.loginBtn;
-
-document.getElementById("switchAuthMode").innerText = 
-isRegister ? p.switchLogin : p.switchCreate;
-
+    isRegister = !isRegister; const p = languages[currentLang];
+    document.getElementById("confirmPassword").style.display = isRegister ? "block" : "none";
+    document.getElementById("authBtn").innerText = isRegister ? p.registerBtn : p.loginBtn;
+    document.getElementById("switchAuthMode").innerText = isRegister ? p.switchLogin : p.switchCreate;
 }
 
 function triggerLoginAnimation(callback) {
-    const loadingPage = document.getElementById("loadingPage");
-    const loaderFill = document.getElementById("loaderFill");
-    const loaderStatus = document.getElementById("loaderStatus");
-    
+    const loadingPage = document.getElementById("loadingPage"), loaderFill = document.getElementById("loaderFill"), loaderStatus = document.getElementById("loaderStatus");
     loadingPage.classList.remove("hidden");
-    
     let progress = 0;
     const interval = setInterval(() => {
         progress += Math.floor(Math.random() * 15) + 5;
         if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
-            
-            setTimeout(() => {
-                loadingPage.classList.add("hidden");
-                callback();
-            }, 400);
+            progress = 100; clearInterval(interval);
+            setTimeout(() => { loadingPage.classList.add("hidden"); callback(); }, 400);
         }
         loaderFill.style.width = progress + "%";
         loaderStatus.innerText = currentLang === "th" ? `กำลังตรวจสอบข้อมูล... ${progress}%` : `DECRYPTING DATA... ${progress}%`;
@@ -740,1029 +316,233 @@ function triggerLoginAnimation(callback) {
 }
 
 window.handleAuth = async function(){
-const p = languages[currentLang];
-const username =
-document.getElementById("username")
-.value.trim();
-
-const password =
-document.getElementById("password")
-.value.trim();
-
-const confirmPassword =
-document.getElementById(
-"confirmPassword").value.trim();
-
-if(!username || !password){
-
-alert(p.alertFill);
-return;
-
-}
-
-if(isRegister){
-
-if(password !== confirmPassword){
-
-alert(p.alertMatch);
-return;
-
-}
-
-const check =
-await get(ref(db,
-"users/" + username));
-
-if(check.exists()){
-
-alert(p.alertDup);
-return;
-
-}
-
-// [UPDATED BACKEND STRUCT]: สมัครใหม่ เซ็ตลงเบสจริงเป็นคำว่า "member" (แทน "user" แบบเก่า)
-await set(
-ref(db,"users/" + username),{
-
-username:username,
-password:password,
-role:"member", 
-avatar: defaultAvatar,
-facebook: "",
-discord: ""
-
-});
-
-alert(p.alertRegisSuccess);
-return;
-
-}
-
-const snapshot =
-await get(
-ref(db,"users/" + username));
-
-if(!snapshot.exists()){
-
-alert(p.alertNoUser);
-return;
-
-}
-
-const user = snapshot.val();
-
-if(user.password !== password){
-
-alert(p.alertWrongPass);
-return;
-
-}
-
-localStorage.setItem(
-"loginUser",
-username);
-
-localStorage.setItem(
-"role",
-user.role);
-
-triggerLoginAnimation(() => {
-    initDashboard();
-});
-
+    const p = languages[currentLang], username = document.getElementById("username").value.trim(), password = document.getElementById("password").value.trim(), confirmPassword = document.getElementById("confirmPassword").value.trim();
+    if(!username || !password){ alert(p.alertFill); return; }
+    if(isRegister){
+        if(password !== confirmPassword){ alert(p.alertMatch); return; }
+        const check = await get(ref(db,"users/" + username));
+        if(check.exists()){ alert(p.alertDup); return; }
+        await set(ref(db,"users/" + username),{username:username,password:password,role:"member",avatar:defaultAvatar,facebook:"",discord:""});
+        alert(p.alertRegisSuccess); return;
+    }
+    const snapshot = await get(ref(db,"users/" + username));
+    if(!snapshot.exists()){ alert(p.alertNoUser); return; }
+    const user = snapshot.val();
+    if(user.password !== password){ alert(p.wrongPass || p.alertWrongPass); return; }
+    localStorage.setItem("loginUser", username); localStorage.setItem("role", user.role);
+    triggerLoginAnimation(() => { initDashboard(); });
 }
 
 async function updateProfileWidget() {
-    const loginUser = localStorage.getItem("loginUser");
-    if(!loginUser) return;
-    
+    const loginUser = localStorage.getItem("loginUser"); if(!loginUser) return;
     const snap = await get(ref(db, "users/" + loginUser));
     if(snap.exists()){
-        const data = snap.val();
-        
-        let roleDisplay = "MEMBER";
-        let isLeader = false;
-        
-        // [UPDATED CHECKING]: แมปสิทธิ์โชว์หน้าบ้านตามตัวแปรชุดใหม่ใน Firebase
-        if(data.role === "admin") {
-            roleDisplay = "ADMIN";
-            isLeader = true;
-        } else if(data.role === "leader") { // ในเบสคือ leader หน้าบ้านโชว์ LEADER
-            roleDisplay = "LEADER";
-            isLeader = true;
-        } else if(data.role === "member") { // ในเบสคือ member หน้าบ้านโชว์ MEMBER
-            roleDisplay = "MEMBER";
-        }
-        
-        document.querySelectorAll(".widgetUserName").forEach(el => {
-            el.innerText = data.username;
-            el.classList.toggle("leader-name", isLeader);
-        });
-        document.querySelectorAll(".widgetUserRole").forEach(el => {
-            el.innerText = roleDisplay;
-        });
-        document.querySelectorAll(".widgetUserAvatar").forEach(el => {
-            el.src = data.avatar || defaultAvatar;
-        });
+        const data = snap.val(); let roleDisplay = "MEMBER", isLeader = false;
+        if(data.role === "admin") { roleDisplay = "ADMIN"; isLeader = true; }
+        else if(data.role === "leader") { roleDisplay = "LEADER"; isLeader = true; }
+        document.querySelectorAll(".widgetUserName").forEach(el => { el.innerText = data.username; el.classList.toggle("leader-name", isLeader); });
+        document.querySelectorAll(".widgetUserRole").forEach(el => { el.innerText = roleDisplay; });
+        document.querySelectorAll(".widgetUserAvatar").forEach(el => { el.src = data.avatar || defaultAvatar; });
     }
 }
 
 window.openMyProfileModal = async function() {
-    const loginUser = localStorage.getItem("loginUser");
-    const snap = await get(ref(db, "users/" + loginUser));
+    const snap = await get(ref(db, "users/" + localStorage.getItem("loginUser")));
     if(snap.exists()){
-        const data = snap.val();
-        document.getElementById("editAvatarUrl").value = data.avatar || "";
-        document.getElementById("editFacebook").value = data.facebook || "";
-        document.getElementById("editDiscord").value = data.discord || "";
+        const d = snap.val(); document.getElementById("editAvatarUrl").value = d.avatar || "";
+        document.getElementById("editFacebook").value = d.facebook || ""; document.getElementById("editDiscord").value = d.discord || "";
         document.getElementById("myProfileModal").classList.remove("hidden");
     }
 }
-
-window.closeMyProfileModal = function() {
-    document.getElementById("myProfileModal").classList.add("hidden");
-}
+window.closeMyProfileModal = function() { document.getElementById("myProfileModal").classList.add("hidden"); }
 
 window.saveMyProfile = async function() {
-    const loginUser = localStorage.getItem("loginUser");
-    const avatar = document.getElementById("editAvatarUrl").value.trim() || defaultAvatar;
-    const facebook = document.getElementById("editFacebook").value.trim();
-    const discord = document.getElementById("editDiscord").value.trim();
-    
-    await update(ref(db, "users/" + loginUser), {
-        avatar: avatar,
-        facebook: facebook,
-        discord: discord
-    });
-    
-    alert(languages[currentLang].alertRoleSuccess);
-    closeMyProfileModal();
-    updateProfileWidget();
-    loadMembers();
+    const loginUser = localStorage.getItem("loginUser"), avatar = document.getElementById("editAvatarUrl").value.trim() || defaultAvatar, facebook = document.getElementById("editFacebook").value.trim(), discord = document.getElementById("editDiscord").value.trim();
+    await update(ref(db, "users/" + loginUser), { avatar, facebook, discord });
+    alert(languages[currentLang].alertRoleSuccess); closeMyProfileModal(); updateProfileWidget(); loadMembers();
 }
 
 window.viewMemberDetail = async function(username) {
-    const p = languages[currentLang];
-    const snap = await get(ref(db, "users/" + username));
+    const p = languages[currentLang], snap = await get(ref(db, "users/" + username));
     if(snap.exists()){
-        const data = snap.val();
-        const modalName = document.getElementById("viewMemberName");
+        const data = snap.val(), modalName = document.getElementById("viewMemberName");
         modalName.innerText = data.username.toUpperCase() + " PROFILE";
-        
         document.getElementById("viewMemberAvatar").src = data.avatar || defaultAvatar;
+        let roleDisplay = "MEMBER", isLeader = false;
+        if(data.role === "admin" || data.role === "leader") { roleDisplay = data.role.toUpperCase(); isLeader = true; }
+        modalName.classList.toggle("leader-name", isLeader); document.getElementById("viewMemberRole").innerText = roleDisplay;
         
-        let roleDisplay = "MEMBER";
-        let isLeader = false;
-        if(data.role === "admin") {
-            roleDisplay = "ADMIN";
-            isLeader = true;
-        } else if(data.role === "leader") {
-            roleDisplay = "LEADER";
-            isLeader = true;
-        } else if(data.role === "member") {
-            roleDisplay = "MEMBER";
-        }
-        
-        modalName.classList.toggle("leader-name", isLeader);
-        document.getElementById("viewMemberRole").innerText = roleDisplay;
-        
-        const fbLink = document.getElementById("viewMemberFB");
-        if(data.facebook) {
-            fbLink.innerText = "LINK";
-            fbLink.href = data.facebook.startsWith("http") ? data.facebook : "https://" + data.facebook;
-            fbLink.style.pointerEvents = "auto";
-        } else {
-            fbLink.innerText = p.notSet;
-            fbLink.removeAttribute("href");
-            fbLink.style.pointerEvents = "none";
-        }
-
-        const dcLink = document.getElementById("viewMemberDC");
-        if(data.discord) {
-            dcLink.innerText = "LINK";
-            dcLink.href = data.discord.startsWith("http") ? data.discord : "https://" + data.discord;
-            dcLink.style.pointerEvents = "auto";
-        } else {
-            dcLink.innerText = p.notSet;
-            dcLink.removeAttribute("href");
-            dcLink.style.pointerEvents = "none";
-        }
-        
+        const setupLink = (elId, val) => {
+            const el = document.getElementById(elId);
+            if(val) { el.innerText = "LINK"; el.href = val.startsWith("http") ? val : "https://" + val; el.style.pointerEvents = "auto"; }
+            else { el.innerText = p.notSet; el.removeAttribute("href"); el.style.pointerEvents = "none"; }
+        };
+        setupLink("viewMemberFB", data.facebook); setupLink("viewMemberDC", data.discord);
         document.getElementById("memberViewModal").classList.remove("hidden");
     }
 }
-
-window.closeMemberViewModal = function() {
-    document.getElementById("memberViewModal").classList.add("hidden");
-}
-
-// เปิด-ปิด หน้าต่างแสดงเหตุผลรายละเอียดใบลาพักสี่เหลี่ยมแยกเฉพาะ
-window.openLeaveDetailModal = function(reason) {
-    const textBlock = document.getElementById("popupLeaveReason");
-    textBlock.innerText = reason ? reason : (currentLang === "th" ? "ไม่ได้ระบุเหตุผลการลา" : "No reason provided");
-    document.getElementById("leaveDetailModal").classList.remove("hidden");
-}
-
-window.closeLeaveDetailModal = function() {
-    document.getElementById("leaveDetailModal").classList.add("hidden");
-}
+window.closeMemberViewModal = function() { document.getElementById("memberViewModal").classList.add("hidden"); }
+window.openLeaveDetailModal = function(reason) { document.getElementById("popupLeaveReason").innerText = reason || (currentLang === "th" ? "ไม่ได้ระบุเหตุผล" : "No reason"); document.getElementById("leaveDetailModal").classList.remove("hidden"); }
+window.closeLeaveDetailModal = function() { document.getElementById("leaveDetailModal").classList.add("hidden"); }
 
 function initDashboard(){
-
-document.getElementById("loginPage")
-.style.display = "none";
-
-document.getElementById("dashboard")
-.style.display = "block";
-
-const role = localStorage.getItem("role");
-
-if(role === "admin"){
-document.getElementById("userMenu").classList.remove("hidden");
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    if(localStorage.getItem("role") === "admin") document.getElementById("userMenu").classList.remove("hidden");
+    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers();
 }
 
-applyLanguagePack();
-showSection("dashboardSection");
-
-updateProfileWidget();
-loadLeaves();
-loadUsers();
-loadMoney();
-loadMembers();
-
-}
-
-window.addEventListener("load",()=>{
-    toggleLanguage(currentLang);
-    const user = localStorage.getItem("loginUser");
-    if(user){
-        initDashboard();
-    }
-});
-
-window.logout = function(){
-localStorage.clear();
-location.reload();
-}
+window.addEventListener("load",()=>{ toggleLanguage(currentLang); if(localStorage.getItem("loginUser")) initDashboard(); });
+window.logout = function(){ localStorage.clear(); location.reload(); }
 
 window.showSection = function(id){
-
-const sections = [
-
-"dashboardSection",
-"historySection",
-"moneySection",
-"memberSection",
-"storeSection",
-"userSection"
-
-];
-
-sections.forEach(section=>{
-
-document.getElementById(section)
-.classList.add("hidden");
-
-});
-
-document.getElementById(id)
-.classList.remove("hidden");
-
+    const sections = ["dashboardSection", "historySection", "moneySection", "memberSection", "storeSection", "userSection"];
+    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "menuMembers", "storeSection": "menuStore", "userSection": "userMenu" };
+    sections.forEach(sec => {
+        document.getElementById(sec).classList.add("hidden");
+        const mId = menuMapping[sec]; if(mId) document.getElementById(mId).classList.remove("active");
+    });
+    document.getElementById(id).classList.remove("hidden");
+    const activeMenuId = menuMapping[id]; if(activeMenuId) document.getElementById(activeMenuId).classList.add("active");
 }
 
-/* LEAVE */
-
-document.getElementById("leaveForm")
-.addEventListener("submit",
-async(e)=>{
-const p = languages[currentLang];
-e.preventDefault();
-
-const startDate =
-document.getElementById(
-"startDate").value;
-
-const endDate =
-document.getElementById(
-"endDate").value;
-
-const start =
-new Date(startDate);
-
-const end =
-new Date(endDate);
-
-const days =
-Math.floor(
-(end - start) /
-(1000 * 60 * 60 * 24)
-) + 1;
-
-if(days <= 0){
-
-alert(p.alertDateWrong);
-return;
-
-}
-
-await push(ref(db,"leaves"),{
-
-username:
-localStorage.getItem(
-"loginUser"),
-
-type:
-document.getElementById(
-"type").value,
-
-reason:
-document.getElementById(
-"reason").value,
-
-startDate:startDate,
-
-endDate:endDate,
-
-days:days,
-
-status:"pending"
-
-});
-
-alert(p.alertLeaveSuccess);
-
-document.getElementById(
-"leaveForm").reset();
-
-loadLeaves();
-
+document.getElementById("leaveForm").addEventListener("submit", async(e)=>{
+    e.preventDefault(); const p = languages[currentLang], startStr = document.getElementById("startDate").value, endStr = document.getElementById("endDate").value;
+    const days = Math.floor((new Date(endStr) - new Date(startStr)) / (1000 * 60 * 60 * 24)) + 1;
+    if(days <= 0){ alert(p.alertDateWrong); return; }
+    await push(ref(db,"leaves"),{ username: localStorage.getItem("loginUser"), type: document.getElementById("type").value, reason: document.getElementById("reason").value, startDate: startStr, endDate: endStr, days: days, status: "pending" });
+    alert(p.alertLeaveSuccess); document.getElementById("leaveForm").reset(); loadLeaves();
 });
 
 async function loadLeaves(){
-const p = languages[currentLang];
-const snapshot =
-await get(ref(db,"leaves"));
+    const p = languages[currentLang], snapshot = await get(ref(db,"leaves")), table = document.getElementById("leaveTable");
+    table.innerHTML = ""; let sick = 0, personal = 0, vacation = 0, today = 0, total = 0;
+    const now = new Date(), currentDate = now.toISOString().split("T")[0], role = localStorage.getItem("role"), selector = document.getElementById("weekSelector");
+    
+    if(selector.innerHTML === ""){
+        let opts = "";
+        for(let i=0;i<12;i++){
+            const d = new Date(); d.setMonth(d.getMonth() - i);
+            const mNum = String(d.getMonth() + 1).padStart(2, '0'), y = currentLang === "th" ? d.getFullYear() + 543 : d.getFullYear();
+            opts += `<option value="${d.getFullYear()}-${mNum}">${currentLang === "th" ? `เดือน ${mNum}/${y}` : `Month ${mNum}/${y}`}</option>`;
+        }
+        selector.innerHTML = opts;
+    }
+    const selVal = selector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    document.getElementById("weekInfo").innerHTML = currentLang === "th" ? `ประจำเดือน: ${selVal.split("-")[1]}/${currentLang === "th" ? parseInt(selVal.split("-")[0])+543 : selVal.split("-")[0]}` : `Month Period: ${selVal}`;
 
-const table =
-document.getElementById(
-"leaveTable");
+    if(snapshot.exists()){
+        for (const [key, leave] of Object.entries(snapshot.val())) {
+            if(!leave.startDate || leave.startDate.substring(0, 7) !== selVal) continue;
+            total++; if(leave.startDate === currentDate) today++;
+            let typeDisplay = leave.type;
+            if (leave.type === "ลาป่วย") { typeDisplay = p.optSick; sick++; }
+            else if (leave.type === "ลากิจ") { typeDisplay = p.optPersonal; personal++; }
+            else if (leave.type === "พักร้อน") { typeDisplay = p.optVacation; vacation++; }
 
-table.innerHTML = "";
+            let acts = "";
+            if(role === "admin" || role === "leader"){
+                if(leave.status !== "approved") acts += `<button onclick="approveLeave('${key}')">APPROVE</button><br><br>`;
+                acts += `<button style="background:#ff1e1e;" onclick="deleteLeave('${key}')">DELETE</button>`;
+            }
+            const snapUser = await get(ref(db, "users/" + leave.username)), appRole = snapUser.exists() ? snapUser.val().role : "member";
+            const cleanReason = leave.reason ? leave.reason.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, ' ') : "";
 
-let sick = 0;
-let personal = 0;
-let vacation = 0;
-
-let today = 0;
-let total = 0;
-
-const now = new Date();
-const currentDate = now.toISOString().split("T")[0];
-const role = localStorage.getItem("role");
-const selector = document.getElementById("weekSelector");
-
-if(selector.innerHTML === ""){
-
-let optionsHtml = "";
-for(let i=0;i<12;i++){
-
-const start =
-new Date();
-
-start.setMonth(
-start.getMonth() - i
-);
-
-const monthNum = String(start.getMonth() + 1).padStart(2, '0');
-const thaiYear = currentLang === "th" ? start.getFullYear() + 543 : start.getFullYear();
-const value = `${start.getFullYear()}-${monthNum}`;
-const text = currentLang === "th" ? `เดือน ${monthNum}/${thaiYear}` : `Month ${monthNum}/${thaiYear}`;
-
-optionsHtml += `
-<option value="${value}">
-${text}
-</option>
-`;
-
-}
-selector.innerHTML = optionsHtml;
-
+            table.innerHTML += `<tr><td class="${(appRole === "admin" || appRole === "leader") ? 'leader-name' : ''}">${leave.username}</td><td>${typeDisplay}</td><td>${leave.startDate} - ${leave.endDate}</td><td>${leave.days}</td>
+            <td><span class="status ${leave.status === 'approved' ? 'success' : 'pending'}">${leave.status === 'approved' ? p.statusApproved : p.statusPending}</span><br><br>
+            <button style="margin-bottom:12px; padding:10px 14px; background:#111; border:1px solid #ff2d2d; color:#ff2d2d; font-size:11px; border-radius:10px; cursor:pointer;" onclick="openLeaveDetailModal('${cleanReason}')">${p.btnDetail}</button><br>${acts}</td></tr>`;
+        }
+    }
+    document.getElementById("todayCount").innerText = today; document.getElementById("totalLeaves").innerText = total;
+    if(chart) chart.destroy();
+    chart = new Chart(document.getElementById("leaveChart"),{ type:"doughnut", data:{ labels:[p.optSick, p.optPersonal, p.optVacation], datasets:[{ data:[sick, personal, vacation], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, cutout:"72%" } });
 }
 
-const selectedValue = selector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`; 
-const [selYear, selMonth] = selectedValue.split("-");
-
-const displayMonth = selMonth;
-const displayYear = currentLang === "th" ? parseInt(selYear) + 543 : selYear;
-
-document.getElementById(
-"weekInfo").innerHTML = currentLang === "th" ? `ประจำเดือน: ${displayMonth}/${displayYear}` : `Month Period: ${displayMonth}/${displayYear}`;
-
-if(snapshot.exists()){
-
-const leaves =
-snapshot.val();
-
-for (const [key, leave] of Object.entries(leaves)) {
-
-if(!leave.startDate) continue;
-const leaveYearMonth = leave.startDate.substring(0, 7); 
-
-if(leaveYearMonth !== selectedValue){
-continue;
-}
-
-total++;
-
-if(
-leave.startDate === currentDate
-){
-
-today++;
-
-}
-
-let leaveTypeDisplay = leave.type;
-if (leave.type === "ลาป่วย") { leaveTypeDisplay = p.optSick; sick++; }
-else if (leave.type === "ลากิจ") { leaveTypeDisplay = p.optPersonal; personal++; }
-else if (leave.type === "พักร้อน") { leaveTypeDisplay = p.optVacation; vacation++; }
-
-let actionButtons = "";
-
-// ปลดล็อกสิทธิ์ปุ่มกดหน้าลาให้ Admin และ Leader (รหัสเบสคือ admin และ leader)
-if(
-role === "admin" ||
-role === "leader" 
-){
-
-if(
-leave.status !== "approved"
-){
-
-actionButtons += `
-<button
-onclick="
-approveLeave(
-'${key}'
-)">
-APPROVE
-</button>
-<br><br>
-`;
-
-}
-
-actionButtons += `
-<button
-style="background:#ff1e1e;"
-onclick="
-deleteLeave(
-'${key}'
-)">
-DELETE
-</button>
-`;
-
-}
-
-const snapUser = await get(ref(db, "users/" + leave.username));
-const applicantRole = snapUser.exists() ? snapUser.val().role : "member";
-const isApplicantLeader = (applicantRole === "admin" || applicantRole === "leader");
-
-// ทำความสะอาดข้อความสตริงก่อนส่งเข้าไปใน onClick ฟังก์ชัน ป้องกันโควทพัง
-const cleanReason = leave.reason ? leave.reason.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, ' ') : "";
-
-table.innerHTML += `
-
-<tr>
-
-<td class="${isApplicantLeader ? 'leader-name' : ''}">${leave.username}</td>
-
-<td>${leaveTypeDisplay}</td>
-
-<td>
-${leave.startDate}
--
-${leave.endDate}
-</td>
-
-<td>${leave.days}</td>
-
-<td>
-
-<span class="
-status
-${
-leave.status === "approved"
-? "success"
-: "pending"
-}">
-
-${
-leave.status === "approved"
-? p.statusApproved
-: p.statusPending
-}
-
-</span>
-
-<br><br>
-
-<button style="margin-bottom: 12px; padding: 10px 14px; background: #111; border: 1px solid #ff2d2d; color:#ff2d2d; font-size:11px; border-radius:10px; cursor:pointer;" 
-        onclick="openLeaveDetailModal('${cleanReason}')">
-    ${p.btnDetail}
-</button>
-<br>
-
-${actionButtons}
-
-</td>
-
-</tr>
-
-`;
-
-}
-
-}
-
-document.getElementById(
-"todayCount").innerText =
-today;
-
-document.getElementById(
-"totalLeaves").innerText =
-total;
-
-const ctx =
-document.getElementById(
-"leaveChart");
-
-if(chart){
-
-chart.destroy();
-
-}
-
-chart = new Chart(ctx,{
-
-type:"doughnut",
-
-data:{
-
-labels:[
-p.optSick,
-p.optPersonal,
-p.optVacation
-],
-
-datasets:[{
-
-data:[
-sick,
-personal,
-vacation
-],
-
-borderWidth:0
-
-}]
-
-},
-
-options:{
-
-responsive:true,
-maintainAspectRatio:false,
-cutout:"72%"
-}
-});
-}
-
-window.approveLeave =
-async function(id){
-
-await update(
-ref(db,"leaves/" + id),{
-
-status:"approved"
-
-});
-
-alert(languages[currentLang].alertApproveSuccess);
-
-loadLeaves();
-
-}
-
-window.deleteLeave =
-async function(id){
-const p = languages[currentLang];
-const confirmDelete =
-confirm(p.alertDeleteLeave);
-
-if(!confirmDelete) return;
-
-await remove(
-ref(db,"leaves/" + id));
-
-alert(p.alertDeleteLeaveSuccess);
-
-loadLeaves();
-
-}
-
-/* USERS MANAGEMENT */
+window.approveLeave = async function(id){ await update(ref(db,"leaves/" + id),{ status:"approved" }); alert(languages[currentLang].alertApproveSuccess); loadLeaves(); }
+window.deleteLeave = async function(id){ if(confirm(languages[currentLang].alertDeleteLeave)){ await remove(ref(db,"leaves/" + id)); alert(languages[currentLang].alertDeleteLeaveSuccess); loadLeaves(); } }
 
 async function loadUsers(){
-
-const role = localStorage.getItem("role");
-if(role !== "admin") return;
-
-const snapshot = await get(ref(db,"users"));
-const table = document.getElementById("userTable");
-
-table.innerHTML = "";
-let total = 0;
-
-if(snapshot.exists()){
-
-const users = snapshot.val();
-
-Object.entries(users)
-.forEach(([key,user]) => {
-
-total++;
-
-let isLeader = (user.role === "admin" || user.role === "leader");
-let roleMngDisplay = "MEMBER";
-
-if(user.role === "member") roleMngDisplay = "MEMBER";
-if(user.role === "leader") roleMngDisplay = "LEADER";
-if(user.role === "admin") roleMngDisplay = "ADMIN";
-
-table.innerHTML += `
-
-<tr>
-
-<td class="${isLeader ? 'leader-name' : ''}">${user.username}</td>
-
-<td>${roleMngDisplay}</td>
-
-<td>
-
-<select
-onchange="
-changeRole(
-'${key}',
-this.value
-)">
-
-<option value="member" ${user.role === "member" ? "selected" : ""}>MEMBER</option>
-<option value="leader" ${user.role === "leader" ? "selected" : ""}>LEADER</option>
-<option value="admin" ${user.role === "admin" ? "selected" : ""}>ADMIN</option>
-
-</select>
-
-<button
-onclick="
-deleteUser(
-'${key}'
-)">
-
-DELETE
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
+    if(localStorage.getItem("role") !== "admin") return;
+    const snap = await get(ref(db,"users")), table = document.getElementById("userTable"); table.innerHTML = ""; let total = 0;
+    if(snap.exists()){
+        Object.entries(snap.val()).forEach(([key,user]) => {
+            total++; let isL = (user.role === "admin" || user.role === "leader");
+            table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td>
+            <select onchange="changeRole('${key}', this.value)"><option value="member" ${user.role === "member" ? "selected" : ""}>MEMBER</option><option value="leader" ${user.role === "leader" ? "selected" : ""}>LEADER</option><option value="admin" ${user.role === "admin" ? "selected" : ""}>ADMIN</option></select>
+            <button onclick="deleteUser('${key}')">DELETE</button></td></tr>`;
+        });
+    }
+    document.getElementById("allUsers").innerText = total;
 }
-
-document.getElementById("allUsers").innerText = total;
-
-}
-
-/* MEMBERS LIST */
 
 async function loadMembers(){
-const p = languages[currentLang];
-const snapshot = await get(ref(db,"users"));
-const table = document.getElementById("memberTable");
-
-table.innerHTML = "";
-
-if(snapshot.exists()){
-const users = snapshot.val();
-
-Object.values(users)
-.forEach((user)=>{
-
-let roleDisplay = "MEMBER";
-let isLeader = false;
-
-if(user.role === "admin") {
-    roleDisplay = "ADMIN";
-    isLeader = true;
-} else if(user.role === "leader") {
-    roleDisplay = "LEADER";
-    isLeader = true;
-} else if(user.role === "member") {
-    roleDisplay = "MEMBER";
+    const p = languages[currentLang], snap = await get(ref(db,"users")), table = document.getElementById("memberTable"); table.innerHTML = "";
+    if(snap.exists()){
+        Object.values(snap.val()).forEach((user)=>{
+            let isL = (user.role === "admin" || user.role === "leader");
+            table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td><button style="padding:6px 12px; font-size:11px; background:#ff1e1e;" onclick="viewMemberDetail('${user.username}')">${p.viewBtnText}</button></td></tr>`;
+        });
+    }
 }
 
-table.innerHTML += `
-
-<tr>
-
-<td class="${isLeader ? 'leader-name' : ''}">${user.username}</td>
-
-<td>${roleDisplay}</td>
-
-<td>
-    <button style="padding: 6px 12px; font-size: 11px; background: #ff1e1e;" onclick="viewMemberDetail('${user.username}')">${p.viewBtnText}</button>
-</td>
-
-</tr>
-
-`;
-
-});
-
+window.changeRole = async function(user,role){ await update(ref(db,"users/" + user),{ role:role }); alert(languages[currentLang].alertRoleSuccess); loadUsers(); loadMembers(); updateProfileWidget(); }
+window.deleteUser = async function(user){
+    if(user === "admin"){ alert(languages[currentLang].alertNoDeleteAdmin); return; }
+    if(confirm(languages[currentLang].alertConfirmDeleteUser)){ await remove(ref(db,"users/" + user)); alert(languages[currentLang].alertDeleteUserSuccess); loadUsers(); loadMembers(); }
 }
-
-}
-
-window.changeRole =
-async function(user,role){
-
-await update(
-ref(db,"users/" + user),{
-
-role:role
-
-});
-
-alert(languages[currentLang].alertRoleSuccess);
-
-loadUsers();
-loadMembers();
-updateProfileWidget();
-
-}
-
-window.deleteUser =
-async function(user){
-const p = languages[currentLang];
-if(user === "admin"){
-
-alert(p.alertNoDeleteAdmin);
-return;
-
-}
-
-const confirmDelete =
-confirm(p.alertConfirmDeleteUser);
-
-if(!confirmDelete) return;
-
-await remove(
-ref(db,"users/" + user));
-
-alert(p.alertDeleteUserSuccess);
-
-loadUsers();
-loadMembers();
-
-}
-
-/* MONEY */
 
 window.editTargetMoney = async function() {
-    const moneySelector = document.getElementById("moneyMonthSelector");
-    const now = new Date();
-    const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    
-    const amount = prompt(languages[currentLang].promptMoneyConfig);
-    if (amount === null) return;
-    
-    await set(ref(db, "money_config/" + selectedMonth), {
-        target: amount
-    });
-    alert(languages[currentLang].alertMoneyConfigSuccess);
-    loadMoney();
+    const moneySelector = document.getElementById("moneyMonthSelector"), now = new Date();
+    const selMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const amount = prompt(languages[currentLang].promptMoneyConfig); if (amount === null) return;
+    await set(ref(db, "money_config/" + selMonth), { target: amount }); alert(languages[currentLang].alertMoneyConfigSuccess); loadMoney();
 }
-
-window.handleMoneyStatusChange = function(username, status) {
-    const fineInput = document.getElementById(`fine-container-${username}`);
-    if (status === "ส่งแล้ว (ล่าช้า)" || status === languages.en.statusSentLate) {
-        fineInput.classList.remove("hidden");
-    } else {
-        fineInput.classList.add("hidden");
-    }
-}
+window.handleMoneyStatusChange = function(username, status) { document.getElementById(`fine-container-${username}`).classList.toggle("hidden", !(status === "ส่งแล้ว (ล่าช้า)" || status === languages.en.statusSentLate)); }
 
 async function loadMoney(){
-const p = languages[currentLang];
-const snapshot =
-await get(ref(db,"users"));
-
-const moneySelector = 
-document.getElementById("moneyMonthSelector");
-
-if(moneySelector.innerHTML === ""){
-
-let optionsHtml = "";
-for(let i=0;i<12;i++){
-
-const start =
-new Date();
-
-start.setMonth(
-start.getMonth() - i
-);
-
-const monthNum = String(start.getMonth() + 1).padStart(2, '0');
-const thaiYear = currentLang === "th" ? start.getFullYear() + 543 : start.getFullYear();
-const value = `${start.getFullYear()}-${monthNum}`;
-const text = currentLang === "th" ? `เดือน ${monthNum}/${thaiYear}` : `Month ${monthNum}/${thaiYear}`;
-
-optionsHtml += `
-<option value="${value}">
-${text}
-</option>
-`;
-
-}
-moneySelector.innerHTML = optionsHtml;
-
-}
-
-const now = new Date();
-const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-
-const role = localStorage.getItem("role");
-
-if(role === "admin" || role === "leader"){ 
-    const editBtn = document.getElementById("editMoneyBtn");
-    if(editBtn) editBtn.classList.remove("hidden");
-} else {
-    const editBtn = document.getElementById("editMoneyBtn");
-    if(editBtn) editBtn.classList.add("hidden");
-}
-
-const configSnapshot = await get(ref(db, "money_config/" + selectedMonth));
-const targetText = document.getElementById("targetMoneyText");
-if(configSnapshot.exists() && configSnapshot.val().target){
-    targetText.innerText = configSnapshot.val().target;
-} else {
-    targetText.innerText = "0";
-}
-
-const moneySnapshot =
-await get(ref(db,"money/" + selectedMonth));
-
-const table =
-document.getElementById(
-"moneyTable");
-
-table.innerHTML = "";
-
-let moneyData = {};
-
-if(moneySnapshot.exists()){
-
-moneyData =
-moneySnapshot.val();
-
-}
-
-if(snapshot.exists()){
-const users = snapshot.val();
-
-for (const user of Object.values(users)) {
-
-const rawStatus = moneyData[user.username]?.status || "ยังไม่ส่ง";
-const fine = moneyData[user.username]?.fine || "";
-
-let statusLang = p.statusNotSent;
-if (rawStatus === "ส่งแล้ว") statusLang = p.statusSent;
-if (rawStatus === "ส่งแล้ว (ล่าช้า)") statusLang = p.statusSentLate;
-
-let displayText = statusLang;
-if (rawStatus === "ส่งแล้ว (ล่าช้า)" && fine) {
-    displayText = p.statusDisplayLate.replace("{fine}", fine);
-}
-
-let manageButton = "";
-
-if(
-role === "admin" ||
-role === "leader"
-){
-
-manageButton = `
-
-<select
-id="money-${user.username}" onchange="handleMoneyStatusChange('${user.username}', this.value)">
-
-<option value="ยังไม่ส่ง" ${rawStatus === "ยังไม่ส่ง" ? "selected" : ""}>${p.statusNotSent}</option>
-<option value="ส่งแล้ว" ${rawStatus === "ส่งแล้ว" ? "selected" : ""}>${p.statusSent}</option>
-<option value="ส่งแล้ว (ล่าช้า)" ${rawStatus === "ส่งแล้ว (ล่าช้า)" ? "selected" : ""}>${p.statusSentLate}</option>
-
-</select>
-
-<div id="fine-container-${user.username}" class="${rawStatus === 'ส่งแล้ว (ล่าช้า)' ? '' : 'hidden'}">
-    <input type="text" id="fine-input-${user.username}" class="fine-input" placeholder="${p.finePlace}" value="${fine}">
-</div>
-
-<button
-onclick="
-confirmMoney(
-'${user.username}'
-)">
-
-${p.confirmBtnText}
-
-</button>
-
-`;
-
-}
-
-const isApplicantLeader = (user.role === "admin" || user.role === "leader");
-
-table.innerHTML += `
-
-<tr>
-
-<td class="${isApplicantLeader ? 'leader-name' : ''}">${user.username}</td>
-
-<td>
-
-<span class="
-status
-${
-rawStatus.startsWith("ส่งแล้ว")
-? "success"
-: "pending"
-}">
-
-${displayText}
-
-</span>
-
-</td>
-
-<td>
-
-${manageButton}
-
-</td>
-
-</tr>
-
-`;
-
-}
-
-}
-
-}
-
-window.confirmMoney =
-async function(user){
-
-    const selectorElement = document.getElementById("moneyMonthSelector");
-    let selectedMonth = selectorElement.value;
-    
-    if (!selectedMonth) {
-        const now = new Date();
-        selectedMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const p = languages[currentLang], snapshot = await get(ref(db,"users")), moneySelector = document.getElementById("moneyMonthSelector");
+    if(moneySelector.innerHTML === ""){
+        let opts = "";
+        for(let i=0;i<12;i++){
+            const d = new Date(); d.setMonth(d.getMonth() - i);
+            const mNum = String(d.getMonth() + 1).padStart(2, '0'), y = currentLang === "th" ? d.getFullYear() + 543 : d.getFullYear();
+            opts += `<option value="${d.getFullYear()}-${mNum}">${currentLang === "th" ? `เดือน ${mNum}/${y}` : `Month ${mNum}/${y}`}</option>`;
+        }
+        moneySelector.innerHTML = opts;
     }
+    const now = new Date(), selMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`, role = localStorage.getItem("role");
+    document.getElementById("editMoneyBtn").classList.toggle("hidden", !(role === "admin" || role === "leader"));
+    
+    const confSnap = await get(ref(db, "money_config/" + selMonth));
+    document.getElementById("targetMoneyText").innerText = (confSnap.exists() && confSnap.val().target) ? confSnap.val().target : "0";
+    
+    const moneySnap = await get(ref(db,"money/" + selMonth)), table = document.getElementById("moneyTable"); table.innerHTML = "";
+    let moneyData = moneySnap.exists() ? moneySnap.val() : {};
 
+    if(snapshot.exists()){
+        for (const user of Object.values(snapshot.val())) {
+            const rawStatus = moneyData[user.username]?.status || "ยังไม่ส่ง", fine = moneyData[user.username]?.fine || "";
+            let statusLang = rawStatus === "ส่งแล้ว" ? p.statusSent : (rawStatus === "ส่งแล้ว (ล่าช้า)" ? p.statusSentLate : p.statusNotSent);
+            let dText = (rawStatus === "ส่งแล้ว (ล่าช้า)" && fine) ? p.statusDisplayLate.replace("{fine}", fine) : statusLang;
+            let mBtn = "";
+            if(role === "admin" || role === "leader"){
+                mBtn = `<select id="money-${user.username}" onchange="handleMoneyStatusChange('${user.username}', this.value)"><option value="ยังไม่ส่ง" ${rawStatus === "ยังไม่ส่ง" ? "selected" : ""}>${p.statusNotSent}</option><option value="ส่งแล้ว" ${rawStatus === "ส่งแล้ว" ? "selected" : ""}>${p.statusSent}</option><option value="ส่งแล้ว (ล่าช้า)" ${rawStatus === "ส่งแล้ว (ล่าช้า)" ? "selected" : ""}>${p.statusSentLate}</option></select>
+                <div id="fine-container-${user.username}" class="${rawStatus === 'ส่งแล้ว (ล่าช้า)' ? '' : 'hidden'}"><input type="text" id="fine-input-${user.username}" class="fine-input" placeholder="${p.finePlace}" value="${fine}"></div>
+                <button onclick="confirmMoney('${user.username}')">${p.confirmBtnText}</button>`;
+            }
+            table.innerHTML += `<tr><td class="${(user.role === "admin" || user.role === "leader") ? 'leader-name' : ''}">${user.username}</td><td><span class="status ${rawStatus.startsWith("ส่งแล้ว") ? "success" : "pending"}">${dText}</span></td><td>${mBtn}</td></tr>`;
+        }
+    }
+}
+
+window.confirmMoney = async function(user){
+    const moneySelector = document.getElementById("moneyMonthSelector");
+    let selMonth = moneySelector.value || `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
     const value = document.getElementById("money-" + user).value;
-    
-    let fineValue = "";
-    if (value === "ส่งแล้ว (ล่าช้า)") {
-        fineValue = document.getElementById("fine-input-" + user).value.trim();
-    }
-
-    await set(ref(db, "money/" + selectedMonth + "/" + user), {
-        status: value,
-        fine: fineValue
-    });
-
-    alert(languages[currentLang].alertUpdateMoney);
-    loadMoney();
+    let fineValue = value === "ส่งแล้ว (ล่าช้า)" ? document.getElementById("fine-input-" + user).value.trim() : "";
+    await set(ref(db, "money/" + selMonth + "/" + user), { status: value, fine: fineValue });
+    alert(languages[currentLang].alertUpdateMoney); loadMoney();
 }
-
 </script>
-
 </body>
 </html>
