@@ -14,7 +14,7 @@
 
 <div id="loadingPage" class="hidden">
     <div class="loader-content">
-        <div class="loader-title">ACCESSING SYS</div>
+        <div id="loadTitle" class="loader-title">ACCESSING SYS</div>
         <div class="loader-bar-bg">
             <div id="loaderFill" class="loader-bar-fill"></div>
         </div>
@@ -24,13 +24,13 @@
 
 <div id="myProfileModal" class="cyber-modal hidden">
     <div class="cyber-modal-content">
-        <h3>EDIT PROFILE</h3>
+        <h3 id="modalEditTitle">EDIT PROFILE</h3>
         <input type="text" id="editAvatarUrl" placeholder="IMAGE URL (ลิงก์รูปภาพ)">
         <input type="text" id="editFacebook" placeholder="FACEBOOK LINK">
         <input type="text" id="editDiscord" placeholder="DISCORD LINK">
         <div class="modal-btn-group">
-            <button class="modal-btn-close" onclick="closeMyProfileModal()">CANCEL</button>
-            <button class="modal-btn-save" onclick="saveMyProfile()">SAVE CHANGES</button>
+            <button id="modalCancelBtn" class="modal-btn-close" onclick="closeMyProfileModal()">CANCEL</button>
+            <button id="modalSaveBtn" class="modal-btn-save" onclick="saveMyProfile()">SAVE CHANGES</button>
         </div>
     </div>
 </div>
@@ -51,7 +51,7 @@
         </div>
         
         <div class="modal-btn-group" style="margin-top: 20px;">
-            <button class="modal-btn-close" style="width:100%;" onclick="closeMemberViewModal()">CLOSE</button>
+            <button id="modalCloseBtn" class="modal-btn-close" style="width:100%;" onclick="closeMemberViewModal()">CLOSE</button>
         </div>
     </div>
 </div>
@@ -60,7 +60,7 @@
 
     <div class="login-box">
 
-        <h1>LAPLUNGROI LOGIN</h1>
+        <h1 id="loginTitle">LAPLUNGROI LOGIN</h1>
 
         <input type="text"
         id="username"
@@ -82,7 +82,7 @@
 
         </button>
 
-        <div class="switch"
+        <div id="switchAuthMode" class="switch"
         onclick="toggleMode()">
 
             CREATE ACCOUNT
@@ -96,6 +96,10 @@
 <div id="dashboard">
 
 <div class="top-header mobile-only">
+    <div class="lang-switcher">
+        <button class="lang-btn langBtnTH" onclick="toggleLanguage('th')">TH</button>
+        <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
+    </div>
     <div class="user-profile-widget" onclick="openMyProfileModal()">
         <div class="profile-info-block">
             <div class="profile-info-name widgetUserName">GUEST</div>
@@ -113,44 +117,25 @@
 
 <ul>
 
-<li onclick="showSection('dashboardSection')">
-DASHBOARD
-</li>
-
-<li onclick="showSection('historySection')">
-LEAVE HISTORY
-</li>
-
-<li onclick="showSection('moneySection')">
-WEEKLY PAYMENT
-</li>
-
-<li onclick="showSection('memberSection')">
-MEMBERS
-</li>
-
-<li id="userMenu"
-class="hidden"
-onclick="showSection('userSection')">
-
-USER MANAGEMENT
-
-</li>
+<li id="menuDash" onclick="showSection('dashboardSection')">DASHBOARD</li>
+<li id="menuHistory" onclick="showSection('historySection')">LEAVE HISTORY</li>
+<li id="menuMoney" onclick="showSection('moneySection')">WEEKLY PAYMENT</li>
+<li id="menuMembers" onclick="showSection('memberSection')">MEMBERS</li>
+<li id="userMenu" class="hidden" onclick="showSection('userSection')">USER MANAGEMENT</li>
 
 </ul>
 
-<button class="logout-btn"
-onclick="logout()">
-
-LOGOUT
-
-</button>
+<button id="logoutBtn" class="logout-btn" onclick="logout()">LOGOUT</button>
 
 </div>
 
 <div class="main">
 
 <div class="top-header desktop-only">
+    <div class="lang-switcher">
+        <button class="lang-btn langBtnTH" onclick="toggleLanguage('th')">TH</button>
+        <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
+    </div>
     <div class="user-profile-widget" onclick="openMyProfileModal()">
         <div class="profile-info-block">
             <div class="profile-info-name widgetUserName">GUEST</div>
@@ -165,17 +150,17 @@ LOGOUT
 <div class="cards">
 
 <div class="card">
-<h3>PEOPLE TODAY</h3>
+<h3 id="cardToday">PEOPLE TODAY</h3>
 <p id="todayCount">0</p>
 </div>
 
 <div class="card">
-<h3>TOTAL USERS</h3>
+<h3 id="cardTotalUsers">TOTAL USERS</h3>
 <p id="allUsers">0</p>
 </div>
 
 <div class="card">
-<h3>TOTAL LEAVES</h3>
+<h3 id="cardTotalLeaves">TOTAL LEAVES</h3>
 <p id="totalLeaves">0</p>
 </div>
 
@@ -185,7 +170,7 @@ LOGOUT
 
 <div class="box">
 
-<h2>LEAVE ANALYTICS</h2>
+<h2 id="boxAnalytics">LEAVE ANALYTICS</h2>
 
 <div class="chart-container">
 
@@ -197,15 +182,15 @@ LOGOUT
 
 <div class="box">
 
-<h2>CREATE LEAVE</h2>
+<h2 id="boxCreateLeave">CREATE LEAVE</h2>
 
 <form id="leaveForm">
 
 <select id="type">
 
-<option>ลาป่วย</option>
-<option>ลากิจ</option>
-<option>พักร้อน</option>
+<option id="optSick">ลาป่วย</option>
+<option id="optPersonal">ลากิจ</option>
+<option id="optVacation">พักร้อน</option>
 
 </select>
 
@@ -223,7 +208,7 @@ type="date"
 id="endDate"
 onclick="this.showPicker()">
 
-<button type="submit">
+<button id="leaveSubmitBtn" type="submit">
 SUBMIT REQUEST
 </button>
 
@@ -247,7 +232,7 @@ flex-wrap:wrap;
 gap:15px;
 ">
 
-<h2>
+<h2 id="boxHistory">
 LEAVE HISTORY
 </h2>
 
@@ -274,11 +259,11 @@ font-size:14px;
 
 <tr>
 
-<th>USER</th>
-<th>TYPE</th>
-<th>DURATION</th>
-<th>DAYS</th>
-<th>STATUS</th>
+<th id="thUser">USER</th>
+<th id="thType">TYPE</th>
+<th id="thDuration">DURATION</th>
+<th id="thDays">DAYS</th>
+<th id="thStatus">STATUS</th>
 
 </tr>
 
@@ -302,9 +287,9 @@ flex-wrap:wrap;
 gap:15px;
 ">
 <div>
-    <h2 style="display:inline-block; margin-bottom: 5px;">WEEKLY PAYMENT</h2>
+    <h2 id="boxMoney" style="display:inline-block; margin-bottom: 5px;">WEEKLY PAYMENT</h2>
     <div id="totalTargetMoneyDisplay" style="color:#aaa; font-size:14px; margin-top:5px;">
-        เดือนนี้ชำระเงิน: <span id="targetMoneyText" style="color:#ff2d2d; font-weight:bold;">0</span> B
+        <span id="lblPaymentText">เดือนนี้ชำระเงิน</span>: <span id="targetMoneyText" style="color:#ff2d2d; font-weight:bold;">0</span> B
         <button id="editMoneyBtn" class="edit-money-btn hidden" onclick="editTargetMoney()">แก้ไข</button>
     </div>
 </div>
@@ -322,9 +307,9 @@ onchange="loadMoney()">
 
 <tr>
 
-<th>USER</th>
-<th>STATUS</th>
-<th>MANAGE</th>
+<th id="thMoneyUser">USER</th>
+<th id="thMoneyStatus">STATUS</th>
+<th id="thMoneyManage">MANAGE</th>
 
 </tr>
 
@@ -339,7 +324,7 @@ onchange="loadMoney()">
 <div id="memberSection"
 class="box hidden">
 
-<h2>ALL MEMBERS</h2>
+<h2 id="boxMembers">ALL MEMBERS</h2>
 
 <table>
 
@@ -347,9 +332,9 @@ class="box hidden">
 
 <tr>
 
-<th>USERNAME</th>
-<th>ROLE</th>
-<th>DETAILS</th>
+<th id="thMemUser">USERNAME</th>
+<th id="thMemRole">ROLE</th>
+<th id="thMemDetails">DETAILS</th>
 
 </tr>
 
@@ -364,7 +349,7 @@ class="box hidden">
 <div id="userSection"
 class="box hidden">
 
-<h2>USER MANAGEMENT</h2>
+<h2 id="boxUserManage">USER MANAGEMENT</h2>
 
 <table>
 
@@ -372,9 +357,9 @@ class="box hidden">
 
 <tr>
 
-<th>USER</th>
-<th>ROLE</th>
-<th>MANAGE</th>
+<th id="thMngUser">USER</th>
+<th id="thMngRole">ROLE</th>
+<th id="thMngAction">MANAGE</th>
 
 </tr>
 
@@ -432,6 +417,225 @@ let chart;
 
 const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
+const languages = {
+    th: {
+        loginTitle: "LAPLUNGROI เข้าสู่ระบบ",
+        usernamePlace: "ชื่อผู้ใช้งาน",
+        passwordPlace: "รหัสผ่าน",
+        confirmPasswordPlace: "ยืนยันรหัสผ่าน",
+        loginBtn: "เข้าสู่ระบบ",
+        registerBtn: "สมัครสมาชิก",
+        switchCreate: "สร้างบัญชีใหม่",
+        switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
+        menuDash: "แดชบอร์ด",
+        menuHistory: "ประวัติการลา",
+        menuMoney: "การชำระเงิน",
+        menuMembers: "รายชื่อสมาชิก",
+        menuUserMng: "จัดการผู้ใช้งาน",
+        logout: "ออกจากระบบ",
+        cardToday: "จำนวนคนลาวันนี้",
+        cardTotalUsers: "ผู้ใช้งานทั้งหมด",
+        cardTotalLeaves: "ใบลาทั้งหมดในเดือน",
+        boxAnalytics: "สถิติการลา",
+        boxCreateLeave: "สร้างใบลา",
+        optSick: "ลาป่วย",
+        optPersonal: "ลากิจ",
+        optVacation: "พักร้อน",
+        reasonPlace: "เหตุผลการลา",
+        leaveSubmit: "ส่งคำขอใบลา",
+        boxHistory: "ประวัติการลา",
+        thUser: "ผู้ใช้งาน", thType: "ประเภท", thDuration: "ระยะเวลา", thDays: "จำนวนวัน", thStatus: "สถานะ",
+        boxMoney: "การชำระเงินรายเดือน",
+        lblPaymentText: "เดือนนี้ชำระเงิน",
+        editBtn: "แก้ไข",
+        thMoneyStatus: "สถานะ", thMoneyManage: "จัดการ",
+        boxMembers: "สมาชิกทั้งหมด",
+        thMemDetails: "รายละเอียด",
+        boxUserManage: "จัดการสิทธิ์ผู้ใช้งาน",
+        thMngAction: "การจัดการ",
+        statusApproved: "อนุมัติแล้ว",
+        statusPending: "รออนุมัติ",
+        alertFill: "กรอกข้อมูลให้ครบ",
+        alertMatch: "Password ไม่ตรงกัน",
+        alertDup: "Username ซ้ำ",
+        alertRegisSuccess: "สมัครสมาชิกสำเร็จ",
+        alertNoUser: "ไม่พบ Username",
+        alertWrongPass: "Password ไม่ถูกต้อง",
+        alertDateWrong: "วันที่ไม่ถูกต้อง",
+        alertLeaveSuccess: "ส่งคำลาแล้ว",
+        alertApproveSuccess: "อนุมัติสำเร็จ",
+        alertDeleteLeave: "ยืนยันการลบรายการใบลาชุดนี้ ?",
+        alertDeleteLeaveSuccess: "ลบใบลาสำเร็จ",
+        alertRoleSuccess: "เปลี่ยนสิทธิ์สำเร็จ",
+        alertNoDeleteAdmin: "ลบ admin ไม่ได้",
+        alertConfirmDeleteUser: "ยืนยันการลบผู้ใช้งาน ?",
+        alertDeleteUserSuccess: "ลบสำเร็จ",
+        alertUpdateMoney: "อัปเดตสถานะสำเร็จ",
+        promptMoneyConfig: "กรอกจำนวนเงินที่ต้องชำระประจำเดือนนี้ (เช่น 500,000):",
+        alertMoneyConfigSuccess: "บันทึกจำนวนเงินชำระสำเร็จ",
+        notSet: "ยังไม่ตั้งค่า",
+        statusNotSent: "ยังไม่ส่ง",
+        statusSent: "ส่งแล้ว",
+        statusSentLate: "ส่งแล้ว (ล่าช้า)",
+        statusDisplayLate: "ส่งแล้ว (ล่าช้าปรับ {fine} B)",
+        finePlace: "จำนวนค่าปรับ",
+        confirmBtnText: "ยืนยัน",
+        editProfileTitle: "แก้ไขโปรไฟล์",
+        imgUrlPlace: "ลิงก์รูปภาพโปรไฟล์",
+        saveChangeBtn: "บันทึกการเปลี่ยนแปลง",
+        cancelBtn: "ยกเลิก",
+        viewBtnText: "ดูข้อมูล",
+        closeBtnText: "ปิดหน้าต่าง"
+    },
+    en: {
+        loginTitle: "LAPLUNGROI LOGIN",
+        usernamePlace: "USERNAME",
+        passwordPlace: "PASSWORD",
+        confirmPasswordPlace: "CONFIRM PASSWORD",
+        loginBtn: "LOGIN",
+        registerBtn: "REGISTER",
+        switchCreate: "CREATE ACCOUNT",
+        switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
+        menuDash: "DASHBOARD",
+        menuHistory: "LEAVE HISTORY",
+        menuMoney: "WEEKLY PAYMENT",
+        menuMembers: "MEMBERS",
+        menuUserMng: "USER MANAGEMENT",
+        logout: "LOGOUT",
+        cardToday: "PEOPLE TODAY",
+        cardTotalUsers: "TOTAL USERS",
+        cardTotalLeaves: "TOTAL LEAVES",
+        boxAnalytics: "LEAVE ANALYTICS",
+        boxCreateLeave: "CREATE LEAVE",
+        optSick: "Sick Leave",
+        optPersonal: "Personal Leave",
+        optVacation: "Vacation Leave",
+        reasonPlace: "REASON",
+        leaveSubmit: "SUBMIT REQUEST",
+        boxHistory: "LEAVE HISTORY",
+        thUser: "USER", thType: "TYPE", thDuration: "DURATION", thDays: "DAYS", thStatus: "STATUS",
+        boxMoney: "WEEKLY PAYMENT",
+        lblPaymentText: "Monthly Target",
+        editBtn: "EDIT",
+        thMoneyStatus: "STATUS", thMoneyManage: "MANAGE",
+        boxMembers: "ALL MEMBERS",
+        thMemDetails: "DETAILS",
+        boxUserManage: "USER MANAGEMENT",
+        thMngAction: "MANAGE",
+        statusApproved: "Approved",
+        statusPending: "Pending",
+        alertFill: "Please fill in all fields",
+        alertMatch: "Passwords do not match",
+        alertDup: "Username already exists",
+        alertRegisSuccess: "Registration successful",
+        alertNoUser: "Username not found",
+        alertWrongPass: "Incorrect password",
+        alertDateWrong: "Invalid date range",
+        alertLeaveSuccess: "Leave request submitted",
+        alertApproveSuccess: "Approved successfully",
+        alertDeleteLeave: "Are you sure you want to delete this leave request?",
+        alertDeleteLeaveSuccess: "Leave request deleted",
+        alertRoleSuccess: "Role updated successfully",
+        alertNoDeleteAdmin: "Cannot delete master admin account",
+        alertConfirmDeleteUser: "Confirm deleting this user account?",
+        alertDeleteUserSuccess: "User deleted successfully",
+        alertUpdateMoney: "Status updated successfully",
+        promptMoneyConfig: "Enter monthly payment target amount (e.g., 500,000):",
+        alertMoneyConfigSuccess: "Monthly target saved successfully",
+        notSet: "NOT SET",
+        statusNotSent: "Unpaid",
+        statusSent: "Paid",
+        statusSentLate: "Paid (Late)",
+        statusDisplayLate: "Paid (Late fine {fine} B)",
+        finePlace: "Fine amount",
+        confirmBtnText: "CONFIRM",
+        editProfileTitle: "EDIT PROFILE",
+        imgUrlPlace: "IMAGE URL",
+        saveChangeBtn: "SAVE CHANGES",
+        cancelBtn: "CANCEL",
+        viewBtnText: "VIEW",
+        closeBtnText: "CLOSE"
+    }
+};
+
+let currentLang = localStorage.getItem("sysLang") || "th";
+
+window.toggleLanguage = function(lang) {
+    currentLang = lang;
+    localStorage.setItem("sysLang", lang);
+    
+    document.querySelectorAll(".langBtnTH").forEach(btn => btn.classList.toggle("active", lang === "th"));
+    document.querySelectorAll(".langBtnEN").forEach(btn => btn.classList.toggle("active", lang === "en"));
+    
+    applyLanguagePack();
+    
+    if (document.getElementById("dashboard").style.display === "block") {
+        loadLeaves();
+        loadMoney();
+        loadMembers();
+        loadUsers();
+    }
+};
+
+function applyLanguagePack() {
+    const p = languages[currentLang];
+    
+    document.getElementById("loginTitle").innerText = p.loginTitle;
+    document.getElementById("username").placeholder = p.usernamePlace;
+    document.getElementById("password").placeholder = p.passwordPlace;
+    document.getElementById("confirmPassword").placeholder = p.confirmPasswordPlace;
+    document.getElementById("authBtn").innerText = isRegister ? p.registerBtn : p.loginBtn;
+    document.getElementById("switchAuthMode").innerText = isRegister ? p.switchLogin : p.switchCreate;
+    
+    document.getElementById("menuDash").innerText = p.menuDash;
+    document.getElementById("menuHistory").innerText = p.menuHistory;
+    document.getElementById("menuMoney").innerText = p.menuMoney;
+    document.getElementById("menuMembers").innerText = p.menuMembers;
+    document.getElementById("userMenu").innerText = p.menuUserMng;
+    document.getElementById("logoutBtn").innerText = p.logout;
+    
+    document.getElementById("cardToday").innerText = p.cardToday;
+    document.getElementById("cardTotalUsers").innerText = p.cardTotalUsers;
+    document.getElementById("cardTotalLeaves").innerText = p.cardTotalLeaves;
+    document.getElementById("boxAnalytics").innerText = p.boxAnalytics;
+    document.getElementById("boxCreateLeave").innerText = p.boxCreateLeave;
+    document.getElementById("optSick").innerText = p.optSick;
+    document.getElementById("optPersonal").innerText = p.optPersonal;
+    document.getElementById("optVacation").innerText = p.optVacation;
+    document.getElementById("reason").placeholder = p.reasonPlace;
+    document.getElementById("leaveSubmitBtn").innerText = p.leaveSubmit;
+    
+    document.getElementById("boxHistory").innerText = p.boxHistory;
+    document.getElementById("thUser").innerText = p.thUser;
+    document.getElementById("thType").innerText = p.thType;
+    document.getElementById("thDuration").innerText = p.thDuration;
+    document.getElementById("thDays").innerText = p.thDays;
+    document.getElementById("thStatus").innerText = p.thStatus;
+    
+    document.getElementById("boxMoney").innerText = p.boxMoney;
+    document.getElementById("lblPaymentText").innerText = p.lblPaymentText;
+    document.getElementById("editMoneyBtn").innerText = p.editBtn;
+    document.getElementById("thMoneyUser").innerText = p.thUser;
+    document.getElementById("thMoneyStatus").innerText = p.thMoneyStatus;
+    document.getElementById("thMoneyManage").innerText = p.thMoneyManage;
+    
+    document.getElementById("boxMembers").innerText = p.boxMembers;
+    document.getElementById("thMemUser").innerText = p.usernamePlace;
+    document.getElementById("thMemRole").innerText = "ROLE";
+    document.getElementById("thMemDetails").innerText = p.thMemDetails;
+    
+    document.getElementById("boxUserManage").innerText = p.boxUserManage;
+    document.getElementById("thMngUser").innerText = p.thUser;
+    document.getElementById("thMngRole").innerText = "ROLE";
+    document.getElementById("thMngAction").innerText = p.thMngAction;
+    
+    document.getElementById("modalEditTitle").innerText = p.editProfileTitle;
+    document.getElementById("editAvatarUrl").placeholder = p.imgUrlPlace;
+    document.getElementById("modalCancelBtn").innerText = p.cancelBtn;
+    document.getElementById("modalSaveBtn").innerText = p.saveChangeBtn;
+    document.getElementById("modalCloseBtn").innerText = p.closeBtnText;
+}
+
 async function createAdmin(){
 
 const snapshot =
@@ -459,6 +663,7 @@ createAdmin();
 window.toggleMode = function(){
 
 isRegister = !isRegister;
+const p = languages[currentLang];
 
 document.getElementById(
 "confirmPassword").style.display =
@@ -466,7 +671,10 @@ isRegister ? "block" : "none";
 
 document.getElementById(
 "authBtn").innerText =
-isRegister ? "REGISTER" : "LOGIN";
+isRegister ? p.registerBtn : p.loginBtn;
+
+document.getElementById("switchAuthMode").innerText = 
+isRegister ? p.switchLogin : p.switchCreate;
 
 }
 
@@ -490,12 +698,12 @@ function triggerLoginAnimation(callback) {
             }, 400);
         }
         loaderFill.style.width = progress + "%";
-        loaderStatus.innerText = `DECRYPTING DATA... ${progress}%`;
+        loaderStatus.innerText = currentLang === "th" ? `กำลังตรวจสอบข้อมูล... ${progress}%` : `DECRYPTING DATA... ${progress}%`;
     }, 100);
 }
 
 window.handleAuth = async function(){
-
+const p = languages[currentLang];
 const username =
 document.getElementById("username")
 .value.trim();
@@ -510,7 +718,7 @@ document.getElementById(
 
 if(!username || !password){
 
-alert("กรอกข้อมูลให้ครบ");
+alert(p.alertFill);
 return;
 
 }
@@ -519,7 +727,7 @@ if(isRegister){
 
 if(password !== confirmPassword){
 
-alert("Password ไม่ตรงกัน");
+alert(p.alertMatch);
 return;
 
 }
@@ -530,7 +738,7 @@ await get(ref(db,
 
 if(check.exists()){
 
-alert("Username ซ้ำ");
+alert(p.alertDup);
 return;
 
 }
@@ -547,7 +755,7 @@ discord: ""
 
 });
 
-alert("สมัครสมาชิกสำเร็จ");
+alert(p.alertRegisSuccess);
 return;
 
 }
@@ -558,7 +766,7 @@ ref(db,"users/" + username));
 
 if(!snapshot.exists()){
 
-alert("Username ไม่ถูกต้อง");
+alert(p.alertNoUser);
 return;
 
 }
@@ -567,7 +775,7 @@ const user = snapshot.val();
 
 if(user.password !== password){
 
-alert("Password ไม่ถูกต้อง");
+alert(p.alertWrongPass);
 return;
 
 }
@@ -594,7 +802,6 @@ async function updateProfileWidget() {
     if(snap.exists()){
         const data = snap.val();
         
-        // Sync values to both desktop and mobile widgets
         document.querySelectorAll(".widgetUserName").forEach(el => {
             el.innerText = data.username;
         });
@@ -635,13 +842,14 @@ window.saveMyProfile = async function() {
         discord: discord
     });
     
-    alert("บันทึกข้อมูลโปรไฟล์สำเร็จ");
+    alert(languages[currentLang].alertRoleSuccess);
     closeMyProfileModal();
     updateProfileWidget();
     loadMembers();
 }
 
 window.viewMemberDetail = async function(username) {
+    const p = languages[currentLang];
     const snap = await get(ref(db, "users/" + username));
     if(snap.exists()){
         const data = snap.val();
@@ -655,7 +863,7 @@ window.viewMemberDetail = async function(username) {
             fbLink.href = data.facebook.startsWith("http") ? data.facebook : "https://" + data.facebook;
             fbLink.style.pointerEvents = "auto";
         } else {
-            fbLink.innerText = "NOT SET";
+            fbLink.innerText = p.notSet;
             fbLink.removeAttribute("href");
             fbLink.style.pointerEvents = "none";
         }
@@ -666,7 +874,7 @@ window.viewMemberDetail = async function(username) {
             dcLink.href = data.discord.startsWith("http") ? data.discord : "https://" + data.discord;
             dcLink.style.pointerEvents = "auto";
         } else {
-            dcLink.innerText = "NOT SET";
+            dcLink.innerText = p.notSet;
             dcLink.removeAttribute("href");
             dcLink.style.pointerEvents = "none";
         }
@@ -703,6 +911,7 @@ if(role === "admin" || role === "member"){
     if(editBtn) editBtn.classList.remove("hidden");
 }
 
+applyLanguagePack();
 showSection("dashboardSection");
 
 updateProfileWidget();
@@ -714,16 +923,11 @@ loadMembers();
 }
 
 window.addEventListener("load",()=>{
-
-const user =
-localStorage.getItem("loginUser");
-
-if(user){
-
-initDashboard();
-
-}
-
+    toggleLanguage(currentLang);
+    const user = localStorage.getItem("loginUser");
+    if(user){
+        initDashboard();
+    }
 });
 
 window.logout = function(){
@@ -763,7 +967,7 @@ document.getElementById(id)
 document.getElementById("leaveForm")
 .addEventListener("submit",
 async(e)=>{
-
+const p = languages[currentLang];
 e.preventDefault();
 
 const startDate =
@@ -788,7 +992,7 @@ Math.floor(
 
 if(days <= 0){
 
-alert("วันที่ไม่ถูกต้อง");
+alert(p.alertDateWrong);
 return;
 
 }
@@ -817,7 +1021,7 @@ status:"pending"
 
 });
 
-alert("ส่งคำลาแล้ว");
+alert(p.alertLeaveSuccess);
 
 document.getElementById(
 "leaveForm").reset();
@@ -827,7 +1031,7 @@ loadLeaves();
 });
 
 async function loadLeaves(){
-
+const p = languages[currentLang];
 const snapshot =
 await get(ref(db,"leaves"));
 
@@ -869,9 +1073,9 @@ start.getMonth() - i
 );
 
 const monthNum = String(start.getMonth() + 1).padStart(2, '0');
-const thaiYear = start.getFullYear() + 543;
+const thaiYear = currentLang === "th" ? start.getFullYear() + 543 : start.getFullYear();
 const value = `${start.getFullYear()}-${monthNum}`;
-const text = `เดือน ${monthNum}/${thaiYear}`;
+const text = currentLang === "th" ? `เดือน ${monthNum}/${thaiYear}` : `Month ${monthNum}/${thaiYear}`;
 
 optionsHtml += `
 <option value="${value}">
@@ -888,14 +1092,10 @@ const selectedValue = selector.value || `${now.getFullYear()}-${String(now.getMo
 const [selYear, selMonth] = selectedValue.split("-");
 
 const displayMonth = selMonth;
-const displayYear = parseInt(selYear) + 543;
+const displayYear = currentLang === "th" ? parseInt(selYear) + 543 : selYear;
 
 document.getElementById(
-"weekInfo").innerHTML = `
-
-ประจำเดือน: ${displayMonth}/${displayYear}
-
-`;
+"weekInfo").innerHTML = currentLang === "th" ? `ประจำเดือน: ${displayMonth}/${displayYear}` : `Month Period: ${displayMonth}/${displayYear}`;
 
 if(snapshot.exists()){
 
@@ -922,17 +1122,10 @@ today++;
 
 }
 
-if(
-leave.type === "ลาป่วย"
-) sick++;
-
-if(
-leave.type === "ลากิจ"
-) personal++;
-
-if(
-leave.type === "พักร้อน"
-) vacation++;
+let leaveTypeDisplay = leave.type;
+if (leave.type === "ลาป่วย") { leaveTypeDisplay = p.optSick; sick++; }
+else if (leave.type === "ลากิจ") { leaveTypeDisplay = p.optPersonal; personal++; }
+else if (leave.type === "พักร้อน") { leaveTypeDisplay = p.optVacation; vacation++; }
 
 let actionButtons = "";
 
@@ -977,7 +1170,7 @@ table.innerHTML += `
 
 <td>${leave.username}</td>
 
-<td>${leave.type}</td>
+<td>${leaveTypeDisplay}</td>
 
 <td>
 ${leave.startDate}
@@ -999,8 +1192,8 @@ leave.status === "approved"
 
 ${
 leave.status === "approved"
-? "อนุมัติแล้ว"
-: "รออนุมัติ"
+? p.statusApproved
+: p.statusPending
 }
 
 </span>
@@ -1044,9 +1237,9 @@ type:"doughnut",
 data:{
 
 labels:[
-"ลาป่วย",
-"ลากิจ",
-"พักร้อน"
+p.optSick,
+p.optPersonal,
+p.optVacation
 ],
 
 datasets:[{
@@ -1087,7 +1280,7 @@ status:"approved"
 
 });
 
-alert("อนุมัติสำเร็จ");
+alert(languages[currentLang].alertApproveSuccess);
 
 loadLeaves();
 
@@ -1095,16 +1288,16 @@ loadLeaves();
 
 window.deleteLeave =
 async function(id){
-
+const p = languages[currentLang];
 const confirmDelete =
-confirm("ยืนยันการลบรายการใบลาชุดนี้ ?");
+confirm(p.alertDeleteLeave);
 
 if(!confirmDelete) return;
 
 await remove(
 ref(db,"leaves/" + id));
 
-alert("ลบใบลาสำเร็จ");
+alert(p.alertDeleteLeaveSuccess);
 
 loadLeaves();
 
@@ -1157,17 +1350,9 @@ changeRole(
 this.value
 )">
 
-<option value="user">
-user
-</option>
-
-<option value="member">
-member
-</option>
-
-<option value="admin">
-admin
-</option>
+<option value="user">user</option>
+<option value="member">member</option>
+<option value="admin">admin</option>
 
 </select>
 
@@ -1198,7 +1383,7 @@ total;
 }
 
 async function loadMembers(){
-
+const p = languages[currentLang];
 const snapshot =
 await get(ref(db,"users"));
 
@@ -1225,7 +1410,7 @@ table.innerHTML += `
 <td>${user.role}</td>
 
 <td>
-    <button style="padding: 6px 12px; font-size: 11px; background: #ff1e1e;" onclick="viewMemberDetail('${user.username}')">VIEW</button>
+    <button style="padding: 6px 12px; font-size: 11px; background: #ff1e1e;" onclick="viewMemberDetail('${user.username}')">${p.viewBtnText}</button>
 </td>
 
 </tr>
@@ -1248,7 +1433,7 @@ role:role
 
 });
 
-alert("เปลี่ยนสิทธิ์สำเร็จ");
+alert(languages[currentLang].alertRoleSuccess);
 
 loadUsers();
 loadMembers();
@@ -1258,23 +1443,23 @@ updateProfileWidget();
 
 window.deleteUser =
 async function(user){
-
+const p = languages[currentLang];
 if(user === "admin"){
 
-alert("ลบ admin ไม่ได้");
+alert(p.alertNoDeleteAdmin);
 return;
 
 }
 
 const confirmDelete =
-confirm("ยืนยันการลบ ?");
+confirm(p.alertConfirmDeleteUser);
 
 if(!confirmDelete) return;
 
 await remove(
 ref(db,"users/" + user));
 
-alert("ลบสำเร็จ");
+alert(p.alertDeleteUserSuccess);
 
 loadUsers();
 loadMembers();
@@ -1288,19 +1473,19 @@ window.editTargetMoney = async function() {
     const now = new Date();
     const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     
-    const amount = prompt("กรอกจำนวนเงินที่ต้องชำระประจำเดือนนี้ (เช่น 500,000):");
+    const amount = prompt(languages[currentLang].promptMoneyConfig);
     if (amount === null) return;
     
     await set(ref(db, "money_config/" + selectedMonth), {
         target: amount
     });
-    alert("บันทึกจำนวนเงินชำระสำเร็จ");
+    alert(languages[currentLang].alertMoneyConfigSuccess);
     loadMoney();
 }
 
 window.handleMoneyStatusChange = function(username, status) {
     const fineInput = document.getElementById(`fine-container-${username}`);
-    if (status === "ส่งแล้ว (ล่าช้า)") {
+    if (status === "ส่งแล้ว (ล่าช้า)" || status === languages.en.statusSentLate) {
         fineInput.classList.remove("hidden");
     } else {
         fineInput.classList.add("hidden");
@@ -1308,7 +1493,7 @@ window.handleMoneyStatusChange = function(username, status) {
 }
 
 async function loadMoney(){
-
+const p = languages[currentLang];
 const snapshot =
 await get(ref(db,"users"));
 
@@ -1328,9 +1513,9 @@ start.getMonth() - i
 );
 
 const monthNum = String(start.getMonth() + 1).padStart(2, '0');
-const thaiYear = start.getFullYear() + 543;
+const thaiYear = currentLang === "th" ? start.getFullYear() + 543 : start.getFullYear();
 const value = `${start.getFullYear()}-${monthNum}`;
-const text = `เดือน ${monthNum}/${thaiYear}`;
+const text = currentLang === "th" ? `เดือน ${monthNum}/${thaiYear}` : `Month ${monthNum}/${thaiYear}`;
 
 optionsHtml += `
 <option value="${value}">
@@ -1386,17 +1571,16 @@ snapshot.val();
 Object.values(users)
 .forEach((user)=>{
 
-const status =
-moneyData[user.username]
-?.status || "ยังไม่ส่ง";
+const rawStatus = moneyData[user.username]?.status || "ยังไม่ส่ง";
+const fine = moneyData[user.username]?.fine || "";
 
-const fine =
-moneyData[user.username]
-?.fine || "";
+let statusLang = p.statusNotSent;
+if (rawStatus === "ส่งแล้ว") statusLang = p.statusSent;
+if (rawStatus === "ส่งแล้ว (ล่าช้า)") statusLang = p.statusSentLate;
 
-let displayText = status;
-if (status === "ส่งแล้ว (ล่าช้า)" && fine) {
-    displayText = `ส่งแล้ว (ล่าช้าปรับ ${fine} B)`;
+let displayText = statusLang;
+if (rawStatus === "ส่งแล้ว (ล่าช้า)" && fine) {
+    displayText = p.statusDisplayLate.replace("{fine}", fine);
 }
 
 let manageButton = "";
@@ -1411,14 +1595,14 @@ manageButton = `
 <select
 id="money-${user.username}" onchange="handleMoneyStatusChange('${user.username}', this.value)">
 
-<option ${status === "ยังไม่ส่ง" ? "selected" : ""}>ยังไม่ส่ง</option>
-<option ${status === "ส่งแล้ว" ? "selected" : ""}>ส่งแล้ว</option>
-<option ${status === "ส่งแล้ว (ล่าช้า)" ? "selected" : ""}>ส่งแล้ว (ล่าช้า)</option>
+<option value="ยังไม่ส่ง" ${rawStatus === "ยังไม่ส่ง" ? "selected" : ""}>${p.statusNotSent}</option>
+<option value="ส่งแล้ว" ${rawStatus === "ส่งแล้ว" ? "selected" : ""}>${p.statusSent}</option>
+<option value="ส่งแล้ว (ล่าช้า)" ${rawStatus === "ส่งแล้ว (ล่าช้า)" ? "selected" : ""}>${p.statusSentLate}</option>
 
 </select>
 
-<div id="fine-container-${user.username}" class="${status === 'ส่งแล้ว (ล่าช้า)' ? '' : 'hidden'}">
-    <input type="text" id="fine-input-${user.username}" class="fine-input" placeholder="จำนวนค่าปรับ" value="${fine}">
+<div id="fine-container-${user.username}" class="${rawStatus === 'ส่งแล้ว (ล่าช้า)' ? '' : 'hidden'}">
+    <input type="text" id="fine-input-${user.username}" class="fine-input" placeholder="${p.finePlace}" value="${fine}">
 </div>
 
 <button
@@ -1427,7 +1611,7 @@ confirmMoney(
 '${user.username}'
 )">
 
-ยืนยัน
+${p.confirmBtnText}
 
 </button>
 
@@ -1446,7 +1630,7 @@ table.innerHTML += `
 <span class="
 status
 ${
-status.startsWith("ส่งแล้ว")
+rawStatus.startsWith("ส่งแล้ว")
 ? "success"
 : "pending"
 }">
@@ -1496,7 +1680,7 @@ fine:fineValue
 
 });
 
-alert("อัปเดตสถานะสำเร็จ");
+alert(languages[currentLang].alertUpdateMoney);
 
 loadMoney();
 

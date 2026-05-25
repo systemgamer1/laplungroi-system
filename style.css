@@ -229,11 +229,12 @@ body{
     padding:25px;
 }
 
-/* TOP HEADER PROFILE */
+/* TOP HEADER PROFILE WITH LANG LEFT */
 .top-header {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap: 15px;
     margin-bottom: 25px;
     width: 100%;
 }
@@ -280,12 +281,29 @@ body{
     letter-spacing: 1px;
 }
 
-/* DETECT DEVICE SYSTEM CLASS */
-.desktop-only {
-    display: flex !important;
+/* LANGUAGE SWITCH UNIT */
+.lang-switcher {
+    display: flex;
+    gap: 6px;
 }
-.mobile-only {
-    display: none !important;
+
+.lang-btn {
+    padding: 6px 10px;
+    background: #111;
+    border: 1px solid #222;
+    color: #777;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.lang-btn.active {
+    border-color: #ff2d2d;
+    color: white;
+    background: #1a0000;
+    box-shadow: 0 0 10px rgba(255, 45, 45, 0.2);
 }
 
 /* POPUP MODAL COMMON */
@@ -401,7 +419,7 @@ body{
     text-decoration: underline;
 }
 
-/* OTHER STYLES */
+/* CARDS & BOXES */
 .cards{
     display:grid;
     grid-template-columns:
@@ -596,7 +614,14 @@ table select{
     clear: both;
 }
 
-/* RESPONSIVE MOBILE DETECTION */
+/* SCREEN DEVICE SWITCH HOOK */
+.desktop-only {
+    display: flex !important;
+}
+.mobile-only {
+    display: none !important;
+}
+
 @media(max-width:1000px){
 
     .container{
@@ -615,7 +640,6 @@ table select{
         grid-template-columns:1fr;
     }
 
-    /* SWITCH LAYOUT POSITION */
     .desktop-only {
         display: none !important;
     }
