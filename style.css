@@ -164,7 +164,7 @@ body{
     100% { opacity: 1; text-shadow: 0 0 15px rgba(255, 45, 45, 0.9); }
 }
 
-/* DASHBOARD */
+/* DASHBOARD LAYOUT */
 
 #dashboard{
     display:none;
@@ -278,6 +278,14 @@ body{
     font-size: 11px;
     color: #ff2d2d;
     letter-spacing: 1px;
+}
+
+/* DETECT DEVICE SYSTEM CLASS */
+.desktop-only {
+    display: flex !important;
+}
+.mobile-only {
+    display: none !important;
 }
 
 /* POPUP MODAL COMMON */
@@ -588,6 +596,7 @@ table select{
     clear: both;
 }
 
+/* RESPONSIVE MOBILE DETECTION */
 @media(max-width:1000px){
 
     .container{
@@ -598,8 +607,23 @@ table select{
         width:100%;
     }
 
+    .main{
+        width: 100%;
+    }
+
     .grid{
         grid-template-columns:1fr;
+    }
+
+    /* SWITCH LAYOUT POSITION */
+    .desktop-only {
+        display: none !important;
+    }
+    .mobile-only {
+        display: flex !important;
+        justify-content: center;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
 }

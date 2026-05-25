@@ -95,6 +95,16 @@
 
 <div id="dashboard">
 
+<div class="top-header mobile-only">
+    <div class="user-profile-widget" onclick="openMyProfileModal()">
+        <div class="profile-info-block">
+            <div class="profile-info-name widgetUserName">GUEST</div>
+            <div class="profile-info-role widgetUserRole">USER</div>
+        </div>
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
+    </div>
+</div>
+
 <div class="container">
 
 <div class="sidebar">
@@ -140,13 +150,13 @@ LOGOUT
 
 <div class="main">
 
-<div class="top-header">
+<div class="top-header desktop-only">
     <div class="user-profile-widget" onclick="openMyProfileModal()">
         <div class="profile-info-block">
-            <div id="widgetUserName" class="profile-info-name">GUEST</div>
-            <div id="widgetUserRole" class="profile-info-role">USER</div>
+            <div class="profile-info-name widgetUserName">GUEST</div>
+            <div class="profile-info-role widgetUserRole">USER</div>
         </div>
-        <img id="widgetUserAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small" alt="Profile">
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
     </div>
 </div>
 
@@ -583,9 +593,17 @@ async function updateProfileWidget() {
     const snap = await get(ref(db, "users/" + loginUser));
     if(snap.exists()){
         const data = snap.val();
-        document.getElementById("widgetUserName").innerText = data.username;
-        document.getElementById("widgetUserRole").innerText = data.role.toUpperCase();
-        document.getElementById("widgetUserAvatar").src = data.avatar || defaultAvatar;
+        
+        // Sync values to both desktop and mobile widgets
+        document.querySelectorAll(".widgetUserName").forEach(el => {
+            el.innerText = data.username;
+        });
+        document.querySelectorAll(".widgetUserRole").forEach(el => {
+            el.innerText = data.role.toUpperCase();
+        });
+        document.querySelectorAll(".widgetUserAvatar").forEach(el => {
+            el.src = data.avatar || defaultAvatar;
+        });
     }
 }
 
