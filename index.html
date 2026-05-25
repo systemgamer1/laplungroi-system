@@ -26,18 +26,19 @@
 }
 
 /* ==========================================================================
-   [NEW DESIGN] CYBERPUNK STATIC PANEL FRAMES (นิ่งสนิท ไม่มีเอฟเฟควิ่งเกะกะ)
+   [FIXED SCALING DESIGN] CYBERPUNK STATIC PANEL FRAMES
    ========================================================================== */
 
-/* ปรับแต่งกล่องให้กึ่งโปร่งแสงคมชัด (Glassmorphism) เพิ่มมิติตัดขอบแดงนิ่งๆ */
+/* ปรับแต่งกล่องหลักกึ่งโปร่งแสง และล็อกตำแหน่งเพื่อรองรับระบบขอบมุมเรืองแสง */
 .box, .card, .cyber-modal-content {
     background: rgba(10, 10, 10, 0.88) !important;
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 45, 45, 0.3) !important;
     position: relative;
+    box-sizing: border-box;
 }
 
-/* สร้างกรอบมุมฉากเรืองแสงสีแดงแบบนิ่ง (Neon Corner Brackets) คมๆ ตามภาพตัวอย่าง */
+/* สร้างกรอบมุมฉากเรืองแสงสีแดง (Neon Corner Brackets) บน PC */
 .box::before, .card::before {
     content: ''; position: absolute;
     top: -2px; left: -2px; width: 14px; height: 14px;
@@ -51,6 +52,37 @@
     border-bottom: 3px solid #ff2d2d; border-right: 3px solid #ff2d2d;
     box-shadow: 2px 2px 6px rgba(255, 45, 45, 0.4);
     z-index: 5;
+}
+
+/* --------------------------------------------------------------------------
+   [MEDIA QUERY] ปรับแต่งตำแหน่งและสเกลของมุมฉากสำหรับหน้าจอมือถือโดยเฉพาะ
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 768px) {
+    /* ปรับแต่งตำแหน่งขอบมุมเรืองแสงให้หดสัดส่วนแนบสนิทไปกับกล่องบนมือถือ ไม่ลอยทะลุ */
+    .box::before, .card::before {
+        top: -1px;
+        left: -1px;
+        width: 10px;
+        height: 10px;
+        border-top-width: 2px;
+        border-left-width: 2px;
+    }
+    .box::after, .card::after {
+        bottom: -1px;
+        right: -1px;
+        width: 10px;
+        height: 10px;
+        border-bottom-width: 2px;
+        border-right-width: 2px;
+    }
+    /* ควบคุมไม่ให้ตารางหรือกล่องยืดทะลุโครงสร้างบอร์ดหลักในมือถือ */
+    .box {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+    }
+    table {
+        width: 100% !important;
+    }
 }
 </style>
 </head>
@@ -220,7 +252,6 @@
 </div>
 
 <script>
-// สคริปต์ควบคุมแอนิเมชันฝุ่นเรืองแสงขยับได้หลังบ้านสไตล์ Cyber Dust
 (function() {
     const canvas = document.getElementById("bgCanvas");
     if(!canvas) return;
