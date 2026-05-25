@@ -7,340 +7,26 @@
 <title>LAPLUNGROI SYS</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap');
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Orbitron',sans-serif;
-}
-
-body{
-    background:
-    radial-gradient(circle at top,#1a0000,#050505 60%);
-    color:white;
-}
-
-.hidden{
-    display:none !important;
-}
-
-/* LOGIN */
-
-#loginPage{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.login-box{
-    width:420px;
-    background:
-    linear-gradient(
-    145deg,
-    rgba(15,15,15,0.95),
-    rgba(5,5,5,0.95)
-    );
-    border:1px solid rgba(255,0,0,0.25);
-    padding:40px;
-    border-radius:30px;
-}
-
-.login-box h1{
-    text-align:center;
-    color:#ff2d2d;
-    margin-bottom:30px;
-    font-size:40px;
-}
-
-.login-box input{
-    width:100%;
-    padding:16px;
-    margin-bottom:15px;
-    border:none;
-    border-radius:16px;
-    background:#0d0d0d;
-    border:1px solid #1f1f1f;
-    color:white;
-}
-
-.login-box button{
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:16px;
-    background:
-    linear-gradient(
-    90deg,
-    #700000,
-    #ff1e1e
-    );
-    color:white;
-    cursor:pointer;
-}
-
-.switch{
-    text-align:center;
-    margin-top:20px;
-    color:#777;
-    cursor:pointer;
-}
-
-/* DASHBOARD */
-
-#dashboard{
-    display:none;
-}
-
-.container{
-    display:flex;
-    min-height:100vh;
-}
-
-.sidebar{
-    width:280px;
-    background:rgba(10,10,10,0.95);
-    border-right:1px solid rgba(255,0,0,0.1);
-    padding:25px;
-}
-
-.sidebar h2{
-    color:#ff2d2d;
-    margin-bottom:35px;
-    font-size:28px;
-}
-
-.sidebar ul{
-    list-style:none;
-}
-
-.sidebar li{
-    padding:16px;
-    background:#111;
-    margin-bottom:12px;
-    border-radius:18px;
-    border:1px solid #1f1f1f;
-    cursor:pointer;
-    color:#aaa;
-}
-
-.sidebar li:hover{
-    background:#1a0000;
-    border:1px solid #ff2d2d;
-    color:white;
-}
-
-.logout-btn{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:16px;
-    background:
-    linear-gradient(
-    90deg,
-    #700000,
-    #ff1e1e
-    );
-    color:white;
-    margin-top:25px;
-    cursor:pointer;
-}
-
-.main{
-    flex:1;
-    padding:25px;
-}
-
-.cards{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-bottom:25px;
-}
-
-.card{
-    background:
-    linear-gradient(
-    145deg,
-    rgba(20,20,20,0.95),
-    rgba(10,10,10,0.95)
-    );
-    border:1px solid rgba(255,0,0,0.12);
-    padding:25px;
-    border-radius:25px;
-}
-
-.card h3{
-    color:#777;
-    margin-bottom:12px;
-    font-size:13px;
-}
-
-.card p{
-    color:#ff2d2d;
-    font-size:40px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px;
-}
-
-.box{
-    background:
-    linear-gradient(
-    145deg,
-    rgba(15,15,15,0.95),
-    rgba(5,5,5,0.95)
-    );
-    border:1px solid rgba(255,0,0,0.12);
-    padding:25px;
-    border-radius:30px;
-    margin-bottom:25px;
-}
-
-.box h2{
-    color:#ff2d2d;
-    margin-bottom:20px;
-}
-
-.chart-container{
-    width:100%;
-    height:260px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-#leaveChart{
-    max-width:280px !important;
-    max-height:280px !important;
-}
-
-form{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-}
-
-form input,
-form select,
-form textarea{
-    padding:16px;
-    border:none;
-    border-radius:15px;
-    background:#0f0f0f;
-    border:1px solid #1f1f1f;
-    color:white;
-}
-
-textarea{
-    resize:none;
-    height:120px;
-}
-
-form button{
-    padding:16px;
-    border:none;
-    border-radius:16px;
-    background:
-    linear-gradient(
-    90deg,
-    #700000,
-    #ff1e1e
-    );
-    color:white;
-    cursor:pointer;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-table th{
-    color:#ff2d2d;
-    padding:18px;
-    border-bottom:1px solid #222;
-    text-align:left;
-}
-
-table td{
-    padding:18px;
-    border-bottom:1px solid #111;
-    color:#bbb;
-}
-
-table button{
-    padding:10px 14px;
-    border:none;
-    border-radius:10px;
-    background:#ff1e1e;
-    color:white;
-    cursor:pointer;
-}
-
-table select{
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:#111;
-    color:white;
-}
-
-.status{
-    padding:6px 12px;
-    border-radius:12px;
-    font-size:12px;
-}
-
-.pending{
-    background:#ff9800;
-    color:black;
-}
-
-.success{
-    background:#00c853;
-    color:white;
-}
-
-@media(max-width:1000px){
-
-    .container{
-        flex-direction:column;
-    }
-
-    .sidebar{
-        width:100%;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<div id="loadingPage" class="hidden">
+    <div class="loader-content">
+        <div class="loader-title">ACCESSING SYS</div>
+        <div class="loader-bar-bg">
+            <div id="loaderFill" class="loader-bar-fill"></div>
+        </div>
+        <div id="loaderStatus" class="loader-status">DECRYPTING DATA... 0%</div>
+    </div>
+</div>
 
 <div id="loginPage">
 
     <div class="login-box">
 
-        <h1 id="loginTitle">
-            LAPLUNGROI LOGIN
-        </h1>
+        <h1>LAPLUNGROI LOGIN</h1>
 
         <input type="text"
         id="username"
@@ -373,242 +59,273 @@ table select{
 
 </div>
 
-<!-- DASHBOARD -->
-
 <div id="dashboard">
 
 <div class="container">
 
-    <div class="sidebar">
+<div class="sidebar">
 
-        <h2>LAPLUNGROI SYS</h2>
+<h2>LAPLUNGROI SYS</h2>
 
-        <ul>
+<ul>
 
-            <li onclick="showSection('dashboardSection')">
-                DASHBOARD
-            </li>
+<li onclick="showSection('dashboardSection')">
+DASHBOARD
+</li>
 
-            <li onclick="showSection('historySection')">
-                LEAVE HISTORY
-            </li>
+<li onclick="showSection('historySection')">
+LEAVE HISTORY
+</li>
 
-            <li onclick="showSection('moneySection')">
-                WEEKLY PAYMENT
-            </li>
+<li onclick="showSection('moneySection')">
+WEEKLY PAYMENT
+</li>
 
-            <li onclick="showSection('memberSection')">
-                MEMBERS
-            </li>
+<li onclick="showSection('memberSection')">
+MEMBERS
+</li>
 
-            <li id="userMenu"
-            class="hidden"
-            onclick="showSection('userSection')">
+<li id="userMenu"
+class="hidden"
+onclick="showSection('userSection')">
 
-                USER MANAGEMENT
+USER MANAGEMENT
 
-            </li>
+</li>
 
-        </ul>
+</ul>
 
-        <button class="logout-btn"
-        onclick="logout()">
+<button class="logout-btn"
+onclick="logout()">
 
-            LOGOUT
+LOGOUT
 
-        </button>
+</button>
 
-    </div>
+</div>
 
-    <div class="main">
+<div class="main">
 
-        <!-- DASHBOARD -->
+<div id="dashboardSection">
 
-        <div id="dashboardSection">
+<div class="cards">
 
-            <div class="cards">
+<div class="card">
+<h3>PEOPLE TODAY</h3>
+<p id="todayCount">0</p>
+</div>
 
-                <div class="card">
-                    <h3>PEOPLE TODAY</h3>
-                    <p id="todayCount">0</p>
-                </div>
+<div class="card">
+<h3>TOTAL USERS</h3>
+<p id="allUsers">0</p>
+</div>
 
-                <div class="card">
-                    <h3>TOTAL USERS</h3>
-                    <p id="allUsers">0</p>
-                </div>
+<div class="card">
+<h3>TOTAL LEAVES</h3>
+<p id="totalLeaves">0</p>
+</div>
 
-                <div class="card">
-                    <h3>TOTAL LEAVES</h3>
-                    <p id="totalLeaves">0</p>
-                </div>
+</div>
 
-            </div>
+<div class="grid">
 
-            <div class="grid">
+<div class="box">
 
-                <div class="box">
+<h2>LEAVE ANALYTICS</h2>
 
-                    <h2>LEAVE ANALYTICS</h2>
+<div class="chart-container">
 
-                    <div class="chart-container">
+<canvas id="leaveChart"></canvas>
 
-                        <canvas id="leaveChart"></canvas>
+</div>
 
-                    </div>
+</div>
 
-                </div>
+<div class="box">
 
-                <div class="box">
+<h2>CREATE LEAVE</h2>
 
-                    <h2>CREATE LEAVE</h2>
+<form id="leaveForm">
 
-                    <form id="leaveForm">
+<select id="type">
 
-                        <select id="type">
+<option>ลาป่วย</option>
+<option>ลากิจ</option>
+<option>พักร้อน</option>
 
-                            <option>ลาป่วย</option>
-                            <option>ลากิจ</option>
-                            <option>พักร้อน</option>
+</select>
 
-                        </select>
+<textarea
+id="reason"
+placeholder="REASON"></textarea>
 
-                        <textarea
-                        id="reason"
-                        placeholder="REASON"></textarea>
+<input
+type="date"
+id="startDate"
+onclick="this.showPicker()">
 
-                        <input
-                        type="date"
-                        id="startDate"
-                        onclick="this.showPicker()">
+<input
+type="date"
+id="endDate"
+onclick="this.showPicker()">
 
-                        <input
-                        type="date"
-                        id="endDate"
-                        onclick="this.showPicker()">
+<button type="submit">
+SUBMIT REQUEST
+</button>
 
-                        <button type="submit">
-                            SUBMIT REQUEST
-                        </button>
+</form>
 
-                    </form>
+</div>
 
-                </div>
+</div>
 
-            </div>
+</div>
 
-        </div>
+<div id="historySection"
+class="box hidden">
 
-        <!-- HISTORY -->
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+flex-wrap:wrap;
+gap:15px;
+">
 
-        <div id="historySection"
-        class="box hidden">
+<h2>
+LEAVE HISTORY
+</h2>
 
-            <h2>LEAVE HISTORY</h2>
+<select
+id="weekSelector"
+onchange="loadLeaves()">
 
-            <table>
+</select>
 
-                <thead>
+</div>
 
-                    <tr>
+<div id="weekInfo"
+style="
+margin-bottom:20px;
+color:#ff2d2d;
+font-size:14px;
+">
 
-                        <th>USER</th>
-                        <th>TYPE</th>
-                        <th>DURATION</th>
-                        <th>DAYS</th>
-                        <th>STATUS</th>
+</div>
 
-                    </tr>
+<table>
 
-                </thead>
+<thead>
 
-                <tbody id="leaveTable"></tbody>
+<tr>
 
-            </table>
+<th>USER</th>
+<th>TYPE</th>
+<th>DURATION</th>
+<th>DAYS</th>
+<th>STATUS</th>
 
-        </div>
+</tr>
 
-        <!-- MONEY -->
+</thead>
 
-        <div id="moneySection"
-        class="box hidden">
+<tbody id="leaveTable"></tbody>
 
-            <h2>WEEKLY PAYMENT</h2>
+</table>
 
-            <table>
+</div>
 
-                <thead>
+<div id="moneySection"
+class="box hidden">
 
-                    <tr>
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+flex-wrap:wrap;
+gap:15px;
+">
+<h2>WEEKLY PAYMENT</h2>
 
-                        <th>USER</th>
-                        <th>STATUS</th>
-                        <th>MANAGE</th>
+<select
+id="moneyMonthSelector"
+onchange="loadMoney()">
 
-                    </tr>
+</select>
+</div>
 
-                </thead>
+<table>
 
-                <tbody id="moneyTable"></tbody>
+<thead>
 
-            </table>
+<tr>
 
-        </div>
+<th>USER</th>
+<th>STATUS</th>
+<th>MANAGE</th>
 
-        <!-- MEMBERS -->
+</tr>
 
-        <div id="memberSection"
-        class="box hidden">
+</thead>
 
-            <h2>ALL MEMBERS</h2>
+<tbody id="moneyTable"></tbody>
 
-            <table>
+</table>
 
-                <thead>
+</div>
 
-                    <tr>
+<div id="memberSection"
+class="box hidden">
 
-                        <th>USERNAME</th>
-                        <th>ROLE</th>
+<h2>ALL MEMBERS</h2>
 
-                    </tr>
+<table>
 
-                </thead>
+<thead>
 
-                <tbody id="memberTable"></tbody>
+<tr>
 
-            </table>
+<th>USERNAME</th>
+<th>ROLE</th>
 
-        </div>
+</tr>
 
-        <!-- USER MANAGEMENT -->
+</thead>
 
-        <div id="userSection"
-        class="box hidden">
+<tbody id="memberTable"></tbody>
 
-            <h2>USER MANAGEMENT</h2>
+</table>
 
-            <table>
+</div>
 
-                <thead>
+<div id="userSection"
+class="box hidden">
 
-                    <tr>
+<h2>USER MANAGEMENT</h2>
 
-                        <th>USER</th>
-                        <th>ROLE</th>
-                        <th>MANAGE</th>
+<table>
 
-                    </tr>
+<thead>
 
-                </thead>
+<tr>
 
-                <tbody id="userTable"></tbody>
+<th>USER</th>
+<th>ROLE</th>
+<th>MANAGE</th>
 
-            </table>
+</tr>
 
-        </div>
+</thead>
 
-    </div>
+<tbody id="userTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
 
 </div>
 
@@ -620,25 +337,25 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-    getDatabase,
-    ref,
-    set,
-    get,
-    push,
-    remove,
-    update
+getDatabase,
+ref,
+set,
+get,
+push,
+remove,
+update
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCZ4AHCqS8I-DDnzw1uCxio9Cr3GWO_8gI",
-  authDomain: "sheetgame-f52f0.firebaseapp.com",
-  databaseURL: "https://sheetgame-f52f0-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "sheetgame-f52f0",
-  storageBucket: "sheetgame-f52f0.firebasestorage.app",
-  messagingSenderId: "789188025871",
-  appId: "1:789188025871:web:8346752832be50ed7acd7a"
+apiKey: "AIzaSyCZ4AHCqS8I-DDnzw1uCxio9Cr3GWO_8gI",
+authDomain: "sheetgame-f52f0.firebaseapp.com",
+databaseURL: "https://sheetgame-f52f0-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId: "sheetgame-f52f0",
+storageBucket: "sheetgame-f52f0.firebasestorage.app",
+messagingSenderId: "789188025871",
+appId: "1:789188025871:web:8346752832be50ed7acd7a"
 
 };
 
@@ -648,212 +365,224 @@ const db = getDatabase(app);
 let isRegister = false;
 let chart;
 
-/* ADMIN */
-
 async function createAdmin(){
 
-    const snapshot =
-    await get(ref(db,"users/admin"));
+const snapshot =
+await get(ref(db,"users/admin"));
 
-    if(!snapshot.exists()){
+if(!snapshot.exists()){
 
-        await set(ref(db,"users/admin"),{
+await set(ref(db,"users/admin"),{
 
-            username:"admin",
-            password:"admin",
-            role:"admin"
+username:"admin",
+password:"admin",
+role:"admin"
 
-        });
+});
 
-    }
+}
 
 }
 
 createAdmin();
 
-/* TOGGLE */
-
 window.toggleMode = function(){
 
-    isRegister = !isRegister;
+isRegister = !isRegister;
 
-    document.getElementById(
-    "confirmPassword").style.display =
-    isRegister ? "block" : "none";
+document.getElementById(
+"confirmPassword").style.display =
+isRegister ? "block" : "none";
 
-    document.getElementById(
-    "authBtn").innerText =
-    isRegister ? "REGISTER" : "LOGIN";
+document.getElementById(
+"authBtn").innerText =
+isRegister ? "REGISTER" : "LOGIN";
 
 }
 
-/* LOGIN */
+function triggerLoginAnimation(callback) {
+    const loadingPage = document.getElementById("loadingPage");
+    const loaderFill = document.getElementById("loaderFill");
+    const loaderStatus = document.getElementById("loaderStatus");
+    
+    loadingPage.classList.remove("hidden");
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 15) + 5;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            
+            setTimeout(() => {
+                loadingPage.classList.add("hidden");
+                callback();
+            }, 400);
+        }
+        loaderFill.style.width = progress + "%";
+        loaderStatus.innerText = `DECRYPTING DATA... ${progress}%`;
+    }, 100);
+}
 
 window.handleAuth = async function(){
 
-    const username =
-    document.getElementById("username")
-    .value.trim();
+const username =
+document.getElementById("username")
+.value.trim();
 
-    const password =
-    document.getElementById("password")
-    .value.trim();
+const password =
+document.getElementById("password")
+.value.trim();
 
-    const confirmPassword =
-    document.getElementById(
-    "confirmPassword").value.trim();
+const confirmPassword =
+document.getElementById(
+"confirmPassword").value.trim();
 
-    if(!username || !password){
+if(!username || !password){
 
-        alert("กรอกข้อมูลให้ครบ");
-        return;
-
-    }
-
-    if(isRegister){
-
-        if(password !== confirmPassword){
-
-            alert("Password ไม่ตรงกัน");
-            return;
-
-        }
-
-        const check =
-        await get(ref(db,
-        "users/" + username));
-
-        if(check.exists()){
-
-            alert("Username ซ้ำ");
-            return;
-
-        }
-
-        await set(
-        ref(db,"users/" + username),{
-
-            username:username,
-            password:password,
-            role:"user"
-
-        });
-
-        alert("สมัครสมาชิกสำเร็จ");
-        return;
-
-    }
-
-    const snapshot =
-    await get(
-    ref(db,"users/" + username));
-
-    if(!snapshot.exists()){
-
-        alert("ไม่พบ Username");
-        return;
-
-    }
-
-    const user = snapshot.val();
-
-    if(user.password !== password){
-
-        alert("Password ไม่ถูกต้อง");
-        return;
-
-    }
-
-    localStorage.setItem(
-    "loginUser",
-    username);
-
-    localStorage.setItem(
-    "role",
-    user.role);
-
-    initDashboard();
+alert("กรอกข้อมูลให้ครบ");
+return;
 
 }
 
-/* DASHBOARD */
+if(isRegister){
+
+if(password !== confirmPassword){
+
+alert("Password ไม่ตรงกัน");
+return;
+
+}
+
+const check =
+await get(ref(db,
+"users/" + username));
+
+if(check.exists()){
+
+alert("Username ซ้ำ");
+return;
+
+}
+
+await set(
+ref(db,"users/" + username),{
+
+username:username,
+password:password,
+role:"user"
+
+});
+
+alert("สมัครสมาชิกสำเร็จ");
+return;
+
+}
+
+const snapshot =
+await get(
+ref(db,"users/" + username));
+
+if(!snapshot.exists()){
+
+alert("ไม่พบ Username");
+return;
+
+}
+
+const user = snapshot.val();
+
+if(user.password !== password){
+
+alert("Password ไม่ถูกต้อง");
+return;
+
+}
+
+localStorage.setItem(
+"loginUser",
+username);
+
+localStorage.setItem(
+"role",
+user.role);
+
+triggerLoginAnimation(() => {
+    initDashboard();
+});
+
+}
 
 function initDashboard(){
 
-    document.getElementById("loginPage")
-    .style.display = "none";
+document.getElementById("loginPage")
+.style.display = "none";
 
-    document.getElementById("dashboard")
-    .style.display = "block";
+document.getElementById("dashboard")
+.style.display = "block";
 
-    const role =
-    localStorage.getItem("role");
+const role =
+localStorage.getItem("role");
 
-    if(
-    role === "admin"
-    ){
+if(role === "admin"){
 
-        document.getElementById(
-        "userMenu")
-        .classList.remove("hidden");
+document.getElementById(
+"userMenu")
+.classList.remove("hidden");
 
-    }
+}
 
-    showSection("dashboardSection");
+showSection("dashboardSection");
 
-    loadLeaves();
-    loadUsers();
-    loadMoney();
-    loadMembers();
+loadLeaves();
+loadUsers();
+loadMoney();
+loadMembers();
 
 }
 
 window.addEventListener("load",()=>{
 
-    const user =
-    localStorage.getItem("loginUser");
+const user =
+localStorage.getItem("loginUser");
 
-    if(user){
+if(user){
 
-        initDashboard();
-
-    }
-
-});
-
-/* LOGOUT */
-
-window.logout = function(){
-
-    localStorage.clear();
-
-    location.reload();
+initDashboard();
 
 }
 
-/* SECTION */
+});
+
+window.logout = function(){
+
+localStorage.clear();
+
+location.reload();
+
+}
 
 window.showSection = function(id){
 
-    const sections = [
+const sections = [
 
-        "dashboardSection",
-        "historySection",
-        "moneySection",
-        "memberSection",
-        "userSection"
+"dashboardSection",
+"historySection",
+"moneySection",
+"memberSection",
+"userSection"
 
-    ];
+];
 
-    sections.forEach(section=>{
+sections.forEach(section=>{
 
-        document.getElementById(section)
-        .classList.add("hidden");
+document.getElementById(section)
+.classList.add("hidden");
 
-    });
+});
 
-    document.getElementById(id)
-    .classList.remove("hidden");
+document.getElementById(id)
+.classList.remove("hidden");
 
 }
 
@@ -863,274 +592,349 @@ document.getElementById("leaveForm")
 .addEventListener("submit",
 async(e)=>{
 
-    e.preventDefault();
+e.preventDefault();
 
-    const startDate =
-    document.getElementById(
-    "startDate").value;
+const startDate =
+document.getElementById(
+"startDate").value;
 
-    const endDate =
-    document.getElementById(
-    "endDate").value;
+const endDate =
+document.getElementById(
+"endDate").value;
 
-    const start =
-    new Date(startDate);
+const start =
+new Date(startDate);
 
-    const end =
-    new Date(endDate);
+const end =
+new Date(endDate);
 
-    const days =
-    Math.floor(
-    (end - start) /
-    (1000 * 60 * 60 * 24)
-    ) + 1;
+const days =
+Math.floor(
+(end - start) /
+(1000 * 60 * 60 * 24)
+) + 1;
 
-    if(days <= 0){
+if(days <= 0){
 
-        alert("วันที่ไม่ถูกต้อง");
-        return;
+alert("วันที่ไม่ถูกต้อง");
+return;
 
-    }
+}
 
-    await push(ref(db,"leaves"),{
+await push(ref(db,"leaves"),{
 
-        username:
-        localStorage.getItem(
-        "loginUser"),
+username:
+localStorage.getItem(
+"loginUser"),
 
-        type:
-        document.getElementById(
-        "type").value,
+type:
+document.getElementById(
+"type").value,
 
-        reason:
-        document.getElementById(
-        "reason").value,
+reason:
+document.getElementById(
+"reason").value,
 
-        startDate:startDate,
+startDate:startDate,
 
-        endDate:endDate,
+endDate:endDate,
 
-        days:days,
+days:days,
 
-        status:"pending"
-
-    });
-
-    alert("ส่งใบลาสำเร็จ");
-
-    document.getElementById(
-    "leaveForm").reset();
-
-    loadLeaves();
+status:"pending"
 
 });
 
-/* LEAVES */
+alert("ส่งใบลาสำเร็จ");
+
+document.getElementById(
+"leaveForm").reset();
+
+loadLeaves();
+
+});
 
 async function loadLeaves(){
 
-    const snapshot =
-    await get(ref(db,"leaves"));
+const snapshot =
+await get(ref(db,"leaves"));
 
-    const table =
-    document.getElementById(
-    "leaveTable");
+const table =
+document.getElementById(
+"leaveTable");
 
-    table.innerHTML = "";
+table.innerHTML = "";
 
-    let sick = 0;
-    let personal = 0;
-    let vacation = 0;
+let sick = 0;
+let personal = 0;
+let vacation = 0;
 
-    let today = 0;
-    let total = 0;
+let today = 0;
+let total = 0;
 
-    const now =
-    new Date()
-    .toISOString()
-    .split("T")[0];
+const now = new Date();
 
-    const role =
-    localStorage.getItem("role");
+const currentDate =
+now.toISOString().split("T")[0];
 
-    if(snapshot.exists()){
+const role =
+localStorage.getItem("role");
 
-        const leaves =
-        snapshot.val();
+const selector =
+document.getElementById(
+"weekSelector");
 
-        Object.entries(leaves)
-        .forEach(([key,leave])=>{
+if(selector.innerHTML === ""){
 
-            total++;
+let optionsHtml = "";
+for(let i=0;i<12;i++){
 
-            if(
-            leave.startDate === now
-            ){
+const start =
+new Date();
 
-                today++;
+start.setMonth(
+start.getMonth() - i
+);
 
-            }
+const monthNum = String(start.getMonth() + 1).padStart(2, '0');
+const thaiYear = start.getFullYear() + 543;
+const value = `${start.getFullYear()}-${monthNum}`;
+const text = `เดือน ${monthNum}/${thaiYear}`;
 
-            if(
-            leave.type === "ลาป่วย"
-            ) sick++;
+optionsHtml += `
+<option value="${value}">
+${text}
+</option>
+`;
 
-            if(
-            leave.type === "ลากิจ"
-            ) personal++;
+}
+selector.innerHTML = optionsHtml;
 
-            if(
-            leave.type === "พักร้อน"
-            ) vacation++;
+}
 
-            let approveButton = "";
+const selectedValue = selector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`; 
+const [selYear, selMonth] = selectedValue.split("-");
 
-            if(
-            role === "admin" ||
-            role === "member"
-            ){
+const displayMonth = selMonth;
+const displayYear = parseInt(selYear) + 543;
 
-                if(
-                leave.status !== "approved"
-                ){
+document.getElementById(
+"weekInfo").innerHTML = `
 
-                    approveButton = `
+ประจำเดือน: ${displayMonth}/${displayYear}
 
-                    <button
-                    onclick="
-                    approveLeave(
-                    '${key}'
-                    )">
+`;
 
-                        APPROVE
+if(snapshot.exists()){
 
-                    </button>
+const leaves =
+snapshot.val();
 
-                    `;
+Object.entries(leaves)
+.forEach(([key,leave])=>{
 
-                }
+if(!leave.startDate) return;
+const leaveYearMonth = leave.startDate.substring(0, 7); 
 
-            }
+if(leaveYearMonth !== selectedValue){
+return;
+}
 
-            table.innerHTML += `
+total++;
 
-            <tr>
+if(
+leave.startDate === currentDate
+){
 
-                <td>${leave.username}</td>
+today++;
 
-                <td>${leave.type}</td>
+}
 
-                <td>
-                    ${leave.startDate}
-                    -
-                    ${leave.endDate}
-                </td>
+if(
+leave.type === "ลาป่วย"
+) sick++;
 
-                <td>${leave.days}</td>
+if(
+leave.type === "ลากิจ"
+) personal++;
 
-                <td>
+if(
+leave.type === "พักร้อน"
+) vacation++;
 
-                    <span class="
-                    status
-                    ${
-                        leave.status === "approved"
-                        ? "success"
-                        : "pending"
-                    }">
+let actionButtons = "";
 
-                        ${
-                            leave.status === "approved"
-                            ? "อนุมัติแล้ว"
-                            : "รออนุมัติ"
-                        }
+if(
+role === "admin" ||
+role === "member"
+){
 
-                    </span>
+if(
+leave.status !== "approved"
+){
 
-                    <br><br>
+actionButtons += `
+<button
+onclick="
+approveLeave(
+'${key}'
+)">
+APPROVE
+</button>
+<br><br>
+`;
 
-                    ${approveButton}
+}
 
-                </td>
+actionButtons += `
+<button
+style="background:#ff1e1e;"
+onclick="
+deleteLeave(
+'${key}'
+)">
+DELETE
+</button>
+`;
 
-            </tr>
+}
 
-            `;
+table.innerHTML += `
 
-        });
+<tr>
 
-    }
+<td>${leave.username}</td>
 
-    document.getElementById(
-    "todayCount").innerText =
-    today;
+<td>${leave.type}</td>
 
-    document.getElementById(
-    "totalLeaves").innerText =
-    total;
+<td>
+${leave.startDate}
+-
+${leave.endDate}
+</td>
 
-    const ctx =
-    document.getElementById(
-    "leaveChart");
+<td>${leave.days}</td>
 
-    if(chart){
+<td>
 
-        chart.destroy();
+<span class="
+status
+${
+leave.status === "approved"
+? "success"
+: "pending"
+}">
 
-    }
+${
+leave.status === "approved"
+? "อนุมัติแล้ว"
+: "รออนุมัติ"
+}
 
-    chart = new Chart(ctx,{
+</span>
 
-        type:"doughnut",
+<br><br>
 
-        data:{
+${actionButtons}
 
-            labels:[
-                "ลาป่วย",
-                "ลากิจ",
-                "พักร้อน"
-            ],
+</td>
 
-            datasets:[{
+</tr>
 
-                data:[
-                    sick,
-                    personal,
-                    vacation
-                ],
+`;
 
-                borderWidth:0
+});
 
-            }]
+}
 
-        },
+document.getElementById(
+"todayCount").innerText =
+today;
 
-        options:{
+document.getElementById(
+"totalLeaves").innerText =
+total;
 
-            responsive:true,
+const ctx =
+document.getElementById(
+"leaveChart");
 
-            maintainAspectRatio:false,
+if(chart){
 
-            cutout:"72%"
+chart.destroy();
 
-        }
+}
 
-    });
+chart = new Chart(ctx,{
+
+type:"doughnut",
+
+data:{
+
+labels:[
+"ลาป่วย",
+"ลากิจ",
+"พักร้อน"
+],
+
+datasets:[{
+
+data:[
+sick,
+personal,
+vacation
+],
+
+borderWidth:0
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+cutout:"72%"
+
+}
+
+});
 
 }
 
 window.approveLeave =
 async function(id){
 
-    await update(
-    ref(db,"leaves/" + id),{
+await update(
+ref(db,"leaves/" + id),{
 
-        status:"approved"
+status:"approved"
 
-    });
+});
 
-    alert("อนุมัติสำเร็จ");
+alert("อนุมัติสำเร็จ");
 
-    loadLeaves();
+loadLeaves();
+
+}
+
+window.deleteLeave =
+async function(id){
+
+const confirmDelete =
+confirm("ยืนยันการลบรายการใบลาชุดนี้ ?");
+
+if(!confirmDelete) return;
+
+await remove(
+ref(db,"leaves/" + id));
+
+alert("ลบใบลาสำเร็จ");
+
+loadLeaves();
 
 }
 
@@ -1138,171 +942,165 @@ async function(id){
 
 async function loadUsers(){
 
-    const role =
-    localStorage.getItem("role");
+const role =
+localStorage.getItem("role");
 
-    if(role !== "admin") return;
+if(role !== "admin") return;
 
-    const snapshot =
-    await get(ref(db,"users"));
+const snapshot =
+await get(ref(db,"users"));
 
-    const table =
-    document.getElementById(
-    "userTable");
+const table =
+document.getElementById(
+"userTable");
 
-    table.innerHTML = "";
+table.innerHTML = "";
 
-    let total = 0;
+let total = 0;
 
-    if(snapshot.exists()){
+if(snapshot.exists()){
 
-        const users =
-        snapshot.val();
+const users =
+snapshot.val();
 
-        Object.entries(users)
-        .forEach(([key,user])=>{
+Object.entries(users)
+.forEach(([key,user])=>{
 
-            total++;
+total++;
 
-            table.innerHTML += `
+table.innerHTML += `
 
-            <tr>
+<tr>
 
-                <td>${user.username}</td>
+<td>${user.username}</td>
 
-                <td>${user.role}</td>
+<td>${user.role}</td>
 
-                <td>
+<td>
 
-                    <select
-                    onchange="
-                    changeRole(
-                    '${key}',
-                    this.value
-                    )">
+<select
+onchange="
+changeRole(
+'${key}',
+this.value
+)">
 
-                        <option value="user">
-                            user
-                        </option>
+<option value="user">
+user
+</option>
 
-                        <option value="member">
-                            member
-                        </option>
+<option value="member">
+member
+</option>
 
-                        <option value="admin">
-                            admin
-                        </option>
+<option value="admin">
+admin
+</option>
 
-                    </select>
+</select>
 
-                    <button
-                    onclick="
-                    deleteUser(
-                    '${key}'
-                    )">
+<button
+onclick="
+deleteUser(
+'${key}'
+)">
 
-                        DELETE
+DELETE
 
-                    </button>
+</button>
 
-                </td>
+</td>
 
-            </tr>
+</tr>
 
-            `;
+`;
 
-        });
-
-    }
-
-    document.getElementById(
-    "allUsers").innerText =
-    total;
+});
 
 }
 
-/* MEMBERS */
+document.getElementById(
+"allUsers").innerText =
+total;
+
+}
 
 async function loadMembers(){
 
-    const snapshot =
-    await get(ref(db,"users"));
+const snapshot =
+await get(ref(db,"users"));
 
-    const table =
-    document.getElementById(
-    "memberTable");
+const table =
+document.getElementById(
+"memberTable");
 
-    table.innerHTML = "";
+table.innerHTML = "";
 
-    if(snapshot.exists()){
+if(snapshot.exists()){
 
-        const users =
-        snapshot.val();
+const users =
+snapshot.val();
 
-        Object.values(users)
-        .forEach((user)=>{
+Object.values(users)
+.forEach((user)=>{
 
-            table.innerHTML += `
+table.innerHTML += `
 
-            <tr>
+<tr>
 
-                <td>${user.username}</td>
+<td>${user.username}</td>
 
-                <td>${user.role}</td>
+<td>${user.role}</td>
 
-            </tr>
+</tr>
 
-            `;
+`;
 
-        });
-
-    }
+});
 
 }
 
-/* CHANGE ROLE */
+}
 
 window.changeRole =
 async function(user,role){
 
-    await update(
-    ref(db,"users/" + user),{
+await update(
+ref(db,"users/" + user),{
 
-        role:role
+role:role
 
-    });
+});
 
-    alert("เปลี่ยนสิทธิ์สำเร็จ");
+alert("เปลี่ยนสิทธิ์สำเร็จ");
 
-    loadUsers();
-    loadMembers();
+loadUsers();
+loadMembers();
 
 }
-
-/* DELETE */
 
 window.deleteUser =
 async function(user){
 
-    if(user === "admin"){
+if(user === "admin"){
 
-        alert("ลบ admin ไม่ได้");
-        return;
+alert("ลบ admin ไม่ได้");
+return;
 
-    }
+}
 
-    const confirmDelete =
-    confirm("ยืนยันการลบ ?");
+const confirmDelete =
+confirm("ยืนยันการลบ ?");
 
-    if(!confirmDelete) return;
+if(!confirmDelete) return;
 
-    await remove(
-    ref(db,"users/" + user));
+await remove(
+ref(db,"users/" + user));
 
-    alert("ลบสำเร็จ");
+alert("ลบสำเร็จ");
 
-    loadUsers();
-    loadMembers();
+loadUsers();
+loadMembers();
 
 }
 
@@ -1310,145 +1108,180 @@ async function(user){
 
 async function loadMoney(){
 
-    const snapshot =
-    await get(ref(db,"users"));
+const snapshot =
+await get(ref(db,"users"));
 
-    const moneySnapshot =
-    await get(ref(db,"money"));
+const moneySelector = 
+document.getElementById("moneyMonthSelector");
 
-    const table =
-    document.getElementById(
-    "moneyTable");
+if(moneySelector.innerHTML === ""){
 
-    table.innerHTML = "";
+let optionsHtml = "";
+for(let i=0;i<12;i++){
 
-    const role =
-    localStorage.getItem("role");
+const start =
+new Date();
 
-    let moneyData = {};
+start.setMonth(
+start.getMonth() - i
+);
 
-    if(moneySnapshot.exists()){
+const monthNum = String(start.getMonth() + 1).padStart(2, '0');
+const thaiYear = start.getFullYear() + 543;
+const value = `${start.getFullYear()}-${monthNum}`;
+const text = `เดือน ${monthNum}/${thaiYear}`;
 
-        moneyData =
-        moneySnapshot.val();
+optionsHtml += `
+<option value="${value}">
+${text}
+</option>
+`;
 
-    }
+}
+moneySelector.innerHTML = optionsHtml;
 
-    if(snapshot.exists()){
+}
 
-        const users =
-        snapshot.val();
+const now = new Date();
+const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
-        Object.values(users)
-        .forEach((user)=>{
+const moneySnapshot =
+await get(ref(db,"money/" + selectedMonth));
 
-            const status =
-            moneyData[user.username]
-            ?.status || "ยังไม่ส่ง";
+const table =
+document.getElementById(
+"moneyTable");
 
-            let manageButton = "";
+table.innerHTML = "";
 
-            if(
-            role === "admin" ||
-            role === "member"
-            ){
+const role =
+localStorage.getItem("role");
 
-                manageButton = `
+let moneyData = {};
 
-                <select
-                id="
-                money-${user.username}
-                ">
+if(moneySnapshot.exists()){
 
-                    <option
-                    ${
-                    status === "ยังไม่ส่ง"
-                    ? "selected"
-                    : ""
-                    }>
-                        ยังไม่ส่ง
-                    </option>
+moneyData =
+moneySnapshot.val();
 
-                    <option
-                    ${
-                    status === "ส่งแล้ว"
-                    ? "selected"
-                    : ""
-                    }>
-                        ส่งแล้ว
-                    </option>
+}
 
-                </select>
+if(snapshot.exists()){
 
-                <button
-                onclick="
-                confirmMoney(
-                '${user.username}'
-                )">
+const users =
+snapshot.val();
 
-                    ยืนยัน
+Object.values(users)
+.forEach((user)=>{
 
-                </button>
+const status =
+moneyData[user.username]
+?.status || "ยังไม่ส่ง";
 
-                `;
+let manageButton = "";
 
-            }
+if(
+role === "admin" ||
+role === "member"
+){
 
-            table.innerHTML += `
+manageButton = `
 
-            <tr>
+<select
+id="money-${user.username}">
 
-                <td>${user.username}</td>
+<option
+${
+status === "ยังไม่ส่ง"
+? "selected"
+: ""
+}>
+ยังไม่ส่ง
+</option>
 
-                <td>
+<option
+${
+status === "ส่งแล้ว"
+? "selected"
+: ""
+}>
+ส่งแล้ว
+</option>
 
-                    <span class="
-                    status
-                    ${
-                    status === "ส่งแล้ว"
-                    ? "success"
-                    : "pending"
-                    }">
+</select>
 
-                        ${status}
+<button
+onclick="
+confirmMoney(
+'${user.username}'
+)">
 
-                    </span>
+ยืนยัน
 
-                </td>
+</button>
 
-                <td>
+`;
 
-                    ${manageButton}
+}
 
-                </td>
+table.innerHTML += `
 
-            </tr>
+<tr>
 
-            `;
+<td>${user.username}</td>
 
-        });
+<td>
 
-    }
+<span class="
+status
+${
+status === "ส่งแล้ว"
+? "success"
+: "pending"
+}">
+
+${status}
+
+</span>
+
+</td>
+
+<td>
+
+${manageButton}
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
 
 }
 
 window.confirmMoney =
 async function(user){
 
-    const value =
-    document.getElementById(
-    "money-" + user).value;
+const selectedMonth = 
+document.getElementById("moneyMonthSelector").value;
 
-    await set(
-    ref(db,"money/" + user),{
+const value =
+document.getElementById(
+"money-" + user).value;
 
-        status:value
+await set(
+ref(db,"money/" + selectedMonth + "/" + user),{
 
-    });
+status:value
 
-    alert("อัปเดตสถานะสำเร็จ");
+});
 
-    loadMoney();
+alert("อัปเดตสถานะสำเร็จ");
+
+loadMoney();
 
 }
 
