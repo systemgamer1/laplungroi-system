@@ -39,7 +39,7 @@
     <div class="cyber-modal-content">
         <h3 id="viewMemberName">MEMBER PROFILE</h3>
         <img id="viewMemberAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="view-profile-avatar" alt="Avatar">
-        <div style="color: #ff2d2d; font-size: 12px; margin-bottom: 20px; letter-spacing: 1px;" id="viewMemberRole">USER</div>
+        <div style="color: #ff2d2d; font-size: 12px; margin-bottom: 20px; letter-spacing: 1px;" id="viewMemberRole">MEMBER</div>
         
         <div class="social-link-item">
             <span>FACEBOOK</span>
@@ -103,7 +103,7 @@
     <div class="user-profile-widget" onclick="openMyProfileModal()">
         <div class="profile-info-block">
             <div class="profile-info-name widgetUserName">GUEST</div>
-            <div class="profile-info-role widgetUserRole">USER</div>
+            <div class="profile-info-role widgetUserRole">MEMBER</div>
         </div>
         <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
     </div>
@@ -140,7 +140,7 @@
     <div class="user-profile-widget" onclick="openMyProfileModal()">
         <div class="profile-info-block">
             <div class="profile-info-name widgetUserName">GUEST</div>
-            <div class="profile-info-role widgetUserRole">USER</div>
+            <div class="profile-info-role widgetUserRole">MEMBER</div>
         </div>
         <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
     </div>
@@ -569,6 +569,11 @@ const languages = {
 
 let currentLang = localStorage.getItem("sysLang") || "th";
 
+async function getUserRole(username) {
+    const snap = await get(ref(db, "users/" + username));
+    return snap.exists() ? snap.val().role : "member";
+}
+
 window.toggleLanguage = function(lang) {
     currentLang = lang;
     localStorage.setItem("sysLang", lang);
@@ -755,12 +760,13 @@ return;
 
 }
 
+// [UPDATED BACKEND STRUCT]: สมัครใหม่ เซ็ตลงเบสจริงเป็นคำว่า "member" (แทน "user" แบบเก่า)
 await set(
 ref(db,"users/" + username),{
 
 username:username,
 password:password,
-role:"user",
+role:"member", 
 avatar: defaultAvatar,
 facebook: "",
 discord: ""
@@ -814,11 +820,26 @@ async function updateProfileWidget() {
     if(snap.exists()){
         const data = snap.val();
         
+        let roleDisplay = "MEMBER";
+        let isLeader = false;
+        
+        // [UPDATED CHECKING]: แมปสิทธิ์โชว์หน้าบ้านตามตัวแปรชุดใหม่ใน Firebase
+        if(data.role === "admin") {
+            roleDisplay = "ADMIN";
+            isLeader = true;
+        } else if(data.role === "leader") { // ในเบสคือ leader หน้าบ้านโชว์ LEADER
+            roleDisplay = "LEADER";
+            isLeader = true;
+        } else if(data.role === "member") { // ในเบสคือ member หน้าบ้านโชว์ MEMBER
+            roleDisplay = "MEMBER";
+        }
+        
         document.querySelectorAll(".widgetUserName").forEach(el => {
             el.innerText = data.username;
+            el.classList.toggle("leader-name", isLeader);
         });
         document.querySelectorAll(".widgetUserRole").forEach(el => {
-            el.innerText = data.role.toUpperCase();
+            el.innerText = roleDisplay;
         });
         document.querySelectorAll(".widgetUserAvatar").forEach(el => {
             el.src = data.avatar || defaultAvatar;
@@ -865,9 +886,25 @@ window.viewMemberDetail = async function(username) {
     const snap = await get(ref(db, "users/" + username));
     if(snap.exists()){
         const data = snap.val();
-        document.getElementById("viewMemberName").innerText = data.username.toUpperCase() + " PROFILE";
+        const modalName = document.getElementById("viewMemberName");
+        modalName.innerText = data.username.toUpperCase() + " PROFILE";
+        
         document.getElementById("viewMemberAvatar").src = data.avatar || defaultAvatar;
-        document.getElementById("viewMemberRole").innerText = data.role.toUpperCase();
+        
+        let roleDisplay = "MEMBER";
+        let isLeader = false;
+        if(data.role === "admin") {
+            roleDisplay = "ADMIN";
+            isLeader = true;
+        } else if(data.role === "leader") {
+            roleDisplay = "LEADER";
+            isLeader = true;
+        } else if(data.role === "member") {
+            roleDisplay = "MEMBER";
+        }
+        
+        modalName.classList.toggle("leader-name", isLeader);
+        document.getElementById("viewMemberRole").innerText = roleDisplay;
         
         const fbLink = document.getElementById("viewMemberFB");
         if(data.facebook) {
@@ -907,20 +944,10 @@ document.getElementById("loginPage")
 document.getElementById("dashboard")
 .style.display = "block";
 
-const role =
-localStorage.getItem("role");
+const role = localStorage.getItem("role");
 
 if(role === "admin"){
-
-document.getElementById(
-"userMenu")
-.classList.remove("hidden");
-
-}
-
-if(role === "admin" || role === "member"){
-    const editBtn = document.getElementById("editMoneyBtn");
-    if(editBtn) editBtn.classList.remove("hidden");
+document.getElementById("userMenu").classList.remove("hidden");
 }
 
 applyLanguagePack();
@@ -943,11 +970,8 @@ window.addEventListener("load",()=>{
 });
 
 window.logout = function(){
-
 localStorage.clear();
-
 location.reload();
-
 }
 
 window.showSection = function(id){
@@ -1062,16 +1086,9 @@ let today = 0;
 let total = 0;
 
 const now = new Date();
-
-const currentDate =
-now.toISOString().split("T")[0];
-
-const role =
-localStorage.getItem("role");
-
-const selector =
-document.getElementById(
-"weekSelector");
+const currentDate = now.toISOString().split("T")[0];
+const role = localStorage.getItem("role");
+const selector = document.getElementById("weekSelector");
 
 if(selector.innerHTML === ""){
 
@@ -1115,14 +1132,13 @@ if(snapshot.exists()){
 const leaves =
 snapshot.val();
 
-Object.entries(leaves)
-.forEach(([key,leave])=>{
+for (const [key, leave] of Object.entries(leaves)) {
 
-if(!leave.startDate) return;
+if(!leave.startDate) continue;
 const leaveYearMonth = leave.startDate.substring(0, 7); 
 
 if(leaveYearMonth !== selectedValue){
-return;
+continue;
 }
 
 total++;
@@ -1142,9 +1158,10 @@ else if (leave.type === "พักร้อน") { leaveTypeDisplay = p.optVacat
 
 let actionButtons = "";
 
+// [UPDATED LOGIC]: ปลดล็อกสิทธิ์ปุ่มกดหน้าลาให้ Admin และ Leader (รหัสเบสคือ admin และ leader)
 if(
 role === "admin" ||
-role === "member"
+role === "leader" 
 ){
 
 if(
@@ -1177,11 +1194,15 @@ DELETE
 
 }
 
+const snapUser = await get(ref(db, "users/" + leave.username));
+const applicantRole = snapUser.exists() ? snapUser.val().role : "member";
+const isApplicantLeader = (applicantRole === "admin" || applicantRole === "leader");
+
 table.innerHTML += `
 
 <tr>
 
-<td>${leave.username}</td>
+<td class="${isApplicantLeader ? 'leader-name' : ''}">${leave.username}</td>
 
 <td>${leaveTypeDisplay}</td>
 
@@ -1221,7 +1242,7 @@ ${actionButtons}
 
 `;
 
-});
+}
 
 }
 
@@ -1316,43 +1337,42 @@ loadLeaves();
 
 }
 
-/* USERS */
+/* USERS MANAGEMENT */
 
 async function loadUsers(){
 
-const role =
-localStorage.getItem("role");
-
+const role = localStorage.getItem("role");
 if(role !== "admin") return;
 
-const snapshot =
-await get(ref(db,"users"));
-
-const table =
-document.getElementById(
-"userTable");
+const snapshot = await get(ref(db,"users"));
+const table = document.getElementById("userTable");
 
 table.innerHTML = "";
-
 let total = 0;
 
 if(snapshot.exists()){
 
-const users =
-snapshot.val();
+const users = snapshot.val();
 
 Object.entries(users)
-.forEach(([key,user])=>{
+.forEach(([key,user]) => {
 
 total++;
+
+let isLeader = (user.role === "admin" || user.role === "leader");
+let roleMngDisplay = "MEMBER";
+
+if(user.role === "member") roleMngDisplay = "MEMBER";
+if(user.role === "leader") roleMngDisplay = "LEADER";
+if(user.role === "admin") roleMngDisplay = "ADMIN";
 
 table.innerHTML += `
 
 <tr>
 
-<td>${user.username}</td>
+<td class="${isLeader ? 'leader-name' : ''}">${user.username}</td>
 
-<td>${user.role}</td>
+<td>${roleMngDisplay}</td>
 
 <td>
 
@@ -1363,9 +1383,9 @@ changeRole(
 this.value
 )">
 
-<option value="user">user</option>
-<option value="member">member</option>
-<option value="admin">admin</option>
+<option value="member" ${user.role === "member" ? "selected" : ""}>MEMBER</option>
+<option value="leader" ${user.role === "leader" ? "selected" : ""}>LEADER</option>
+<option value="admin" ${user.role === "admin" ? "selected" : ""}>ADMIN</option>
 
 </select>
 
@@ -1389,38 +1409,45 @@ DELETE
 
 }
 
-document.getElementById(
-"allUsers").innerText =
-total;
+document.getElementById("allUsers").innerText = total;
 
 }
 
+/* MEMBERS LIST */
+
 async function loadMembers(){
 const p = languages[currentLang];
-const snapshot =
-await get(ref(db,"users"));
-
-const table =
-document.getElementById(
-"memberTable");
+const snapshot = await get(ref(db,"users"));
+const table = document.getElementById("memberTable");
 
 table.innerHTML = "";
 
 if(snapshot.exists()){
-
-const users =
-snapshot.val();
+const users = snapshot.val();
 
 Object.values(users)
 .forEach((user)=>{
+
+let roleDisplay = "MEMBER";
+let isLeader = false;
+
+if(user.role === "admin") {
+    roleDisplay = "ADMIN";
+    isLeader = true;
+} else if(user.role === "leader") {
+    roleDisplay = "LEADER";
+    isLeader = true;
+} else if(user.role === "member") {
+    roleDisplay = "MEMBER";
+}
 
 table.innerHTML += `
 
 <tr>
 
-<td>${user.username}</td>
+<td class="${isLeader ? 'leader-name' : ''}">${user.username}</td>
 
-<td>${user.role}</td>
+<td>${roleDisplay}</td>
 
 <td>
     <button style="padding: 6px 12px; font-size: 11px; background: #ff1e1e;" onclick="viewMemberDetail('${user.username}')">${p.viewBtnText}</button>
@@ -1545,9 +1572,14 @@ const now = new Date();
 const selectedMonth = moneySelector.value || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
 const role = localStorage.getItem("role");
-if(role === "admin" || role === "member"){
+
+// [UPDATED CHECKING]: ปุ่มสลับค่าเป้าหมายเงินประจำเดือนเปิดให้เฉพาะ Admin และ Leader (สิทธิ์คำว่า leader ในเบส)
+if(role === "admin" || role === "leader"){ 
     const editBtn = document.getElementById("editMoneyBtn");
     if(editBtn) editBtn.classList.remove("hidden");
+} else {
+    const editBtn = document.getElementById("editMoneyBtn");
+    if(editBtn) editBtn.classList.add("hidden");
 }
 
 const configSnapshot = await get(ref(db, "money_config/" + selectedMonth));
@@ -1577,12 +1609,9 @@ moneySnapshot.val();
 }
 
 if(snapshot.exists()){
+const users = snapshot.val();
 
-const users =
-snapshot.val();
-
-Object.values(users)
-.forEach((user)=>{
+for (const user of Object.values(users)) {
 
 const rawStatus = moneyData[user.username]?.status || "ยังไม่ส่ง";
 const fine = moneyData[user.username]?.fine || "";
@@ -1598,9 +1627,10 @@ if (rawStatus === "ส่งแล้ว (ล่าช้า)" && fine) {
 
 let manageButton = "";
 
+// [UPDATED CHECKING]: เปิดชุดเครื่องมือ Dropdown อัปเดตเงินให้เฉพาะ Admin และ Leader สิทธิ์ใหม่ตรงๆ ตัว
 if(
 role === "admin" ||
-role === "member"
+role === "leader"
 ){
 
 manageButton = `
@@ -1632,11 +1662,13 @@ ${p.confirmBtnText}
 
 }
 
+const isApplicantLeader = (user.role === "admin" || user.role === "leader");
+
 table.innerHTML += `
 
 <tr>
 
-<td>${user.username}</td>
+<td class="${isApplicantLeader ? 'leader-name' : ''}">${user.username}</td>
 
 <td>
 
@@ -1664,7 +1696,7 @@ ${manageButton}
 
 `;
 
-});
+}
 
 }
 
@@ -1673,30 +1705,30 @@ ${manageButton}
 window.confirmMoney =
 async function(user){
 
-const selectedMonth = 
-document.getElementById("moneyMonthSelector").value;
+    // แก้ไขจุดนี้: ถ้า Selector เป็นค่าว่าง ให้ดึงเดือนปัจจุบันของระบบมาใช้งานทันที ป้องกันบัคกดไม่ไป
+    const selectorElement = document.getElementById("moneyMonthSelector");
+    let selectedMonth = selectorElement.value;
+    
+    if (!selectedMonth) {
+        const now = new Date();
+        selectedMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
 
-const value =
-document.getElementById(
-"money-" + user).value;
+    const value = document.getElementById("money-" + user).value;
+    
+    let fineValue = "";
+    if (value === "ส่งแล้ว (ล่าช้า)") {
+        fineValue = document.getElementById("fine-input-" + user).value.trim();
+    }
 
-let fineValue = "";
-if (value === "ส่งแล้ว (ล่าช้า)") {
-    fineValue = document.getElementById("fine-input-" + user).value.trim();
-}
+    // สั่งเซ็ตลง Firebase มั่นใจว่า Path เดือนถูกต้องแน่นอน
+    await set(ref(db, "money/" + selectedMonth + "/" + user), {
+        status: value,
+        fine: fineValue
+    });
 
-await set(
-ref(db,"money/" + selectedMonth + "/" + user),{
-
-status:value,
-fine:fineValue
-
-});
-
-alert(languages[currentLang].alertUpdateMoney);
-
-loadMoney();
-
+    alert(languages[currentLang].alertUpdateMoney);
+    loadMoney();
 }
 
 </script>
