@@ -154,7 +154,12 @@
 
 <div id="loginPage">
     <div class="login-box">
-        <h1 id="loginTitle">LAPLUNGROI LOGIN</h1>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <img src="logo.png" alt="Logo" style="width: 100%; max-width: 200px; display: inline-block; filter: drop-shadow(0 0 10px rgba(255, 45, 45, 0.6));">
+        </div>
+
+        <h2 id="loginTitle" style="color: #ff2d2d; margin-bottom: 25px; font-size: 1.5rem; text-align: center; letter-spacing: 2px; text-shadow: 0 0 10px #ff2d2d;">เข้าสู่ระบบ</h2>
+        
         <input type="text" id="username" placeholder="USERNAME">
         <input type="password" id="password" placeholder="PASSWORD">
         <input type="password" id="confirmPassword" placeholder="CONFIRM PASSWORD" style="display:none;">
@@ -352,7 +357,7 @@ let confirmCallback = null;
 
 const languages = {
     th: {
-        loginTitle: "LAPLUNGROI เข้าสู่ระบบ", usernamePlace: "ชื่อผู้ใช้งาน", passwordPlace: "รหัสผ่าน", confirmPasswordPlace: "ยืนยันรหัสผ่าน", loginBtn: "เข้าสู่ระบบ", registerBtn: "สมัครสมาชิก", switchCreate: "สร้างบัญชีใหม่", switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
+        loginTitle: "เข้าสู่ระบบ", usernamePlace: "ชื่อผู้ใช้งาน", passwordPlace: "รหัสผ่าน", confirmPasswordPlace: "ยืนยันรหัสผ่าน", loginBtn: "เข้าสู่ระบบ", registerBtn: "สมัครสมาชิก", switchCreate: "สร้างบัญชีใหม่", switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
         menuDash: "แดชบอร์ด", menuHistory: "ประวัติการลา", menuMoney: "การชำระเงิน", menuMembers: "รายชื่อสมาชิก", menuStore: "ร้านค้า", menuUserMng: "จัดการผู้ใช้งาน", logout: "ออกจากระบบ",
         cardToday: "จำนวนคนลาวันนี้", cardTotalUsers: "ผู้ใช้งานทั้งหมด", cardTotalLeaves: "ใบลาทั้งหมดในเดือน", boxAnalytics: "สถิติการลา", boxCreateLeave: "สร้างใบลา", optSick: "ลาป่วย", optPersonal: "ลากิจ", optVacation: "พักร้อน", reasonPlace: "เหตุผลการลา", leaveSubmit: "ส่งคำขอใบลา",
         boxHistory: "ประวัติการลา", thUser: "ผู้ใช้งาน", thType: "ประเภท", thDuration: "ระยะเวลา", thDays: "จำนวนวัน", thStatus: "สถานะ", boxMoney: "การชำระเงินรายเดือน", lblPaymentText: "เดือนนี้ชำระเงิน", editBtn: "แก้ไข", thMoneyStatus: "สถานะ", thMoneyManage: "จัดการ",
@@ -363,7 +368,7 @@ const languages = {
         btnDaily: "รายวัน", btnMonthly: "รายเดือน", lblDailyPeriod: "ประจำวันที่: {date}"
     },
     en: {
-        loginTitle: "LAPLUNGROI LOGIN", usernamePlace: "USERNAME", passwordPlace: "PASSWORD", confirmPasswordPlace: "CONFIRM PASSWORD", loginBtn: "LOGIN", registerBtn: "REGISTER", switchCreate: "CREATE ACCOUNT", switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
+        loginTitle: "LOGIN", usernamePlace: "USERNAME", passwordPlace: "PASSWORD", confirmPasswordPlace: "CONFIRM PASSWORD", loginBtn: "LOGIN", registerBtn: "REGISTER", switchCreate: "CREATE ACCOUNT", switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
         menuDash: "DASHBOARD", menuHistory: "LEAVE HISTORY", menuMoney: "WEEKLY PAYMENT", menuMembers: "MEMBERS", menuStore: "STORE", menuUserMng: "USER MANAGEMENT", logout: "LOGOUT",
         cardToday: "PEOPLE TODAY", cardTotalUsers: "TOTAL USERS", cardTotalLeaves: "TOTAL LEAVES", boxAnalytics: "LEAVE ANALYTICS", boxCreateLeave: "CREATE LEAVE", optSick: "Sick Leave", optPersonal: "Personal Leave", optVacation: "Vacation Leave", reasonPlace: "REASON", leaveSubmit: "SUBMIT REQUEST",
         boxHistory: "LEAVE HISTORY", thUser: "USER", thType: "TYPE", thDuration: "DURATION", thDays: "DAYS", thStatus: "STATUS", boxMoney: "WEEKLY PAYMENT", lblPaymentText: "Monthly Target", editBtn: "EDIT", thMoneyStatus: "STATUS", thMoneyManage: "MANAGE",
