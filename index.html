@@ -157,9 +157,7 @@
         <div style="text-align: center; margin-bottom: 25px;">
             <img src="logo.png" alt="Logo" style="width: 100%; max-width: 200px; display: inline-block; filter: drop-shadow(0 0 10px rgba(255, 45, 45, 0.6));">
         </div>
-
-        <h2 id="loginTitle" style="color: #ff2d2d; margin-bottom: 25px; font-size: 1.5rem; text-align: center; letter-spacing: 2px; text-shadow: 0 0 10px #ff2d2d;">เข้าสู่ระบบ</h2>
-        
+        <h2 id="loginTitle" style="color: #ff2d2d; margin-bottom: 25px; font-size: 1.5rem; text-align: center; letter-spacing: 2px; text-shadow: 0 0 10px #ff2d2d, 0 0 20px #ff2d2d;">เข้าสู่ระบบ</h2>
         <input type="text" id="username" placeholder="USERNAME">
         <input type="password" id="password" placeholder="PASSWORD">
         <input type="password" id="confirmPassword" placeholder="CONFIRM PASSWORD" style="display:none;">
@@ -188,6 +186,7 @@
                 <li id="menuHistory" onclick="showSection('historySection')">LEAVE HISTORY</li>
                 <li id="menuMoney" onclick="showSection('moneySection')">WEEKLY PAYMENT</li>
                 <li id="menuMembers" onclick="showSection('memberSection')">MEMBERS</li>
+                <li id="menuLucky" onclick="showSection('luckySection')">LUCKY WHEEL</li>
                 <li id="menuStore" onclick="showSection('storeSection')">STORE</li>
                 <li id="userMenu" class="hidden" onclick="showSection('userSection')">USER MANAGEMENT</li>
             </ul>
@@ -268,6 +267,22 @@
                     <thead><tr><th id="thMemUser">USERNAME</th><th id="thMemRole">ROLE</th><th id="thMemDetails">DETAILS</th></tr></thead>
                     <tbody id="memberTable"></tbody>
                 </table>
+            </div>
+
+            <div id="luckySection" class="box hidden">
+                <h2 id="boxLuckyTitle" style="color:#ff2d2d; margin-bottom:20px; letter-spacing: 1px;">LUCKY WHEEL สุ่มรางวัล</h2>
+                <div style="display:flex; gap:30px; justify-content:center; flex-wrap:wrap; align-items: flex-start;">
+                    <div style="text-align:center; position: relative;">
+                        <div class="wheel-pointer"></div>
+                        <canvas id="wheelCanvas" width="340" height="340"></canvas>
+                        <br>
+                        <button id="spinBtn" onclick="spinWheel()" style="margin-top:20px; padding:12px 50px; background:linear-gradient(90deg, #700000, #ff1e1e); color:white; border:1px solid #ff2d2d; cursor:pointer; border-radius:12px; font-weight:bold; letter-spacing:1px; box-shadow: 0 0 10px rgba(255,0,0,0.3);">SPIN WHEEL</button>
+                    </div>
+                    <div style="width:340px; background:rgba(5,5,5,0.9); padding:20px; border-radius:12px; border:1px solid rgba(255,45,45,0.2); min-height: 380px;">
+                        <h3 id="boxWinnerHistoryTitle" style="margin-bottom:15px; color: #ff2d2d; letter-spacing: 1px; border-bottom: 1px solid #222; padding-bottom: 8px;">WINNER HISTORY</h3>
+                        <div id="winnerList" style="max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                </div>
             </div>
 
             <div id="storeSection" class="box center-msg-box hidden"><h1 id="storeMsg">รอการอัพเดท..</h1></div>
@@ -355,6 +370,10 @@ const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 let leaveViewMode = "monthly";
 let confirmCallback = null;
 
+// ตัวแปรสำหรับวงล้อ
+let currentWheelRotation = 0;
+let isWheelSpinning = false;
+
 const languages = {
     th: {
         loginTitle: "เข้าสู่ระบบ", usernamePlace: "ชื่อผู้ใช้งาน", passwordPlace: "รหัสผ่าน", confirmPasswordPlace: "ยืนยันรหัสผ่าน", loginBtn: "เข้าสู่ระบบ", registerBtn: "สมัครสมาชิก", switchCreate: "สร้างบัญชีใหม่", switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
@@ -416,7 +435,7 @@ window.toggleLanguage = function(lang) {
     document.querySelectorAll(".langBtnEN").forEach(btn => btn.classList.toggle("active", lang === "en"));
     applyLanguagePack();
     if (document.getElementById("dashboard").style.display === "block") {
-        loadLeaves(); loadMoney(); loadMembers(); loadUsers();
+        loadLeaves(); loadMoney(); loadMembers(); loadUsers(); loadWinners(); drawWheel();
     }
 };
 
@@ -457,7 +476,6 @@ function applyLanguagePack() {
     document.getElementById("thMoneyUser").innerText = p.thUser;
     document.getElementById("thMoneyStatus").innerText = p.thMoneyStatus;
     document.getElementById("thMoneyManage").innerText = p.thMoneyManage;
-    document.getElementById("boxMembers").innerText = p.boxMembers;
     document.getElementById("thMemUser").innerText = p.usernamePlace;
     document.getElementById("thMemRole").innerText = "ROLE";
     document.getElementById("thMemDetails").innerText = p.thMemDetails;
@@ -472,6 +490,10 @@ function applyLanguagePack() {
     document.getElementById("popupLeaveCloseBtn").innerText = p.closeBtnText;
     document.getElementById("btnModeDaily").innerText = p.btnDaily;
     document.getElementById("btnModeMonthly").innerText = p.btnMonthly;
+    
+    document.getElementById("menuLucky").innerText = currentLang === "th" ? "สุ่มรางวัล" : "LUCKY WHEEL";
+    document.getElementById("boxLuckyTitle").innerText = currentLang === "th" ? "LUCKY WHEEL สุ่มรางวัล" : "LUCKY WHEEL";
+    document.getElementById("boxWinnerHistoryTitle").innerText = currentLang === "th" ? "ประวัติผู้ชนะ" : "WINNER HISTORY";
 }
 
 async function createAdmin(){
@@ -578,21 +600,22 @@ function initDashboard(){
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
     if(localStorage.getItem("role") === "admin") document.getElementById("userMenu").classList.remove("hidden");
-    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers();
+    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers(); loadWinners(); drawWheel();
 }
 
 window.addEventListener("load",()=>{ toggleLanguage(currentLang); if(localStorage.getItem("loginUser")) initDashboard(); });
 window.logout = function(){ localStorage.clear(); location.reload(); }
 
 window.showSection = function(id){
-    const sections = ["dashboardSection", "historySection", "moneySection", "memberSection", "storeSection", "userSection"];
-    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "menuMembers", "storeSection": "menuStore", "userSection": "userMenu" };
+    const sections = ["dashboardSection", "historySection", "moneySection", "memberSection", "luckySection", "storeSection", "userSection"];
+    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "menuMembers", "luckySection": "menuLucky", "storeSection": "menuStore", "userSection": "userMenu" };
     sections.forEach(sec => {
         document.getElementById(sec).classList.add("hidden");
         const mId = menuMapping[sec]; if(mId) document.getElementById(mId).classList.remove("active");
     });
     document.getElementById(id).classList.remove("hidden");
     const activeMenuId = menuMapping[id]; if(activeMenuId) document.getElementById(activeMenuId).classList.add("active");
+    if (id === "luckySection") { drawWheel(); }
 }
 
 document.getElementById("leaveForm").addEventListener("submit", async(e)=>{
@@ -677,20 +700,17 @@ window.deleteLeave = function(id){
     });
 }
 
-// 📌 OPTIMIZED: ฟังก์ชันดึงและคำนวณรายชื่อผู้ใช้งานทั้งหมด (แยกสิทธิ์ดักออก เพื่อให้ Member ทุกคนดึงสถิติไปอัปเดต Dashboard สำเร็จ)
 async function loadUsers(){
     const snap = await get(ref(db,"users")), table = document.getElementById("userTable"); 
     table.innerHTML = ""; 
-    let nonAdminCount = 0; // ตัวแปรนับสมาชิกทั่วไปที่ไม่รวมบัญชีชื่อ "admin"
+    let nonAdminCount = 0;
     
     if(snap.exists()){
         Object.entries(snap.val()).forEach(([key,user]) => {
-            // เงื่อนไข: ถ้านามแฝงไม่ใช่บัญชีหลัก "admin" ให้บวกเพิ่มจำนวนนับสะสม
             if(user.username !== "admin") {
                 nonAdminCount++;
             }
             
-            // แสดงรายชื่อตารางหลังบ้านลงตารางเฉพาะคนที่เป็นแอดมินเท่านั้น
             if(localStorage.getItem("role") === "admin") {
                 let isL = (user.role === "admin" || user.role === "leader");
                 table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td>
@@ -699,33 +719,24 @@ async function loadUsers(){
             }
         });
     }
-    // อัปเดตการแสดงผลยอดรวมสากล สมาชิกทั่วไป (Member) ก็เห็นค่าอัปเดตไม่เป็น 0 แล้ว
     document.getElementById("allUsers").innerText = nonAdminCount;
     document.getElementById("totalUsersCountDisplay").innerText = currentLang === "th" ? `ผู้ใช้งานทั้งหมด ${nonAdminCount} คน` : `Total Users: ${nonAdminCount}`;
 }
 
 async function loadMembers(){
-    const p = languages[currentLang], snap = await get(ref(db,"users")), table = document.getElementById("memberTable"); 
-    table.innerHTML = "";
-    
-    let memberCount = 0; // สร้างตัวแปรนับ
-
+    const p = languages[currentLang], snap = await get(ref(db,"users")), table = document.getElementById("memberTable"); table.innerHTML = "";
+    let memberCount = 0;
     if(snap.exists()){
         Object.values(snap.val()).forEach((user)=>{
-            // เงื่อนไข: ถ้านามแฝงไม่ใช่ "admin" ให้บวกจำนวนเพิ่ม
             if(user.username !== "admin") {
                 memberCount++;
             }
-
             let isL = (user.role === "admin" || user.role === "leader");
             table.innerHTML += `<tr><td class="${isL ? 'leader-name' : ''}">${user.username}</td><td>${user.role.toUpperCase()}</td><td><button style="padding:6px 12px; font-size:11px; background:#ff1e1e;" onclick="viewMemberDetail('${user.username}')">${p.viewBtnText}</button></td></tr>`;
         });
     }
-
-    // อัปเดตข้อความหัวข้อ (สมมติว่าคุณมี element ไว้แสดงชื่อหัวข้อ ถ้าไม่มีให้สร้าง tag h2 ID ไว้ครับ)
-    // ตรงนี้ผมแนะนำให้เพิ่ม ID ที่ h2 ใน HTML ของส่วน memberSection ครับ
     const header = document.getElementById("boxMembers");
-    header.innerText = (currentLang === "th" ? "สมาชิกทั้งหมด      " : "ALL MEMBERS ") + memberCount + (currentLang === "th" ? " คน" : "");
+    header.innerText = (currentLang === "th" ? "สมาชิกทั้งหมด " : "ALL MEMBERS ") + memberCount + (currentLang === "th" ? " คน" : "");
 }
 
 window.changeRole = async function(user,role){ await update(ref(db,"users/" + user),{ role:role }); alert(languages[currentLang].alertRoleSuccess); loadUsers(); loadMembers(); updateProfileWidget(); }
@@ -795,6 +806,188 @@ window.confirmMoney = async function(user){
     let fineValue = value === "ส่งแล้ว (ล่าช้า)" ? document.getElementById("fine-input-" + user).value.trim() : "";
     await set(ref(db, "money/" + selMonth + "/" + user), { status: value, fine: fineValue });
     alert(languages[currentLang].alertUpdateMoney); loadMoney();
+}
+
+/* ==========================================================================
+   LUCKY WHEEL SYSTEM FUNCTIONS
+   ========================================================================== */
+async function getWheelMembers() {
+    const snap = await get(ref(db, "users"));
+    let members = [];
+    if(snap.exists()){
+        Object.values(snap.val()).forEach((user) => {
+            if(user.username !== "admin") {
+                members.push(user.username);
+            }
+        });
+    }
+    return members;
+}
+
+async function drawWheel() {
+    const canvas = document.getElementById("wheelCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const members = await getWheelMembers();
+    
+    const numSegments = members.length;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) - 10;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    if (numSegments === 0) {
+        ctx.fillStyle = "#fff";
+        ctx.font = "14px Orbitron";
+        ctx.textAlign = "center";
+        ctx.fillText("NO MEMBERS AVAILABLE", centerX, centerY);
+        return;
+    }
+    
+    const anglePerSegment = (Math.PI * 2) / numSegments;
+    
+    for (let i = 0; i < numSegments; i++) {
+        const startAngle = i * anglePerSegment + currentWheelRotation;
+        const endAngle = startAngle + anglePerSegment;
+        
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        
+        if (i % 3 === 0) ctx.fillStyle = "#111111";
+        else if (i % 3 === 1) ctx.fillStyle = "#ff2d2d";
+        else ctx.fillStyle = "#222222";
+        
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.05)";
+        ctx.stroke();
+        
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(startAngle + anglePerSegment / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 11px Orbitron, sans-serif";
+        
+        let nameText = members[i];
+        if(nameText.length > 12) nameText = nameText.substring(0,10) + "...";
+        
+        ctx.fillText(nameText, radius - 15, 4);
+        ctx.restore();
+    }
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 20, 0, Math.PI * 2);
+    ctx.fillStyle = "#000";
+    ctx.strokeStyle = "#ff2d2d";
+    ctx.lineWidth = 3;
+    ctx.fill();
+    ctx.stroke();
+}
+
+window.spinWheel = async function() {
+    const role = localStorage.getItem("role");
+    
+    if (role !== "admin" && role !== "leader") {
+        alert(currentLang === "th" ? "คุณไม่สามารถหมุนได้" : "You do not have permission to spin.");
+        return;
+    }
+    
+    if (isWheelSpinning) return;
+    
+    const members = await getWheelMembers();
+    if (members.length === 0) {
+        alert(currentLang === "th" ? "ไม่มีรายชื่อสมาชิกสำหรับสุ่ม" : "No members available to spin.");
+        return;
+    }
+    
+    isWheelSpinning = true;
+    const spinBtn = document.getElementById("spinBtn");
+    spinBtn.disabled = true;
+    spinBtn.style.opacity = "0.5";
+    
+    const targetIndex = Math.floor(Math.random() * members.length);
+    const numSegments = members.length;
+    const anglePerSegment = (Math.PI * 2) / numSegments;
+    
+    const baseSpins = 8 + Math.floor(Math.random() * 5); 
+    const targetRotation = baseSpins * Math.PI * 2 + (Math.PI * 2 - (targetIndex * anglePerSegment) - (anglePerSegment / 2));
+    
+    const startTime = performance.now();
+    const spinDuration = 5000;
+    const startRotation = currentWheelRotation % (Math.PI * 2);
+    
+    function animateSpin(currentTime) {
+        const elapsed = currentTime - startTime;
+        if (elapsed >= spinDuration) {
+            currentWheelRotation = targetRotation;
+            drawWheel();
+            
+            const winnerName = members[targetIndex];
+            alert((currentLang === "th" ? "ผู้โชคดีคือ: " : "The Winner is: ") + winnerName);
+            
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            const dateStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} [${timeStr}]`;
+            
+            push(ref(db, "winners"), {
+                name: winnerName,
+                date: dateStr
+            }).then(() => {
+                loadWinners();
+            });
+            
+            isWheelSpinning = false;
+            spinBtn.disabled = false;
+            spinBtn.style.opacity = "1";
+        } else {
+            const progress = elapsed / spinDuration;
+            const easeOutProgress = 1 - Math.pow(1 - progress, 3); 
+            currentWheelRotation = startRotation + (targetRotation - startRotation) * easeOutProgress;
+            drawWheel();
+            requestAnimationFrame(animateSpin);
+        }
+    }
+    
+    requestAnimationFrame(animateSpin);
+}
+
+async function loadWinners() {
+    const snap = await get(ref(db, "winners"));
+    const list = document.getElementById("winnerList");
+    if(!list) return;
+    list.innerHTML = "";
+    
+    if(snap.exists()){
+        const role = localStorage.getItem("role");
+        const dataEntries = Object.entries(snap.val()).reverse();
+        
+        dataEntries.forEach(([key, val]) => {
+            let delBtn = (role === "admin" || role === "leader") 
+                         ? `<button class="winner-del-btn" onclick="deleteWinner('${key}')">DELETE</button>` : "";
+                         
+            list.innerHTML += `
+                <div class="winner-item">
+                    <div>
+                        <strong>${val.name}</strong>
+                        <br><small>${val.date}</small>
+                    </div>
+                    ${delBtn}
+                </div>`;
+        });
+    } else {
+        list.innerHTML = `<div style="text-align:center; color:#555; margin-top:20px; font-size:12px;">NO HISTORY AVAILABLE</div>`;
+    }
+}
+
+window.deleteWinner = function(key) {
+    openCyberConfirm(currentLang === "th" ? "ต้องการลบประวัติผู้ได้รับรางวัลรายการนี้ใช่หรือไม่?" : "Confirm deleting this winner record?", async () => {
+        await remove(ref(db, "winners/" + key));
+        alert(currentLang === "th" ? "ลบประวัติสำเร็จ" : "Record deleted successfully");
+        loadWinners();
+    });
 }
 </script>
 </body>
