@@ -426,9 +426,9 @@ td{
 
 /* USERNAME ROLE COLOR highlight style */
 .leader-name {
-    color: #ff2d2d !important;
+    color: #ffd700 !important; /* เปลี่ยนเป็นสีทอง */
     font-weight: bold;
-    text-shadow: 0 0 8px rgba(255, 45, 45, 0.3);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6); /* เรืองแสงสีทอง */
 }
 
 /* MODAL / ACTION DROPDOWNS & BUTTONS FOR ADMINS */
@@ -635,9 +635,11 @@ td button:hover {
     min-height: 300px;
 }
 .center-msg-box h1 {
-    color: #333;
+    color: #ff2d2d; /* สีแดง */
     font-size: 28px;
     letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 45, 45, 0.7); /* เอฟเฟกต์เรืองแสง */
+    animation: pulse 1s infinite alternate; /* ดึงเอฟเฟกต์วูบวาบมาใช้ */
 }
 
 /* RESPONSIVE RESPONDING LAYOUT SCREEN DESIGN ADJUSTMENT */
@@ -669,7 +671,7 @@ td button:hover {
 }
 
 /* ==========================================================================
-   LUCKY WHEEL SYSTEM STYLES (ส่วนที่เพิ่มใหม่)
+   LUCKY WHEEL SYSTEM STYLES (ส่วนวงล้อที่ถูกเพิ่มเข้ามาใหม่)
    ========================================================================== */
 #wheelCanvas {
     border: 4px dashed #ff2d2d;

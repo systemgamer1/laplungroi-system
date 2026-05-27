@@ -109,6 +109,16 @@
     </div>
 </div>
 
+<div id="cyberErrorModal" class="cyber-modal hidden">
+    <div class="cyber-modal-content" style="max-width: 350px; text-align: center; border-radius: 12px; padding: 25px; border: 1px solid #ff1e1e; background: rgba(20, 0, 0, 0.95) !important;">
+        <h3 id="errorModalTitle" style="color: #ff2d2d; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px;">SYSTEM ALERT</h3>
+        <p id="errorModalMsg" style="color: #fff; font-size: 14px; margin-bottom: 25px; line-height: 1.5;">ข้อความแจ้งเตือน</p>
+        <div class="modal-btn-group" style="display: flex; justify-content: center;">
+            <button class="modal-btn-save" style="width: 100%; padding: 12px; background: #ff2d2d; border-color: #ff2d2d; font-size:14px; text-transform:uppercase;" onclick="closeErrorModal()">OK / ตกลง</button>
+        </div>
+    </div>
+</div>
+
 <div id="cyberConfirmModal" class="cyber-modal hidden">
     <div class="cyber-modal-content" style="max-width: 400px; text-align: center; border-radius: 12px; padding: 25px;">
         <h3 id="confirmModalTitle" style="color: #ff2d2d; font-size: 20px; margin-bottom: 15px; letter-spacing: 1px;">SYSTEM CONFIRMATION</h3>
@@ -155,7 +165,7 @@
 <div id="loginPage">
     <div class="login-box">
         <div style="text-align: center; margin-bottom: 25px;">
-            <img src="logo.png" alt="Logo" style="width: 100%; max-width: 200px; display: inline-block; filter: drop-shadow(0 0 10px rgba(255, 45, 45, 0.6));">
+            <img src="logo.png" alt="Company Logo" style="width: 100%; max-width: 200px; display: inline-block; filter: drop-shadow(0 0 10px rgba(255, 45, 45, 0.6));">
         </div>
         <h2 id="loginTitle" style="color: #ff2d2d; margin-bottom: 25px; font-size: 1.5rem; text-align: center; letter-spacing: 2px; text-shadow: 0 0 10px #ff2d2d, 0 0 20px #ff2d2d;">เข้าสู่ระบบ</h2>
         <input type="text" id="username" placeholder="USERNAME">
@@ -297,6 +307,7 @@
                     <tbody id="userTable"></tbody>
                 </table>
             </div>
+
             <div class="credits-footer">developer by mhoo onetrap</div>
         </div>
     </div>
@@ -369,8 +380,6 @@ const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 let leaveViewMode = "monthly";
 let confirmCallback = null;
-
-// ตัวแปรสำหรับวงล้อ
 let currentWheelRotation = 0;
 let isWheelSpinning = false;
 
@@ -400,6 +409,16 @@ const languages = {
 };
 
 let currentLang = localStorage.getItem("sysLang") || "th";
+
+// แจ้งเตือนสิทธิ์การใช้งาน (Custom Red Modal) แทน Browser Alert
+window.showErrorModal = function(msg) {
+    document.getElementById("errorModalMsg").innerText = msg;
+    document.getElementById("errorModalTitle").innerText = currentLang === "th" ? "ปฏิเสธการเข้าถึง" : "ACCESS DENIED";
+    document.getElementById("cyberErrorModal").classList.remove("hidden");
+}
+window.closeErrorModal = function() {
+    document.getElementById("cyberErrorModal").classList.add("hidden");
+}
 
 window.openCyberConfirm = function(msg, callback) {
     document.getElementById("confirmModalMsg").innerText = msg;
@@ -890,8 +909,9 @@ async function drawWheel() {
 window.spinWheel = async function() {
     const role = localStorage.getItem("role");
     
+    // หากไม่ใช่ Admin หรือ Leader ให้แสดง Custom Modal สีแดง
     if (role !== "admin" && role !== "leader") {
-        alert(currentLang === "th" ? "คุณไม่สามารถหมุนได้" : "You do not have permission to spin.");
+        showErrorModal(currentLang === "th" ? "คุณไม่สามารถหมุนวงล้อได้" : "You do not have permission to spin.");
         return;
     }
     
@@ -899,7 +919,7 @@ window.spinWheel = async function() {
     
     const members = await getWheelMembers();
     if (members.length === 0) {
-        alert(currentLang === "th" ? "ไม่มีรายชื่อสมาชิกสำหรับสุ่ม" : "No members available to spin.");
+        showErrorModal(currentLang === "th" ? "ไม่มีรายชื่อสมาชิกสำหรับสุ่ม" : "No members available to spin.");
         return;
     }
     
@@ -926,6 +946,7 @@ window.spinWheel = async function() {
             drawWheel();
             
             const winnerName = members[targetIndex];
+            // แสดงผลผู้ชนะผ่าน Alert (หรือถ้าอยากให้ผู้ชนะแสดงหน้าต่างแดงเหมือนกันสามารถแก้ใช้ showErrorModal ได้ครับ)
             alert((currentLang === "th" ? "ผู้โชคดีคือ: " : "The Winner is: ") + winnerName);
             
             const now = new Date();
@@ -985,7 +1006,6 @@ async function loadWinners() {
 window.deleteWinner = function(key) {
     openCyberConfirm(currentLang === "th" ? "ต้องการลบประวัติผู้ได้รับรางวัลรายการนี้ใช่หรือไม่?" : "Confirm deleting this winner record?", async () => {
         await remove(ref(db, "winners/" + key));
-        alert(currentLang === "th" ? "ลบประวัติสำเร็จ" : "Record deleted successfully");
         loadWinners();
     });
 }
