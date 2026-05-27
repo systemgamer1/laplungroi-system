@@ -726,3 +726,34 @@ td button:hover {
     z-index: 10;
     filter: drop-shadow(0 0 5px #ff2d2d);
 }
+
+/* ==========================================================================
+   🎯 CHAT FIXES ONLY
+   ========================================================================== */
+.chat-msg-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+}
+
+/* ข้อความของเราชิดขวา */
+.chat-msg-item.me {
+    align-self: flex-end;
+    align-items: flex-end;
+    text-align: right;
+}
+
+/* ข้อความคนอื่นชิดซ้าย */
+.chat-msg-item.others {
+    align-self: flex-start;
+    align-items: flex-start;
+    text-align: left;
+}
+
+/* กรอบข้อความบีบพอดีคำพูด */
+.chat-msg-bubble {
+    display: inline-block;
+    width: fit-content;
+    text-align: left;
+}
+

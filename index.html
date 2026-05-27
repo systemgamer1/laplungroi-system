@@ -77,6 +77,158 @@
 }
 
 /* --------------------------------------------------------------------------
+   [CYBER SYSTEM GLOBAL CHAT FLOATING WINDOW STYLES]
+   -------------------------------------------------------------------------- */
+.cyber-chat-trigger {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: #120000;
+    border: 2px solid #ff2d2d;
+    border-radius: 50%;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 45, 45, 0.6);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.cyber-chat-trigger:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px #ff2d2d;
+    background: #ff2d2d;
+}
+.cyber-chat-window {
+    position: fixed;
+    bottom: 95px;
+    right: 25px;
+    width: 330px;
+    height: 440px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid #ff2d2d;
+    box-shadow: 0 0 20px rgba(255, 45, 45, 0.3);
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+}
+.cyber-chat-window.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+.cyber-chat-header {
+    background: rgba(25, 0, 0, 0.9);
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 45, 45, 0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cyber-chat-header h3 {
+    margin: 0;
+    font-size: 13px;
+    color: #ff2d2d;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px #ff2d2d;
+}
+.cyber-chat-close {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 14px;
+}
+.cyber-chat-close:hover { color: #ff2d2d; }
+.cyber-chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.4);
+}
+.chat-msg-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+}
+.chat-msg-item.me { align-self: flex-end; text-align: right; }
+.chat-msg-item.others { align-self: flex-start; text-align: left; }
+.chat-msg-user {
+    font-size: 11px;
+    font-weight: bold;
+    color: #ff2d2d;
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+}
+.chat-msg-item.me .chat-msg-user { color: #fff; }
+.chat-msg-bubble {
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 45, 45, 0.2);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    word-break: break-all;
+    display: inline-block;
+    text-align: left;
+}
+.chat-msg-item.me .chat-msg-bubble {
+    border-color: #ff2d2d;
+    background: rgba(255, 45, 45, 0.08);
+}
+.chat-msg-time {
+    font-size: 9px;
+    color: #666;
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+}
+
+.cyber-chat-footer {
+    padding: 10px;
+    background: #050505;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    gap: 8px;
+}
+.cyber-chat-input {
+    flex: 1;
+    background: #000 !important;
+    border: 1px solid #222 !important;
+    color: #fff !important;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+.cyber-chat-input:focus { border-color: #ff2d2d !important; }
+.cyber-chat-send {
+    background: #ff2d2d;
+    border: none;
+    color: #fff;
+    padding: 0 14px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.cyber-chat-send:hover { background: #cc1b1b; }
+
+/* --------------------------------------------------------------------------
    [MEDIA QUERY] ปรับแต่งตำแหน่งและสเกลของมุมฉากสำหรับหน้าจอมือถือโดยเฉพาะ
    -------------------------------------------------------------------------- */
 @media screen and (max-width: 768px) {
@@ -93,6 +245,11 @@
     }
     table {
         width: 100% !important;
+    }
+    .cyber-chat-window {
+        width: calc(100% - 40px);
+        right: 20px;
+        left: 20px;
     }
 }
 </style>
@@ -185,6 +342,24 @@
         <h3 id="popupLeaveTitle" style="font-size:20px; border-bottom:1px solid #ff2d2d; padding-bottom:10px; margin-bottom:15px;">เหตุผลการลา</h3>
         <div id="popupLeaveReason" style="width:100%; background:#000; padding:20px; border-radius:8px; border:1px solid #1f1f1f; color:#fff; text-align:left; font-size:14px; line-height:1.6; word-break:break-all; min-height:100px; margin-bottom:20px;">-</div>
         <div class="modal-btn-group"><button id="popupLeaveCloseBtn" class="modal-btn-close" style="width:100%; border-radius:8px;" onclick="closeLeaveDetailModal()">ปิดหน้าต่าง</button></div>
+    </div>
+</div>
+
+<div id="cyberChatHub" class="hidden">
+    <button class="cyber-chat-trigger" onclick="toggleChatWindow()">CHAT</button>
+    <div id="chatWindow" class="cyber-chat-window">
+        <div class="cyber-chat-header">
+            <h3>GLOBAL CHAT NODE</h3>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="adminClearChatBtn" class="hidden" style="background: #ff1e1e; color: #fff; border: 1px solid #ff2d2d; padding: 2px 8px; font-size: 10px; font-weight: bold; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 4px; letter-spacing: 0.5px; box-shadow: 0 0 8px rgba(255,30,30,0.4);" onclick="clearAllGlobalChats()">CLEAR</button>
+                <button class="cyber-chat-close" onclick="toggleChatWindow()">✖</button>
+            </div>
+        </div>
+        <div id="chatMessages" class="cyber-chat-messages"></div>
+        <div class="cyber-chat-footer">
+            <input type="text" id="chatInput" class="cyber-chat-input" placeholder="พิมพ์ข้อความที่นี่..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
+            <button class="cyber-chat-send" onclick="sendChatMessage()">SEND</button>
+        </div>
     </div>
 </div>
 
@@ -392,7 +567,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, set, get, push, remove, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCZ4AHCqS8I-DDnzw1uCxio9Cr3GWO_8gI",
@@ -477,7 +652,6 @@ function isDateInWeeklyRange(dateString, weeklyValue) {
     return checkWeekNum === wNum;
 }
 
-// ปรับแต่งกล่องแจ้งเตือนเว็บให้หัวข้อเปลี่ยนยืดหยุ่นได้ (แก้ปัญหาหัวข้อปฏิเสธการเข้าถึงค้าง)
 window.showErrorModal = function(msg, customTitle) {
     document.getElementById("errorModalMsg").innerText = msg;
     document.getElementById("errorModalTitle").innerText = customTitle || (currentLang === "th" ? "SYSTEM ALERT" : "SYSTEM ALERT");
@@ -659,10 +833,7 @@ window.closeMyProfileModal = function() { document.getElementById("myProfileModa
 window.saveMyProfile = async function() {
     const loginUser = localStorage.getItem("loginUser"), avatar = document.getElementById("editAvatarUrl").value.trim() || defaultAvatar, facebook = document.getElementById("editFacebook").value.trim(), discord = document.getElementById("editDiscord").value.trim();
     await update(ref(db, "users/" + loginUser), { avatar, facebook, discord });
-    
-    // เปลี่ยนแจ้งเตือนของหน้าแก้ไขโปรไฟล์ส่วนตัวให้เด้งบนเว็บ (Popup Web) ตามสั่ง
     showErrorModal(languages[currentLang].alertRoleSuccess, currentLang === "th" ? "สำเร็จ" : "SUCCESS"); 
-    
     closeMyProfileModal(); updateProfileWidget(); loadMembers();
 }
 
@@ -718,22 +889,120 @@ window.saveTargetMoney = async function() {
     if(amount === "") return;
     
     await set(ref(db, "money_config/" + selWeek), { target: amount });
-    
-    // เปลี่ยนแจ้งเตือนของหน้าบันทึกการตั้งค่าจำนวนเงินประจำสัปดาห์ให้เด้งบนเว็บ (Popup Web) ตามสั่ง
     showErrorModal(languages[currentLang].alertMoneyConfigSuccess, currentLang === "th" ? "สำเร็จ" : "SUCCESS");
-    
     closeEditMoneyModal();
     loadMoney();
+}
+
+/* ==========================================================================
+   ฟังก์ชันระบบแชทรวมด่วนขวาล่างจอควบคุมผ่าน Realtime Firebase (Global Chat Node Logic)
+   ========================================================================== */
+window.toggleChatWindow = function() {
+    const chatWin = document.getElementById("chatWindow");
+    chatWin.classList.toggle("open");
+    if(chatWin.classList.contains("open")) {
+        const msgArea = document.getElementById("chatMessages");
+        msgArea.scrollTop = msgArea.scrollHeight; 
+    }
+}
+
+window.sendChatMessage = async function() {
+    const input = document.getElementById("chatInput");
+    const msgText = input.value.trim();
+    if(msgText === "") return;
+    
+    const loginUser = localStorage.getItem("loginUser") || "GUEST";
+    const now = new Date();
+    
+    const dStr = String(now.getDate()).padStart(2, '0');
+    const mStr = String(now.getMonth() + 1).padStart(2, '0');
+    const yStr = now.getFullYear();
+    const timeStr = `${dStr}/${mStr}/${yStr} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    
+    await push(ref(db, "global_chats"), {
+        sender: loginUser,
+        message: msgText,
+        time: timeStr,
+        timestamp: Date.now()
+    });
+    
+    input.value = "";
+}
+
+function listenGlobalChat() {
+    const chatRef = ref(db, "global_chats");
+    onValue(chatRef, (snapshot) => {
+        const msgArea = document.getElementById("chatMessages");
+        msgArea.innerHTML = "";
+        if(snapshot.exists()) {
+            const loginUser = localStorage.getItem("loginUser") || "GUEST";
+            const nowTime = Date.now();
+            const limit48Hours = 48 * 60 * 60 * 1000; 
+
+            const entries = Object.entries(snapshot.val());
+            const records = [];
+            
+            entries.forEach(([key, data]) => {
+                if (nowTime - data.timestamp > limit48Hours) {
+                    remove(ref(db, "global_chats/" + key));
+                } else {
+                    records.push(data);
+                }
+            });
+            
+            records.sort((a, b) => a.timestamp - b.timestamp);
+            const limitedRecords = records.slice(-50);
+            
+            limitedRecords.forEach(data => {
+                const isMe = data.sender === loginUser;
+                msgArea.innerHTML += `
+                    <div class="chat-msg-item ${isMe ? 'me' : 'others'}">
+                        <div class="chat-msg-user">${data.sender.toUpperCase()}</div>
+                        <div class="chat-msg-bubble">${data.message}</div>
+                        <div class="chat-msg-time">${data.time}</div>
+                    </div>`;
+            });
+            msgArea.scrollTop = msgArea.scrollHeight; 
+        } else {
+            msgArea.innerHTML = `<div style="text-align:center; color:#555; margin-top:150px; font-size:11px; letter-spacing:1px;">NO MESSAGE STREAM AVAILABLE</div>`;
+        }
+    });
+}
+
+// ฟังก์ชันสั่งการล้างข้อความทั้งหมดใน Firebase สำหรับสิทธิ์ ADMIN เท่านั้นตามบรีฟ
+window.clearAllGlobalChats = function() {
+    const role = localStorage.getItem("role");
+    if(role !== "admin") {
+        showErrorModal(currentLang === "th" ? "คุณไม่มีสิทธิ์ในการล้างข้อความแชท" : "You do not have permission to clear chat.");
+        return;
+    }
+    
+    openCyberConfirm(currentLang === "th" ? "ต้องการล้างข้อความแชทรวมทั้งหมดใช่หรือไม่?" : "Are you sure you want to clear all global chat messages?", async () => {
+        await remove(ref(db, "global_chats"));
+        showErrorModal(currentLang === "th" ? "ล้างข้อความแชททั้งหมดเรียบร้อยแล้ว!" : "All chat messages cleared!", currentLang === "th" ? "สำเร็จ" : "SUCCESS");
+    });
 }
 
 function initDashboard(){
     document.getElementById("loginPage").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
-    if(localStorage.getItem("role") === "admin") document.getElementById("userMenu").classList.remove("hidden");
-    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers(); loadWinners(); drawWheel();
+    document.getElementById("cyberChatHub").classList.remove("hidden"); 
+    
+    // ตรวจเช็คสิทธิ์ล็อกอินเพื่อเปิดสิทธิ์ปุ่มจัดการข้อมูลและปุ่มล้างแชทให้แอดมิน
+    if(localStorage.getItem("role") === "admin") {
+        document.getElementById("userMenu").classList.remove("hidden");
+        document.getElementById("adminClearChatBtn").classList.remove("hidden"); 
+    }
+    
+    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers(); loadWinners(); drawWheel(); listenGlobalChat();
 }
 
-window.addEventListener("load",()=>{ toggleLanguage(currentLang); if(localStorage.getItem("loginUser")) initDashboard(); });
+window.addEventListener("load",()=>{ 
+    toggleLanguage(currentLang); 
+    if(localStorage.getItem("loginUser")) {
+        initDashboard(); 
+    } 
+});
 window.logout = function(){ localStorage.clear(); location.reload(); }
 
 window.showSection = function(id){
