@@ -154,13 +154,28 @@
     </div>
 </div>
 
+<div id="editMoneyModal" class="cyber-modal hidden">
+    <div class="cyber-modal-content" style="max-width: 400px; border-radius: 12px; padding: 25px;">
+        <h3 id="editMoneyModalTitle" style="color: #ff2d2d; font-size: 18px; margin-bottom: 15px; letter-spacing: 1px;">CONFIG PAYMENT</h3>
+        <p id="editMoneyModalMsg" style="color: #fff; font-size: 14px; margin-bottom: 15px;">กรอกจำนวนเงินที่ต้องชำระประจำสัปดาห์นี้:</p>
+        <input type="number" id="editMoneyInput" placeholder="0" style="width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 10px; font-size: 16px; border-radius: 6px; margin-bottom: 20px; box-sizing: border-box;">
+        <div class="modal-btn-group" style="display: flex; gap: 10px; justify-content: center;">
+            <button class="modal-btn-close" style="flex: 1; padding: 12px;" onclick="closeEditMoneyModal()">CANCEL</button>
+            <button class="modal-btn-save" style="flex: 1; padding: 12px; background: #ff2d2d; border-color: #ff2d2d;" onclick="saveTargetMoney()">SAVE</button>
+        </div>
+    </div>
+</div>
+
 <div id="memberViewModal" class="cyber-modal hidden">
     <div class="cyber-modal-content">
         <h3 id="viewMemberName">MEMBER PROFILE</h3>
         <img id="viewMemberAvatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="view-profile-avatar" alt="Avatar">
         <div style="color: #ff2d2d; font-size: 12px; margin-bottom: 20px; letter-spacing: 1px;" id="viewMemberRole">MEMBER</div>
         <div class="social-link-item"><span>FACEBOOK</span><a id="viewMemberFB" href="#" target="_blank">NOT SET</a></div>
-        <div class="social-link-item"><span>DISCORD</span><a id="viewMemberDC" href="#" target="_blank">NOT SET</a></div>
+        <div class="social-link-item" style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: #555; font-weight: bold; letter-spacing: 0.5px;">Discord :</span>
+            <span id="viewMemberDC" style="color: #fff; font-weight: bold;">NOT SET</span>
+        </div>
         <div class="modal-btn-group" style="margin-top: 20px;"><button class="modal-btn-close" style="width:100%;" onclick="closeMemberViewModal()">CLOSE</button></div>
     </div>
 </div>
@@ -276,7 +291,7 @@
                         <h2 id="boxMoney" style="display:inline-block; margin-bottom:5px;">WEEKLY PAYMENT</h2>
                         <div style="color:#aaa; font-size:14px; margin-top:5px;">
                             <span id="lblPaymentText">สัปดาห์นี้ชำระเงิน</span>: <span id="targetMoneyText" style="color:#ff2d2d; font-weight:bold;">0</span> B
-                            <button id="editMoneyBtn" class="edit-money-btn hidden" onclick="editTargetMoney()">แก้ไข</button>
+                            <button id="editMoneyBtn" class="edit-money-btn hidden" onclick="openEditMoneyModal()">แก้ไข</button>
                         </div>
                     </div>
                     <select id="moneyMonthSelector" onchange="loadMoney()"></select>
@@ -462,9 +477,10 @@ function isDateInWeeklyRange(dateString, weeklyValue) {
     return checkWeekNum === wNum;
 }
 
-window.showErrorModal = function(msg) {
+// ปรับแต่งกล่องแจ้งเตือนเว็บให้หัวข้อเปลี่ยนยืดหยุ่นได้ (แก้ปัญหาหัวข้อปฏิเสธการเข้าถึงค้าง)
+window.showErrorModal = function(msg, customTitle) {
     document.getElementById("errorModalMsg").innerText = msg;
-    document.getElementById("errorModalTitle").innerText = currentLang === "th" ? "ปฏิเสธการเข้าถึง" : "ACCESS DENIED";
+    document.getElementById("errorModalTitle").innerText = customTitle || (currentLang === "th" ? "SYSTEM ALERT" : "SYSTEM ALERT");
     document.getElementById("cyberErrorModal").classList.remove("hidden");
 }
 window.closeErrorModal = function() {
@@ -564,6 +580,9 @@ function applyLanguagePack() {
     document.getElementById("menuLucky").innerText = currentLang === "th" ? "สุ่มรางวัล" : "LUCKY WHEEL";
     document.getElementById("boxLuckyTitle").innerText = currentLang === "th" ? "LUCKY WHEEL สุ่มรางวัล" : "LUCKY WHEEL";
     document.getElementById("boxWinnerHistoryTitle").innerText = currentLang === "th" ? "ประวัติผู้ชนะ" : "WINNER HISTORY";
+
+    document.getElementById("editMoneyModalTitle").innerText = currentLang === "th" ? "ตั้งค่าระบบการเงิน" : "CONFIG PAYMENT";
+    document.getElementById("editMoneyModalMsg").innerText = p.promptMoneyConfig;
 }
 
 async function createAdmin(){
@@ -640,7 +659,11 @@ window.closeMyProfileModal = function() { document.getElementById("myProfileModa
 window.saveMyProfile = async function() {
     const loginUser = localStorage.getItem("loginUser"), avatar = document.getElementById("editAvatarUrl").value.trim() || defaultAvatar, facebook = document.getElementById("editFacebook").value.trim(), discord = document.getElementById("editDiscord").value.trim();
     await update(ref(db, "users/" + loginUser), { avatar, facebook, discord });
-    alert(languages[currentLang].alertRoleSuccess); closeMyProfileModal(); updateProfileWidget(); loadMembers();
+    
+    // เปลี่ยนแจ้งเตือนของหน้าแก้ไขโปรไฟล์ส่วนตัวให้เด้งบนเว็บ (Popup Web) ตามสั่ง
+    showErrorModal(languages[currentLang].alertRoleSuccess, currentLang === "th" ? "สำเร็จ" : "SUCCESS"); 
+    
+    closeMyProfileModal(); updateProfileWidget(); loadMembers();
 }
 
 window.viewMemberDetail = async function(username) {
@@ -658,13 +681,50 @@ window.viewMemberDetail = async function(username) {
             if(val) { el.innerText = "LINK"; el.href = val.startsWith("http") ? val : "https://" + val; el.style.pointerEvents = "auto"; }
             else { el.innerText = p.notSet; el.removeAttribute("href"); el.style.pointerEvents = "none"; }
         };
-        setupLink("viewMemberFB", data.facebook); setupLink("viewMemberDC", data.discord);
+        setupLink("viewMemberFB", data.facebook);
+        
+        const dcEl = document.getElementById("viewMemberDC");
+        if(data.discord && data.discord.trim() !== "") {
+            dcEl.innerText = data.discord;
+            dcEl.style.color = "#fff";
+        } else {
+            dcEl.innerText = p.notSet;
+            dcEl.style.color = "#555";
+        }
+        
         document.getElementById("memberViewModal").classList.remove("hidden");
     }
 }
 window.closeMemberViewModal = function() { document.getElementById("memberViewModal").classList.add("hidden"); }
 window.openLeaveDetailModal = function(reason) { document.getElementById("popupLeaveReason").innerText = reason || (currentLang === "th" ? "ไม่ได้ระบุเหตุผล" : "No reason"); document.getElementById("leaveDetailModal").classList.remove("hidden"); }
 window.closeLeaveDetailModal = function() { document.getElementById("leaveDetailModal").classList.add("hidden"); }
+
+window.openEditMoneyModal = async function() {
+    const moneySelector = document.getElementById("moneyMonthSelector");
+    const selWeek = moneySelector.value;
+    const confSnap = await get(ref(db, "money_config/" + selWeek));
+    const currentVal = (confSnap.exists() && confSnap.val().target) ? confSnap.val().target : "0";
+    
+    document.getElementById("editMoneyInput").value = currentVal;
+    document.getElementById("editMoneyModal").classList.remove("hidden");
+}
+window.closeEditMoneyModal = function() {
+    document.getElementById("editMoneyModal").classList.add("hidden");
+}
+window.saveTargetMoney = async function() {
+    const moneySelector = document.getElementById("moneyMonthSelector");
+    const selWeek = moneySelector.value;
+    const amount = document.getElementById("editMoneyInput").value.trim();
+    if(amount === "") return;
+    
+    await set(ref(db, "money_config/" + selWeek), { target: amount });
+    
+    // เปลี่ยนแจ้งเตือนของหน้าบันทึกการตั้งค่าจำนวนเงินประจำสัปดาห์ให้เด้งบนเว็บ (Popup Web) ตามสั่ง
+    showErrorModal(languages[currentLang].alertMoneyConfigSuccess, currentLang === "th" ? "สำเร็จ" : "SUCCESS");
+    
+    closeEditMoneyModal();
+    loadMoney();
+}
 
 function initDashboard(){
     document.getElementById("loginPage").style.display = "none";
@@ -678,7 +738,7 @@ window.logout = function(){ localStorage.clear(); location.reload(); }
 
 window.showSection = function(id){
     const sections = ["dashboardSection", "historySection", "moneySection", "memberSection", "luckySection", "storeSection", "userSection"];
-    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "menuMembers", "luckySection": "menuLucky", "storeSection": "menuStore", "userSection": "userMenu" };
+    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "memberSection", "luckySection": "menuLucky", "storeSection": "menuStore", "userSection": "userMenu" };
     sections.forEach(sec => {
         document.getElementById(sec).classList.add("hidden");
         const mId = menuMapping[sec]; if(mId) document.getElementById(mId).classList.remove("active");
@@ -729,13 +789,16 @@ async function loadLeaves(){
 
     if(snapshot.exists()){
         for (const [key, leave] of Object.entries(snapshot.val())) {
+            if (isDateInWeeklyRange(leave.startDate, selVal)) {
+                total++;
+            }
+
             if (leaveViewMode === "daily") {
                 if (currentDate < leave.startDate || currentDate > leave.endDate) continue;
             } else {
                 if (!isDateInWeeklyRange(leave.startDate, selVal)) continue;
             }
-
-            total++; 
+            
             if(leave.startDate === currentDate) today++;
             
             let typeDisplay = leave.type;
@@ -756,7 +819,8 @@ async function loadLeaves(){
             <button style="margin-bottom:12px; padding:10px 14px; background:#111; border:1px solid #ff2d2d; color:#ff2d2d; font-size:11px; border-radius:10px; cursor:pointer;" onclick="openLeaveDetailModal('${cleanReason}')">${p.btnDetail}</button><br>${acts}</td></tr>`;
         }
     }
-	document.getElementById("totalLeaves").innerText = total;
+    
+    document.getElementById("totalLeaves").innerText = total;
     document.getElementById("todayCount").innerText = today; 
     
     if(chart) chart.destroy();
@@ -829,12 +893,6 @@ window.deleteUser = function(user){
     });
 }
 
-window.editTargetMoney = async function() {
-    const moneySelector = document.getElementById("moneyMonthSelector");
-    const selWeek = moneySelector.value;
-    const amount = prompt(languages[currentLang].promptMoneyConfig); if (amount === null) return;
-    await set(ref(db, "money_config/" + selWeek), { target: amount }); alert(languages[currentLang].alertMoneyConfigSuccess); loadMoney();
-}
 window.handleMoneyStatusChange = function(username, status) { document.getElementById(`fine-container-${username}`).classList.toggle("hidden", !(status === "ส่งแล้ว (ล่าช้า)" || status === languages.en.statusSentLate)); }
 
 async function loadMoney(){
@@ -983,7 +1041,6 @@ window.spinWheel = async function() {
     
     const baseSpins = 8 + Math.floor(Math.random() * 5); 
     const targetAngle = (targetIndex * anglePerSegment) + (anglePerSegment / 2);
-    // ปรับสูตรคำนวณใหม่ชดเชยแกน 12 นาฬิกา (1.5 * Math.PI) และทิศทางตามเข็มนาฬิกาให้ตรงกับ Index ของชื่อผู้ชนะอย่างแม่นยำ
     const targetRotation = (baseSpins * Math.PI * 2) + (Math.PI * 2 - targetAngle) + (1.5 * Math.PI);
     
     const startTime = performance.now();
@@ -993,7 +1050,6 @@ window.spinWheel = async function() {
     function animateSpin(currentTime) {
         const elapsed = currentTime - startTime;
         if (elapsed >= spinDuration) {
-            // ล็อกรอบองศาที่แท้จริงไม่ให้เกิดเศษเพี้ยนตอนหยุดหมุน
             currentWheelRotation = targetRotation % (Math.PI * 2);
             drawWheel();
             
