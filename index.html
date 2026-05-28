@@ -83,17 +83,19 @@
 .coin-visual, .box-visual {
     width: 100px;
     height: 100px;
-    background: rgba(0, 182, 195, 0.1);
-    border: 2px dashed #00B6C3;
+    background: rgba(255, 45, 45, 0.1); 
+    border: 2px dashed #ff2d2d;         
     border-radius: 50%;
     margin: 15px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 32px;
-    text-shadow: 0 0 10px #00B6C3;
-    box-shadow: 0 0 15px rgba(0, 182, 195, 0.2);
+    text-shadow: 0 0 10px #ff2d2d;     
+    box-shadow: 0 0 15px rgba(255, 45, 45, 0.2); 
 }
+
+
 .box-visual {
     border-radius: 15px;
 }
@@ -996,29 +998,11 @@ window.showSection = function(id){
     }
     
     // บรรทัดที่เพิ่มเข้ามา: สั่งโหลดประวัติสุ่มกล่องจากความจำเครื่องขึ้นมาแสดงผลทันทีเมื่อเข้าหน้านี้
-    if (id === "gamesSection") {
-        const logList = document.getElementById('gachaLogList');
-        if (logList) {
-            const storedLogs = JSON.parse(localStorage.getItem("cyberGachaLogs")) || [];
-            if (storedLogs.length > 0) {
-                logList.innerHTML = storedLogs.map(log => `
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(26, 0, 0, 0.5); border: 1px solid rgba(255, 0, 0, 0.15); padding: 12px 15px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(255,0,0,0.05); margin-bottom: 5px;">
-                        <div style="text-align: left;">
-                            <strong style="color: #fff; font-size: 13px; font-family: 'Orbitron', sans-serif;">Loot Box</strong>
-                            <br>
-                            <small style="color: #555; font-size: 10px; font-family: 'Orbitron', sans-serif;">${log.time}</small>
-                        </div>
-                        <div style="color: #ff2d2d; font-weight: bold; font-size: 13px; text-shadow: 0 0 8px rgba(255, 45, 45, 0.4); font-family: 'Orbitron', sans-serif;">
-                            +${log.prize} Coin
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                logList.innerHTML = `<div style="text-align:center; color:#555; margin-top:20px; font-size:12px;">NO HISTORY AVAILABLE</div>`;
-            }
-        }
+    if (id === "gamesSection" && window.loadGachaLogs) {
+        window.loadGachaLogs();
     }
 }
+
 
 document.getElementById("leaveForm").addEventListener("submit", async(e)=>{
     e.preventDefault(); const p = languages[currentLang], startStr = document.getElementById("startDate").value, endStr = document.getElementById("endDate").value;
@@ -1439,6 +1423,32 @@ window.switchGameTab = function(tabId) {
     if(document.getElementById(tabId)) document.getElementById(tabId).classList.remove('hidden');
 };
 
+window.loadGachaLogs = function() {
+    const logList = document.getElementById('gachaLogList');
+    const username = localStorage.getItem("loginUser");
+    if (logList && username) {
+        get(ref(db, "gacha_logs/" + username)).then((snap) => {
+            if (snap.exists()) {
+                const logs = Object.values(snap.val()).reverse().slice(0, 20);
+                logList.innerHTML = logs.map(log => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(26, 0, 0, 0.5); border: 1px solid rgba(255, 0, 0, 0.15); padding: 12px 15px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(255,0,0,0.05); margin-bottom: 5px;">
+                        <div style="text-align: left;">
+                            <strong style="color: #fff; font-size: 13px; font-family: 'Orbitron', sans-serif;">Loot Box</strong>
+                            <br>
+                            <small style="color: #555; font-size: 10px; font-family: 'Orbitron', sans-serif;">${log.time}</small>
+                        </div>
+                        <div style="color: #ff2d2d; font-weight: bold; font-size: 13px; text-shadow: 0 0 8px rgba(255, 45, 45, 0.4); font-family: 'Orbitron', sans-serif;">
+                            +${log.prize} Coin
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                logList.innerHTML = `<div style="text-align:center; color:#555; margin-top:20px; font-size:12px;">NO HISTORY AVAILABLE</div>`;
+            }
+        });
+    }
+};
+
 let selectedSide = 'H';
 window.selectCoinSide = function(side) {
     selectedSide = side;
@@ -1492,7 +1502,7 @@ window.startCoinFlip = async function() {
     }, 1500);
 };
 
-let gachaLogs = JSON.parse(localStorage.getItem("cyberGachaLogs")) || [];
+let gachaLogs = [];
 window.triggerGachaConfirm = function() {
     openCyberConfirm(currentLang === "th" ? "คุณต้องการใช้ 10 Coin เพื่อเริ่มเปิดกล่องสุ่มใช่หรือไม่ ?" : "Do you want to use 10 Coin to open a loot box?", function() {
         executeGachaPlay();
@@ -1553,26 +1563,16 @@ async function executeGachaPlay() {
  
         const now = new Date();
         const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        gachaLogs.unshift({ time: timeStr, prize: reward });
-               if(gachaLogs.length > 20) gachaLogs.pop(); 
-   
-        localStorage.setItem("cyberGachaLogs", JSON.stringify(gachaLogs));
+        
+        // 1. ส่งขึ้นคลาวด์ Firebase
+        await push(ref(db, "gacha_logs/" + username), {
+            time: timeStr,
+            prize: reward,
+            timestamp: Date.now()
+        });
 
-        const logList = document.getElementById('gachaLogList');
-        if (logList) {
-            logList.innerHTML = gachaLogs.map(log => `
-                <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(26, 0, 0, 0.5); border: 1px solid rgba(255, 0, 0, 0.15); padding: 12px 15px; border-radius: 8px; box-shadow: inset 0 0 10px rgba(255,0,0,0.05); margin-bottom: 5px;">
-                    <div style="text-align: left;">
-                        <strong style="color: #fff; font-size: 13px; font-family: 'Orbitron', sans-serif;">Loot Box</strong>
-                        <br>
-                        <small style="color: #555; font-size: 10px; font-family: 'Orbitron', sans-serif;">${log.time}</small>
-                    </div>
-                    <div style="color: #ff2d2d; font-weight: bold; font-size: 13px; text-shadow: 0 0 8px rgba(255, 45, 45, 0.4); font-family: 'Orbitron', sans-serif;">
-                        +${log.prize} Coin
-                    </div>
-                </div>
-            `).join('');
-        }
+        // 2. สั่งให้ฟังก์ชันตรงข้อ 2 ดึงประวัติมาอัปเดตหน้าจอทันทีเรียลไทม์
+        if (window.loadGachaLogs) window.loadGachaLogs();
     }, 5000);
 }
 </script>
