@@ -728,32 +728,201 @@ td button:hover {
 }
 
 /* ==========================================================================
-   🎯 CHAT FIXES ONLY
+   🎯 CHAT HUB STRUCTURAL FIXES
    ========================================================================== */
 .chat-msg-item {
     display: flex;
     flex-direction: column;
     max-width: 85%;
+    width: 100%;
 }
 
-/* ข้อความของเราชิดขวา */
+/* ข้อความฝั่งเรา: ชิดขวา และบังคับให้บล็อกข้างในเกาะขวาตาม */
 .chat-msg-item.me {
     align-self: flex-end;
     align-items: flex-end;
-    text-align: right;
 }
 
-/* ข้อความคนอื่นชิดซ้าย */
+/* ข้อความฝั่งคนอื่น: ชิดซ้าย */
 .chat-msg-item.others {
     align-self: flex-start;
     align-items: flex-start;
-    text-align: left;
 }
 
-/* กรอบข้อความบีบพอดีคำพูด */
+/* ชื่อผู้ส่ง */
+.chat-msg-user {
+    font-size: 11px;
+    font-weight: bold;
+    color: #ff2d2d;
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+}
+.chat-msg-item.me .chat-msg-user {
+    color: #fff;
+}
+
+/* กรอบข้อความ: บีบพอดีคำ ไม่ขึ้นบรรทัดใหม่มั่วซั่ว */
 .chat-msg-bubble {
-    display: inline-block;
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 45, 45, 0.2);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    word-break: break-word;
+    display: block;
     width: fit-content;
+    max-width: 100%;
     text-align: left;
 }
+.chat-msg-item.me .chat-msg-bubble {
+    border-color: #ff2d2d;
+    background: rgba(255, 45, 45, 0.08);
+}
 
+/* เวลา: ป้องกันการหดเบียดจนซ้อนกับข้อความ */
+.chat-msg-time {
+    font-size: 9px;
+    color: #666;
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   🎯 CHAT SYSTEM POSITION FIXED (ดึงปุ่มแชทกลับมาลอยขวาล่างตำแหน่งเดิม)
+   ========================================================================== */
+
+/* ตัวปุ่มกลม CHAT ให้ลอยอยู่ขวาล่างของจอ */
+.cyber-chat-trigger {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: #120000;
+    border: 2px solid #ff2d2d;
+    border-radius: 50%;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 45, 45, 0.6);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cyber-chat-trigger:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px #ff2d2d;
+    background: #ff2d2d;
+}
+
+/* หน้าต่างแชทลอยสไลด์ขึ้นสวยงาม */
+.cyber-chat-window {
+    position: fixed;
+    bottom: 95px;
+    right: 25px;
+    width: 330px;
+    height: 440px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid #ff2d2d;
+    box-shadow: 0 0 20px rgba(255, 45, 45, 0.3);
+    z-index: 998;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* เมื่อกดเปิดแชท ให้สไลด์ขึ้นและแสดงผล */
+.cyber-chat-window.open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.cyber-chat-header {
+    background: rgba(25, 0, 0, 0.9);
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 45, 45, 0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cyber-chat-header h3 {
+    margin: 0;
+    font-size: 13px;
+    color: #ff2d2d;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px #ff2d2d;
+}
+
+.cyber-chat-close {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cyber-chat-close:hover { 
+    color: #ff2d2d; 
+}
+
+.cyber-chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.cyber-chat-footer {
+    padding: 10px;
+    background: #050505;
+    border-top: 1px solid #1a1a1a;
+    display: flex;
+    gap: 8px;
+}
+
+.cyber-chat-input {
+    flex: 1;
+    background: #000 !important;
+    border: 1px solid #222 !important;
+    color: #fff !important;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.cyber-chat-input:focus { 
+    border-color: #ff2d2d !important; 
+}
+
+.cyber-chat-send {
+    background: #ff2d2d;
+    border: none;
+    color: #fff;
+    padding: 0 14px;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.cyber-chat-send:hover { 
+    background: #cc1b1b; 
+}

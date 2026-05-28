@@ -77,158 +77,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   [CYBER SYSTEM GLOBAL CHAT FLOATING WINDOW STYLES]
-   -------------------------------------------------------------------------- */
-.cyber-chat-trigger {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 60px;
-    height: 60px;
-    background: #120000;
-    border: 2px solid #ff2d2d;
-    border-radius: 50%;
-    color: #fff;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(255, 45, 45, 0.6);
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.cyber-chat-trigger:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 25px #ff2d2d;
-    background: #ff2d2d;
-}
-.cyber-chat-window {
-    position: fixed;
-    bottom: 95px;
-    right: 25px;
-    width: 330px;
-    height: 440px;
-    background: rgba(10, 10, 10, 0.95);
-    border: 1px solid #ff2d2d;
-    box-shadow: 0 0 20px rgba(255, 45, 45, 0.3);
-    z-index: 998;
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    transform: translateY(20px);
-    opacity: 0;
-    pointer-events: none;
-}
-.cyber-chat-window.open {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-}
-.cyber-chat-header {
-    background: rgba(25, 0, 0, 0.9);
-    padding: 12px 15px;
-    border-bottom: 1px solid rgba(255, 45, 45, 0.4);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.cyber-chat-header h3 {
-    margin: 0;
-    font-size: 13px;
-    color: #ff2d2d;
-    letter-spacing: 1.5px;
-    text-shadow: 0 0 8px #ff2d2d;
-}
-.cyber-chat-close {
-    background: transparent;
-    border: none;
-    color: #888;
-    cursor: pointer;
-    font-size: 14px;
-}
-.cyber-chat-close:hover { color: #ff2d2d; }
-.cyber-chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: rgba(0, 0, 0, 0.4);
-}
-.chat-msg-item {
-    display: flex;
-    flex-direction: column;
-    max-width: 85%;
-}
-.chat-msg-item.me { align-self: flex-end; text-align: right; }
-.chat-msg-item.others { align-self: flex-start; text-align: left; }
-.chat-msg-user {
-    font-size: 11px;
-    font-weight: bold;
-    color: #ff2d2d;
-    margin-bottom: 3px;
-    letter-spacing: 0.5px;
-}
-.chat-msg-item.me .chat-msg-user { color: #fff; }
-.chat-msg-bubble {
-    background: rgba(20, 20, 20, 0.8);
-    border: 1px solid rgba(255, 45, 45, 0.2);
-    padding: 8px 12px;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 13px;
-    word-break: break-all;
-    display: inline-block;
-    text-align: left;
-}
-.chat-msg-item.me .chat-msg-bubble {
-    border-color: #ff2d2d;
-    background: rgba(255, 45, 45, 0.08);
-}
-.chat-msg-time {
-    font-size: 9px;
-    color: #666;
-    margin-top: 3px;
-    letter-spacing: 0.3px;
-}
-
-.cyber-chat-footer {
-    padding: 10px;
-    background: #050505;
-    border-top: 1px solid #1a1a1a;
-    display: flex;
-    gap: 8px;
-}
-.cyber-chat-input {
-    flex: 1;
-    background: #000 !important;
-    border: 1px solid #222 !important;
-    color: #fff !important;
-    padding: 8px 12px;
-    font-size: 12px;
-    border-radius: 4px;
-}
-.cyber-chat-input:focus { border-color: #ff2d2d !important; }
-.cyber-chat-send {
-    background: #ff2d2d;
-    border: none;
-    color: #fff;
-    padding: 0 14px;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;
-}
-.cyber-chat-send:hover { background: #cc1b1b; }
-
-/* --------------------------------------------------------------------------
    [MEDIA QUERY] ปรับแต่งตำแหน่งและสเกลของมุมฉากสำหรับหน้าจอมือถือโดยเฉพาะ
    -------------------------------------------------------------------------- */
 @media screen and (max-width: 768px) {
@@ -245,11 +93,6 @@
     }
     table {
         width: 100% !important;
-    }
-    .cyber-chat-window {
-        width: calc(100% - 40px);
-        right: 20px;
-        left: 20px;
     }
 }
 </style>
@@ -384,7 +227,11 @@
             <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
         </div>
         <div class="user-profile-widget" onclick="openMyProfileModal()">
-            <div class="profile-info-block"><div class="profile-info-name widgetUserName">GUEST</div><div class="profile-info-role widgetUserRole">MEMBER</div></div>
+            <div class="profile-info-block">
+                <div class="profile-info-name widgetUserName">GUEST</div>
+                <div class="profile-info-role widgetUserRole">MEMBER</div>
+                <div class="profile-coin" style="text-align: right; font-size: 10px;">COIN:<span class="widgetUserCoin" style="color: #FFD700; font-weight: bold; text-shadow: 0 0 5px #FFD700; margin-left: 2px;">0</span></div>
+            </div>
             <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
         </div>
     </div>
@@ -400,6 +247,7 @@
                 <li id="menuLucky" onclick="showSection('luckySection')">LUCKY WHEEL</li>
                 <li id="menuStore" onclick="showSection('storeSection')">STORE</li>
                 <li id="userMenu" class="hidden" onclick="showSection('userSection')">USER MANAGEMENT</li>
+                <li id="coinMenu" class="hidden" onclick="showSection('coinSection')">COIN MANAGEMENT</li>
             </ul>
             <button id="logoutBtn" class="logout-btn" onclick="logout()">LOGOUT</button>
         </div>
@@ -411,7 +259,11 @@
                     <button class="lang-btn langBtnEN" onclick="toggleLanguage('en')">EN</button>
                 </div>
                 <div class="user-profile-widget" onclick="openMyProfileModal()">
-                    <div class="profile-info-block"><div class="profile-info-name widgetUserName">GUEST</div><div class="profile-info-role widgetUserRole">MEMBER</div></div>
+                    <div class="profile-info-block">
+                        <div class="profile-info-name widgetUserName">GUEST</div>
+                        <div class="profile-info-role widgetUserRole">MEMBER</div>
+                        <div class="profile-coin" style="text-align: right; font-size: 10px;">COIN:<span class="widgetUserCoin" style="color: #FFD700; font-weight: bold; text-shadow: 0 0 5px #FFD700; margin-left: 2px;">0</span></div>
+                    </div>
                     <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-img-small widgetUserAvatar" alt="Profile">
                 </div>
             </div>
@@ -514,6 +366,22 @@
                 </table>
             </div>
 
+            <div id="coinSection" class="box hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px;">
+                    <h2 id="boxCoinManage" style="color: #ff2d2d; letter-spacing: 1px;">COIN MANAGEMENT</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>USER</th>
+                            <th>COIN BALANCE</th>
+                            <th>MANAGE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coinTable"></tbody>
+                </table>
+            </div>
+
             <div class="credits-footer">developer by mhoo onetrap</div>
         </div>
     </div>
@@ -592,7 +460,7 @@ let isWheelSpinning = false;
 const languages = {
     th: {
         loginTitle: "เข้าสู่ระบบ", usernamePlace: "ชื่อผู้ใช้งาน", passwordPlace: "รหัสผ่าน", confirmPasswordPlace: "ยืนยันรหัสผ่าน", loginBtn: "เข้าสู่ระบบ", registerBtn: "สมัครสมาชิก", switchCreate: "สร้างบัญชีใหม่", switchLogin: "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ",
-        menuDash: "แดชบอร์ด", menuHistory: "ประวัติการลา", menuMoney: "การชำระเงิน", menuMembers: "รายชื่อสมาชิก", menuStore: "ร้านค้า", menuUserMng: "จัดการผู้ใช้งาน", logout: "ออกจากระบบ",
+        menuDash: "แดชบอร์ด", menuHistory: "ประวัติการลา", menuMoney: "การชำระเงิน", menuMembers: "รายชื่อสมาชิก", menuStore: "ร้านค้า", menuUserMng: "จัดการผู้ใช้งาน", menuCoin: "จัดการ Coin", logout: "ออกจากระบบ",
         cardToday: "จำนวนคนลาวันนี้", cardTotalUsers: "ผู้ใช้งานทั้งหมด", cardTotalLeaves: "ใบลาทั้งหมดในสัปดาห์", boxAnalytics: "สถิติการลา", boxCreateLeave: "สร้างใบลา", optSick: "ลาป่วย", optPersonal: "ลากิจ", optVacation: "พักร้อน", reasonPlace: "เหตุผลการลา", leaveSubmit: "ส่งคำขอใบลา",
         boxHistory: "ประวัติการลา", thUser: "ผู้ใช้งาน", thType: "ประเภท", thDuration: "ระยะเวลา", thDays: "จำนวนวัน", thStatus: "สถานะ", boxMoney: "การชำระเงินรายสัปดาห์", lblPaymentText: "สัปดาห์นี้ชำระเงิน", editBtn: "แก้ไข", thMoneyStatus: "สถานะ", thMoneyManage: "จัดการ",
         boxMembers: "สมาชิกทั้งหมด", thMemDetails: "รายละเอียด", boxUserManage: "จัดการสิทธิ์ผู้ใช้งาน", thMngAction: "การจัดการ", statusApproved: "อนุมัติแล้ว", statusPending: "รออนุมัติ", alertFill: "กรอกข้อมูลให้ครบ", alertMatch: "Password ไม่ตรงกัน", alertDup: "Username ซ้ำ",
@@ -603,7 +471,7 @@ const languages = {
     },
     en: {
         loginTitle: "LOGIN", usernamePlace: "USERNAME", passwordPlace: "PASSWORD", confirmPasswordPlace: "CONFIRM PASSWORD", loginBtn: "LOGIN", registerBtn: "REGISTER", switchCreate: "CREATE ACCOUNT", switchLogin: "ALREADY HAVE ACCOUNT? LOGIN",
-        menuDash: "DASHBOARD", menuHistory: "LEAVE HISTORY", menuMoney: "WEEKLY PAYMENT", menuMembers: "MEMBERS", menuStore: "STORE", menuUserMng: "USER MANAGEMENT", logout: "LOGOUT",
+        menuDash: "DASHBOARD", menuHistory: "LEAVE HISTORY", menuMoney: "WEEKLY PAYMENT", menuMembers: "MEMBERS", menuStore: "STORE", menuUserMng: "USER MANAGEMENT", menuCoin: "COIN MANAGEMENT", logout: "LOGOUT",
         cardToday: "PEOPLE TODAY", cardTotalUsers: "TOTAL USERS", cardTotalLeaves: "TOTAL LEAVES", boxAnalytics: "LEAVE ANALYTICS", boxCreateLeave: "CREATE LEAVE", optSick: "Sick Leave", optPersonal: "Personal Leave", optVacation: "Vacation Leave", reasonPlace: "REASON", leaveSubmit: "SUBMIT REQUEST",
         boxHistory: "LEAVE HISTORY", thUser: "USER", thType: "TYPE", thDuration: "DURATION", thDays: "DAYS", thStatus: "STATUS", boxMoney: "WEEKLY PAYMENT", lblPaymentText: "Weekly Target", editBtn: "EDIT", thMoneyStatus: "STATUS", thMoneyManage: "MANAGE",
         boxMembers: "ALL MEMBERS", thMemDetails: "DETAILS", boxUserManage: "USER MANAGEMENT", thMngAction: "MANAGE", statusApproved: "Approved", statusPending: "Pending", alertFill: "Please fill in all fields", alertMatch: "Passwords do not match", alertDup: "Username already exists",
@@ -713,6 +581,10 @@ function applyLanguagePack() {
     document.getElementById("menuMembers").innerText = p.menuMembers;
     document.getElementById("menuStore").innerText = p.menuStore;
     document.getElementById("userMenu").innerText = p.menuUserMng;
+    
+    // บรรทัดที่เพิ่มเข้ามาเพื่อให้เมนู COIN เปลี่ยนภาษาได้
+    document.getElementById("coinMenu").innerText = p.menuCoin; 
+    
     document.getElementById("logoutBtn").innerText = p.logout;
     document.getElementById("cardToday").innerText = p.cardToday;
     document.getElementById("cardTotalUsers").innerText = p.cardTotalUsers;
@@ -762,7 +634,7 @@ function applyLanguagePack() {
 async function createAdmin(){
     const snap = await get(ref(db,"users/admin"));
     if(!snap.exists()){
-        await set(ref(db,"users/admin"),{username:"admin",password:"admin",role:"admin",avatar:defaultAvatar,facebook:"",discord:""});
+        await set(ref(db,"users/admin"),{username:"admin",password:"admin",role:"admin",avatar:defaultAvatar,facebook:"",discord:"",coin:0});
     }
 }
 createAdmin();
@@ -796,7 +668,8 @@ window.handleAuth = async function(){
         if(password !== confirmPassword){ alert(p.alertMatch); return; }
         const check = await get(ref(db,"users/" + username));
         if(check.exists()){ alert(p.alertDup); return; }
-        await set(ref(db,"users/" + username),{username:username,password:password,role:"member",avatar:defaultAvatar,facebook:"",discord:""});
+        // ตรวจสอบระบบ Coin ถ้าผู้ใช้งานสมัครสมาชิกใหม่ ให้มีค่าเริ่มต้น coin: 0 ติดตัวทันที
+        await set(ref(db,"users/" + username),{username:username,password:password,role:"member",avatar:defaultAvatar,facebook:"",discord:"",coin:0});
         alert(p.alertRegisSuccess); return;
     }
     const snapshot = await get(ref(db,"users/" + username));
@@ -817,6 +690,10 @@ async function updateProfileWidget() {
         document.querySelectorAll(".widgetUserName").forEach(el => { el.innerText = data.username; el.classList.toggle("leader-name", isLeader); });
         document.querySelectorAll(".widgetUserRole").forEach(el => { el.innerText = roleDisplay; });
         document.querySelectorAll(".widgetUserAvatar").forEach(el => { el.src = data.avatar || defaultAvatar; });
+        
+        // --- ส่วนประมวลผลดึงค่าระบบ Coin จาก Firebase มาแสดงผลในกล่องโปรไฟล์ ---
+        const userCoins = data.coin !== undefined ? data.coin : 0;
+        document.querySelectorAll(".widgetUserCoin").forEach(el => { el.innerText = userCoins.toLocaleString(); });
     }
 }
 
@@ -969,7 +846,6 @@ function listenGlobalChat() {
     });
 }
 
-// ฟังก์ชันสั่งการล้างข้อความทั้งหมดใน Firebase สำหรับสิทธิ์ ADMIN เท่านั้นตามบรีฟ
 window.clearAllGlobalChats = function() {
     const role = localStorage.getItem("role");
     if(role !== "admin") {
@@ -988,13 +864,13 @@ function initDashboard(){
     document.getElementById("dashboard").style.display = "block";
     document.getElementById("cyberChatHub").classList.remove("hidden"); 
     
-    // ตรวจเช็คสิทธิ์ล็อกอินเพื่อเปิดสิทธิ์ปุ่มจัดการข้อมูลและปุ่มล้างแชทให้แอดมิน
     if(localStorage.getItem("role") === "admin") {
         document.getElementById("userMenu").classList.remove("hidden");
+        document.getElementById("coinMenu").classList.remove("hidden");
         document.getElementById("adminClearChatBtn").classList.remove("hidden"); 
     }
     
-    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers(); loadWinners(); drawWheel(); listenGlobalChat();
+    applyLanguagePack(); showSection("dashboardSection"); updateProfileWidget(); loadLeaves(); loadUsers(); loadMoney(); loadMembers(); loadWinners(); drawWheel(); listenGlobalChat(); loadCoins();
 }
 
 window.addEventListener("load",()=>{ 
@@ -1006,8 +882,8 @@ window.addEventListener("load",()=>{
 window.logout = function(){ localStorage.clear(); location.reload(); }
 
 window.showSection = function(id){
-    const sections = ["dashboardSection", "historySection", "moneySection", "memberSection", "luckySection", "storeSection", "userSection"];
-    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "memberSection", "luckySection": "menuLucky", "storeSection": "menuStore", "userSection": "userMenu" };
+    const sections = ["dashboardSection", "historySection", "moneySection", "memberSection", "luckySection", "storeSection", "userSection", "coinSection"];
+    const menuMapping = { "dashboardSection": "menuDash", "historySection": "menuHistory", "moneySection": "menuMoney", "memberSection": "memberSection", "luckySection": "menuLucky", "storeSection": "menuStore", "userSection": "userMenu", "coinSection": "coinMenu" };
     sections.forEach(sec => {
         document.getElementById(sec).classList.add("hidden");
         const mId = menuMapping[sec]; if(mId) document.getElementById(mId).classList.remove("active");
@@ -1204,9 +1080,6 @@ window.confirmMoney = async function(user){
     alert(languages[currentLang].alertUpdateMoney); loadMoney();
 }
 
-/* ==========================================================================
-   LUCKY WHEEL SYSTEM FUNCTIONS (แก้ไขสูตรทิศทางให้ลูกศรชี้กึ่งกลางผู้ชนะเป๊ะ)
-   ========================================================================== */
 async function getWheelMembers() {
     const snap = await get(ref(db, "users"));
     let members = [];
@@ -1389,6 +1262,49 @@ window.deleteWinner = function(key) {
         await remove(ref(db, "winners/" + key));
         loadWinners();
     });
+}
+
+// -------------------------------------------------------------
+// [ NEW FUNCTION ] ระบบ COIN MANAGEMENT ดึงรายชื่อจาก users ทั้งหมดมาตั้งค่า
+// -------------------------------------------------------------
+async function loadCoins() {
+    const snap = await get(ref(db, "users"));
+    const table = document.getElementById("coinTable");
+    if (!table) return;
+    table.innerHTML = "";
+    
+    if (snap.exists() && localStorage.getItem("role") === "admin") {
+        Object.entries(snap.val()).forEach(([key, user]) => {
+            const currentCoin = user.coin !== undefined ? user.coin : 0;
+            let isL = (user.role === "admin" || user.role === "leader");
+            table.innerHTML += `<tr>
+                <td class="${isL ? 'leader-name' : ''}">${user.username}</td>
+                <td style="color: #FFD700; font-weight: bold; font-size: 14px;">${currentCoin.toLocaleString()}</td>
+                <td>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="number" id="coinInput_${key}" value="${currentCoin}" style="width:100px; padding:6px 10px; background:#000; border:1px solid #333; color:#fff; border-radius:6px; font-size:12px; outline:none;" onfocus="this.style.borderColor='#ff2d2d'" onblur="this.style.borderColor='#333'">
+                        <button onclick="updateUserCoin('${key}')" style="background:#ff2d2d; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:11px; font-weight:bold; transition:all 0.2s;" onmouseover="this.style.boxShadow='0 0 8px #ff2d2d'" onmouseout="this.style.boxShadow='none'">SAVE</button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+    }
+}
+
+window.updateUserCoin = async function(username) {
+    const inputEl = document.getElementById(`coinInput_${username}`);
+    if(!inputEl) return;
+    const newCoin = parseInt(inputEl.value, 10);
+    if(isNaN(newCoin)) return;
+    
+    await update(ref(db, "users/" + username), { coin: newCoin });
+    showErrorModal(currentLang === "th" ? "อัปเดตจำนวน COIN สำเร็จ" : "COIN updated successfully", currentLang === "th" ? "สำเร็จ" : "SUCCESS");
+    loadCoins();
+    
+    // หากแอดมินอัปเดตเหรียญตัวเอง ให้ตัวเลขมุมขวาบนเปลี่ยนทันที
+    if(username === localStorage.getItem("loginUser")) {
+        updateProfileWidget();
+    }
 }
 </script>
 </body>
