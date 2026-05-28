@@ -926,3 +926,32 @@ td button:hover {
 .cyber-chat-send:hover { 
     background: #cc1b1b; 
 }
+
+/* คอนเทนเนอร์ประวัติ: บังคับซ่อนแถบเลื่อนซ้ายขวา (Horizontal Scroll) */
+#gachaTab .box {
+    overflow-x: hidden !important;
+}
+
+/* ตกแต่ง Scrollbar เฉพาะในกรอบประวัติรางวัลให้เป็นสไตล์ไซเบอร์ */
+#gachaTab .box::-webkit-scrollbar {
+    width: 6px;               /* ปรับให้แถบเลื่อนแนวตั้งบางลงมากเหลือแค่ 6px */
+    height: 0px;              /* สั่งตัดแถบเลื่อนแนวนอนออกให้เป็น 0 */
+}
+
+/* พื้นหลังของแถบเลื่อน (Track) */
+#gachaTab .box::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+/* ตัวจับเลื่อน (Thumb) ให้เป็นสีแดงนีออนดุดัน */
+#gachaTab .box::-webkit-scrollbar-thumb {
+    background: #ff2d2d;
+    border-radius: 10px;
+    box-shadow: 0 0 8px #ff2d2d; /* ใส่เอฟเฟกต์เรืองแสงสีแดง */
+}
+
+/* เวลาเลื่อนเมาส์ไปโดนให้สีแดงเข้มขึ้น */
+#gachaTab .box::-webkit-scrollbar-thumb:hover {
+    background: #b31c1c;
+}
